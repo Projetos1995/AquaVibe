@@ -115,10 +115,64 @@
         .contador-qtd button { width:40px; height:40px; border-radius:50%; border:none; background:var(--azul-medio); color:white; font-size:1.3rem; cursor:pointer; font-weight:700; }
         .contador-qtd span { font-size:1.3rem; font-weight:700; color:var(--azul-escuro); min-width:30px; text-align:center; }
         .admin-badge { background:#fbbf24; color:#78350f; padding:0.2rem 0.6rem; border-radius:10px; font-size:0.75rem; font-weight:700; margin-left:0.5rem; }
+        
+        /* ---------- ESTILO DAS CALCULADORAS ---------- */
+        .calculadoras-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+        .calc-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--sombra);
+            transition: transform 0.2s;
+        }
+        .calc-card:hover {
+            transform: translateY(-3px);
+        }
+        .calc-card h3 {
+            color: var(--azul-escuro);
+            margin-bottom: 15px;
+            font-size: 1.15em;
+        }
+        .calc-card button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #0369a1, #0891b2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: opacity 0.2s;
+        }
+        .calc-card button:hover {
+            opacity: 0.9;
+        }
+        .resultado {
+            background: linear-gradient(135deg, #e0f2fe, #cff6fe);
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 4px solid #0369a1;
+            color: #0c4a6e;
+            margin-top: 15px;
+            display: none;
+        }
+        .resultado h4 {
+            margin-bottom: 10px;
+        }
+        .resultado strong {
+            color: #0369a1;
+            font-size: 1.1em;
+        }
     </style>
 </head>
 <body>
-
 <!-- LOGIN -->
 <section id="tela-login" class="tela ativa">
     <div class="marca"><h1>Aqua<span>Vibe</span> 🐠</h1><p>Sinta a vida do seu aquário 💧</p></div>
@@ -166,19 +220,120 @@
         <p id="nome-usuario">Seu aquário, nosso cuidado 💧</p>
         <div class="seletor-aquario" id="seletor-aquarios"></div>
     </div>
-
     <div id="menu-principal">
         <div class="grade">
             <div class="card-funcao" onclick="mostrarSubTela('sub-aquarios')"><div class="icone">🏝️</div><h3>Meus Aquários</h3><p>Gerenciar tanques</p></div>
             <div class="card-funcao" onclick="mostrarSubTela('sub-banco')"><div class="icone">📚</div><h3>Banco de Peixes</h3><p>Espécies & fotos</p></div>
             <div class="card-funcao" onclick="mostrarSubTela('sub-peixes')"><div class="icone">🐟</div><h3>Meus Peixes</h3><p>No aquário atual</p></div>
             <div class="card-funcao" onclick="mostrarSubTela('sub-parametros')"><div class="icone">📊</div><h3>Parâmetros</h3><p>pH, temperatura</p></div>
+            <div class="card-funcao" onclick="mostrarSubTela('sub-calculadoras')"><div class="icone">🧮</div><h3>Calculadoras</h3><p>Litragem, Lúmens, Substrato</p></div>
             <div class="card-funcao" onclick="mostrarSubTela('sub-plantas')"><div class="icone">🌿</div><h3>Plantas</h3><p>Espécies</p></div>
             <div class="card-funcao" onclick="mostrarSubTela('sub-lembretes')"><div class="icone">⏰</div><h3>Lembretes</h3><p>Cuidados</p></div>
             <div class="card-funcao" onclick="mostrarSubTela('sub-historico')"><div class="icone">📈</div><h3>Histórico</h3><p>Acompanhamento</p></div>
             <div class="card-funcao card-admin" id="card-admin" style="display:none;" onclick="mostrarSubTela('sub-admin')"><div class="icone">👑</div><h3>Painel Admin</h3><p>Gerenciar o app</p></div>
         </div>
         <button class="btn btn-secundario sair" onclick="sair()">Sair da conta</button>
+    </div>
+
+    <!-- 🧮 CALCULADORAS -->
+    <div id="sub-calculadoras" class="sub-tela">
+        <div class="voltar" onclick="voltarMenu()">← Voltar</div>
+        <h2 style="color:var(--azul-escuro);margin-bottom:1rem;">🧮 Calculadoras do Aquarista</h2>
+        
+        <div class="calculadoras-container">
+            <!-- 📐 LITRAGEM -->
+            <div class="calc-card">
+                <h3>📐 Litragem do Aquário</h3>
+                <div class="grupo-input">
+                    <label>Comprimento (cm):</label>
+                    <input type="number" id="lit_comprimento" placeholder="Ex: 100">
+                </div>
+                <div class="grupo-input">
+                    <label>Largura / Profundidade (cm):</label>
+                    <input type="number" id="lit_largura" placeholder="Ex: 50">
+                </div>
+                <div class="grupo-input">
+                    <label>Altura da água (cm):</label>
+                    <input type="number" id="lit_altura" placeholder="Ex: 45">
+                </div>
+                <button onclick="calcularLitragem()">Calcular ✅</button>
+                <div id="resultado_litragem" class="resultado">
+                    <h4>📊 Resultado</h4>
+                    <p>Volume bruto: <strong id="res_bruto"></strong> L</p>
+                    <p>Volume útil: <strong id="res_util"></strong> L</p>
+                    <p>Peso aproximado: <strong id="res_peso"></strong> kg</p>
+                    <p id="res_dica_lit" style="margin-top:8px; font-size:0.9em;"></p>
+                </div>
+            </div>
+
+            <!-- 💡 LÚMENS -->
+            <div class="calc-card">
+                <h3>💡 Iluminação — Lúmens</h3>
+                <div class="grupo-input">
+                    <label>Comprimento (cm):</label>
+                    <input type="number" id="calc_comprimento" placeholder="Ex: 80">
+                </div>
+                <div class="grupo-input">
+                    <label>Largura (cm):</label>
+                    <input type="number" id="calc_largura" placeholder="Ex: 40">
+                </div>
+                <div class="grupo-input">
+                    <label>Altura da água (cm):</label>
+                    <input type="number" id="calc_altura" placeholder="Ex: 45">
+                </div>
+                <div class="grupo-input">
+                    <label>Tipo de aquário:</label>
+                    <select id="calc_tipo">
+                        <option value="15">🌿 Low Tech — ~15 lm/L</option>
+                        <option value="30" selected>🌱 Média — ~30 lm/L</option>
+                        <option value="60">🌳 High Tech — ~60 lm/L</option>
+                    </select>
+                </div>
+                <button onclick="calcularLumens()">Calcular ✅</button>
+                <div id="resultado_lumens" class="resultado">
+                    <h4>📊 Resultado</h4>
+                    <p>Volume do aquário: <strong id="res_volume"></strong> L</p>
+                    <p>Lúmens recomendados: <strong id="res_lumens"></strong> lm</p>
+                    <p>Potência LED aprox.: <strong id="res_watts"></strong> W</p>
+                    <p id="res_dica" style="margin-top:8px; font-size:0.9em;"></p>
+                </div>
+            </div>
+
+            <!-- 🪨 SUBSTRATO -->
+            <div class="calc-card">
+                <h3>🪨 Substrato</h3>
+                <div class="grupo-input">
+                    <label>Comprimento (cm):</label>
+                    <input type="number" id="sub_comprimento" placeholder="Ex: 80">
+                </div>
+                <div class="grupo-input">
+                    <label>Largura (cm):</label>
+                    <input type="number" id="sub_largura" placeholder="Ex: 40">
+                </div>
+                <div class="grupo-input">
+                    <label>Espessura desejada:</label>
+                    <select id="sub_espessura">
+                        <option value="3">3 cm — Fina</option>
+                        <option value="4" selected>4 cm — Padrão ✅</option>
+                        <option value="5">5 cm — Plantas</option>
+                        <option value="6">6 cm — Dupla camada</option>
+                        <option value="escolha">Personalizada</option>
+                    </select>
+                </div>
+                <div class="grupo-input" id="sub_personalizado" style="display:none;">
+                    <label>Espessura (cm):</label>
+                    <input type="number" id="sub_espessura_pers" placeholder="Ex: 4.5">
+                </div>
+                <button onclick="calcularSubstrato()">Calcular ✅</button>
+                <div id="resultado_substrato" class="resultado">
+                    <h4>📊 Resultado</h4>
+                    <p>Volume de substrato: <strong id="res_vol_sub"></strong> L</p>
+                    <p>Sacos de 2,5 kg: <strong id="res_sacos"></strong> unidade(s)</p>
+                    <p>Peso total: <strong id="res_peso_sub"></strong> kg</p>
+                    <p id="res_dica_sub" style="margin-top:8px; font-size:0.9em;"></p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- PAINEL ADMIN -->
@@ -273,7 +428,7 @@
     <div id="sub-plantas" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div><div class="cartao-dados"><h3>🌿 Plantas</h3><div class="sem-dados">Em breve 🌿</div></div></div>
     <div id="sub-lembretes" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div><div class="cartao-dados"><h3>⏰ Lembretes</h3><div class="sem-dados">Em breve ⏰</div></div></div>
     <div id="sub-historico" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div><div class="cartao-dados"><h3>📈 Histórico</h3><div class="sem-dados">Em breve 📈</div></div></div>
-
+    
     <div class="rodape">AquaVibe © 2026 — Sinta a vida do seu aquário 💧🐠</div>
 </section>
 
@@ -286,14 +441,14 @@
 </div>
 
 <script>
-// ===== CONTA ADMIN JÁ INCLUÍDA (PERMANENTE) =====
+// ===== CONTA ADMIN PERMANENTE =====
 let contas = [
     { nome:"Administrador", email:"admin@aquavibe.com", senha:"admin123", aquarios:[], aquarioAtivo:null, admin:true }
 ];
 let usuario = {nome:'',email:'',aquarios:[],aquarioAtivo:null};
 let filtroAtual='todos', abaAtual='populares', peixeSelecionado=null, qtdAdicionar=1;
 
-// ===== BANCO POPULARES =====
+// ===== BANCO DE PEIXES =====
 const BANCO_PEIXES = [
 {id:1,nome:"Neon Tetra",cientifico:"Paracheirodon innesi",familia:"Characidae",tipo:"doce",emoji:"🐟",origem:"Amazônia",tamanho:"3-4 cm",temperatura:"22-26 °C",ph:"6.0-7.0",gh:"1-10 dGH",comportamento:"Pacífico, cardume (mín. 6)",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"5-8 anos",compatibilidade:"Pequenos e pacíficos",obs:"O mais popular do mundo."},
 {id:2,nome:"Cardinal Tetra",cientifico:"Paracheirodon axelrodi",familia:"Characidae",tipo:"doce",emoji:"🐠",origem:"Amazônia Superior",tamanho:"4-5 cm",temperatura:"23-27 °C",ph:"5.5-7.0",gh:"1-8 dGH",comportamento:"Pacífico, cardume",alimentacao:"Onívoro",dificuldade:"Médio",vida:"4-6 anos",compatibilidade:"Pequenos e calmos",obs:"Vermelho vai até a cabeça."},
@@ -310,287 +465,4 @@ const BANCO_PEIXES = [
 {id:13,nome:"Ramirezi",cientifico:"Mikrogeophagus ramirezi",familia:"Cichlidae",tipo:"doce",emoji:"🐠",origem:"Venezuela",tamanho:"5-7 cm",temperatura:"26-30 °C",ph:"5.0-7.0",gh:"1-10 dGH",comportamento:"Pacífico, forma casal",alimentacao:"Carnívoro",dificuldade:"Médio",vida:"2-4 anos",compatibilidade:"Pequenos e calmos",obs:"Ciclídeo anão bonito."},
 {id:14,nome:"Danio Zebra",cientifico:"Danio rerio",familia:"Cyprinidae",tipo:"doce",emoji:"🐟",origem:"Índia",tamanho:"4-5 cm",temperatura:"18-25 °C",ph:"6.5-7.5",gh:"5-19 dGH",comportamento:"Pacífico, ativo, cardume",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"3-5 anos",compatibilidade:"Pacíficos similares",obs:"Extremamente resistente."},
 {id:15,nome:"Barbo Tigre",cientifico:"Puntigrus tetrazona",familia:"Cyprinidae",tipo:"doce",emoji:"🐯",origem:"Indonésia",tamanho:"6-7 cm",temperatura:"20-26 °C",ph:"6.0-8.0",gh:"5-19 dGH",comportamento:"Ativo, belisca nadadeiras",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"5-7 anos",compatibilidade:"Ativos e rápidos",obs:"Evite com bettas e anjos."},
-{id:16,nome:"Colisa (Gourami Anão)",cientifico:"Trichogaster lalius",familia:"Osphronemidae",tipo:"doce",emoji:"🐠",origem:"Índia",tamanho:"5-7 cm",temperatura:"24-28 °C",ph:"6.0-7.5",gh:"4-10 dGH",comportamento:"Pacífico, tímido",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"3-4 anos",compatibilidade:"Pacíficos pequenos",obs:"Macho azul com listras vermelhas."},
-{id:17,nome:"Otocinclus",cientifico:"Otocinclus affinis",familia:"Loricariidae",tipo:"doce",emoji:"🐟",origem:"Amazônia",tamanho:"3-5 cm",temperatura:"21-26 °C",ph:"6.0-7.5",gh:"2-15 dGH",comportamento:"Pacífico, cardume",alimentacao:"SÓ algas verdes",dificuldade:"Médio",vida:"3-5 anos",compatibilidade:"Pacíficos pequenos",obs:"Melhor comedor de algas verdes."},
-{id:18,nome:"Rasbora Arlequim",cientifico:"Trigonostigma heteromorpha",familia:"Cyprinidae",tipo:"doce",emoji:"🐟",origem:"Tailândia",tamanho:"4-5 cm",temperatura:"22-27 °C",ph:"6.0-7.5",gh:"2-12 dGH",comportamento:"Pacífico, cardume",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"5-8 anos",compatibilidade:"Pacíficos pequenos",obs:"Laranja com triângulo preto."},
-{id:19,nome:"Tetra Serpae",cientifico:"Hyphessobrycon eques",familia:"Characidae",tipo:"doce",emoji:"🐠",origem:"Brasil (Mato Grosso)",tamanho:"4-5 cm",temperatura:"22-27 °C",ph:"5.5-7.5",gh:"5-15 dGH",comportamento:"Semi-agressivo",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"5-7 anos",compatibilidade:"Ativos e rápidos",obs:"Vermelho vibrante."},
-{id:20,nome:"Kinguio (Goldfish)",cientifico:"Carassius auratus",familia:"Cyprinidae",tipo:"doce",emoji:"🐠",origem:"China",tamanho:"15-30 cm",temperatura:"15-23 °C (fria!)",ph:"7.0-8.4",gh:"8-20 dGH",comportamento:"Pacífico, muito sujo",alimentacao:"Onívoro",dificuldade:"Fácil (aquário grande!)",vida:"10-20 anos",compatibilidade:"Só com kinguios",obs:"NÃO é de tigela! Água fria."},
-{id:21,nome:"Apistograma",cientifico:"Apistogramma cacatuoides",familia:"Cichlidae",tipo:"doce",emoji:"🐟",origem:"Amazônia",tamanho:"5-8 cm",temperatura:"23-29 °C",ph:"5.0-7.0",gh:"1-10 dGH",comportamento:"Pacífico, territorial",alimentacao:"Carnívoro",dificuldade:"Médio",vida:"3-5 anos",compatibilidade:"Tetras pequenos",obs:"Ciclídeo anão perfeito."},
-{id:22,nome:"Tetra Nariz Vermelho",cientifico:"Hemigrammus rhodostomus",familia:"Characidae",tipo:"doce",emoji:"🐟",origem:"Amazônia",tamanho:"4-5 cm",temperatura:"24-28 °C",ph:"5.5-7.0",gh:"2-8 dGH",comportamento:"Pacífico, cardume",alimentacao:"Onívoro",dificuldade:"Médio",vida:"5-8 anos",compatibilidade:"Pacíficos pequenos",obs:"Indicador de qualidade da água!"},
-{id:23,nome:"Bóia (Clown Loach)",cientifico:"Chromobotia macracanthus",familia:"Botiidae",tipo:"doce",emoji:"🤡",origem:"Indonésia",tamanho:"20-30 cm",temperatura:"25-30 °C",ph:"6.0-7.5",gh:"5-12 dGH",comportamento:"Pacífico, cardume",alimentacao:"Onívoro — come CARACÓIS!",dificuldade:"Médio",vida:"10-20 anos",compatibilidade:"Pacíficos similares",obs:"Come caracóis! Fica GRANDE."},
-{id:24,nome:"Tubarão Rabo Vermelho",cientifico:"Epalzeorhynchos bicolor",familia:"Cyprinidae",tipo:"doce",emoji:"🦈",origem:"Tailândia",tamanho:"12-15 cm",temperatura:"22-26 °C",ph:"6.5-7.5",gh:"5-15 dGH",comportamento:"Territorial (só 1)",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"5-8 anos",compatibilidade:"Ativos similares",obs:"Corpo preto, cauda vermelha."},
-{id:25,nome:"Peixe Arco-Íris",cientifico:"Melanotaenia praecox",familia:"Melanotaeniidae",tipo:"doce",emoji:"🌈",origem:"Nova Guiné",tamanho:"6-12 cm",temperatura:"22-28 °C",ph:"7.0-8.0",gh:"8-20 dGH",comportamento:"Pacífico, ativo, cardume",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"5-8 anos",compatibilidade:"Pacíficos ativos",obs:"Cores metálicas iridescentes."},
-{id:26,nome:"Kribensis",cientifico:"Pelvicachromis pulcher",familia:"Cichlidae",tipo:"doce",emoji:"🐠",origem:"África",tamanho:"8-10 cm",temperatura:"23-27 °C",ph:"6.0-8.0",gh:"5-20 dGH",comportamento:"Pacífico, forma casal",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"5-8 anos",compatibilidade:"Pacíficos similares",obs:"Ciclídeo africano anão."},
-{id:27,nome:"Tetra Embaixador",cientifico:"Inpaichthys kerri",familia:"Characidae",tipo:"doce",emoji:"🐟",origem:"Brasil (Aripuanã)",tamanho:"4-5 cm",temperatura:"24-28 °C",ph:"6.0-7.5",gh:"2-12 dGH",comportamento:"Pacífico, cardume",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"4-6 anos",compatibilidade:"Pacíficos pequenos",obs:"Azul iridescente."},
-{id:28,nome:"Tetra Saia Preta",cientifico:"Gymnocorymbus ternetzi",familia:"Characidae",tipo:"doce",emoji:"🐟",origem:"Brasil, Bolívia",tamanho:"5-7 cm",temperatura:"20-26 °C",ph:"6.0-8.0",gh:"5-20 dGH",comportamento:"Pacífico, cardume",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"3-5 anos",compatibilidade:"Ativos similares",obs:"Resistente — bom para iniciantes."},
-{id:101,nome:"Palhaço Ocellaris (Nemo)",cientifico:"Amphiprion ocellaris",familia:"Pomacentridae",tipo:"marinho",emoji:"🤡",origem:"Indo-Pacífico",tamanho:"8-11 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico, forma par (anêmona)",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"6-10 anos",compatibilidade:"Pacíficos marinhos",obs:"O mais famoso! Muda de sexo."},
-{id:102,nome:"Palhaço Marrom (Tomato)",cientifico:"Amphiprion frenatus",familia:"Pomacentridae",tipo:"marinho",emoji:"🍅",origem:"Indo-Pacífico",tamanho:"12-14 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Semi-agressivo",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"6-10 anos",compatibilidade:"Maiores e robustos",obs:"Vermelho-tomate. Mais agressivo."},
-{id:103,nome:"Tang Azul (Dory)",cientifico:"Paracanthurus hepatus",familia:"Acanthuridae",tipo:"marinho",emoji:"💙",origem:"Indo-Pacífico",tamanho:"25-30 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico, ativo",alimentacao:"Herbívoro — algas",dificuldade:"Médio",vida:"8-12 anos",compatibilidade:"Pacíficos grandes",obs:"A famosa Dory! 300L+."},
-{id:104,nome:"Tang Amarelo",cientifico:"Zebrasoma flavescens",familia:"Acanthuridae",tipo:"marinho",emoji:"💛",origem:"Havaí",tamanho:"15-20 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico (não com outro amarelo)",alimentacao:"Herbívoro — algas",dificuldade:"Fácil",vida:"10-20 anos",compatibilidade:"Pacíficos",obs:"Amarelo vibrante. Excelente comedor de algas."},
-{id:105,nome:"Anjo Imperador",cientifico:"Pomacanthus imperator",familia:"Pomacanthidae",tipo:"marinho",emoji:"👑",origem:"Indo-Pacífico",tamanho:"35-40 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Semi-agressivo",alimentacao:"Onívoro — esponjas",dificuldade:"Difícil",vida:"15-20 anos",compatibilidade:"Grandes",obs:"Jovem azul com anéis; adulto listrado. 500L+."},
-{id:106,nome:"Anjo Chama (Flame)",cientifico:"Centropyge loricula",familia:"Pomacanthidae",tipo:"marinho",emoji:"🔥",origem:"Pacífico (Havaí)",tamanho:"8-10 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Semi-agressivo",alimentacao:"Onívoro",dificuldade:"Médio",vida:"5-10 anos",compatibilidade:"Pacíficos a semi-agressivos",obs:"Vermelho-fogo com listras pretas."},
-{id:107,nome:"Anjo Beleza de Coral",cientifico:"Centropyge bispinosa",familia:"Pomacanthidae",tipo:"marinho",emoji:"💜",origem:"Indo-Pacífico",tamanho:"8-10 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico a semi-agressivo",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"5-10 anos",compatibilidade:"Pacíficos marinhos",obs:"Roxo/azul com bordas alaranjadas."},
-{id:108,nome:"Borboleta Bico de Cobre",cientifico:"Chelmon rostratus",familia:"Chaetodontidae",tipo:"marinho",emoji:"🦋",origem:"Indo-Pacífico",tamanho:"18-20 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico, tímido",alimentacao:"Carnívoro — come AIPTASIA!",dificuldade:"Difícil",vida:"5-10 anos",compatibilidade:"Pacíficos marinhos",obs:"Famoso por comer Aiptasia (pestes)."},
-{id:109,nome:"Mandarim (Dragonet)",cientifico:"Synchiropus splendidus",familia:"Callionymidae",tipo:"marinho",emoji:"🐉",origem:"Pacífico Ocidental",tamanho:"6-8 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico, tímido",alimentacao:"SÓ copépodos vivos!",dificuldade:"Difícil",vida:"3-6 anos",compatibilidade:"Pacíficos muito calmos",obs:"O peixe mais colorido do mundo. Não para iniciantes!"},
-{id:110,nome:"Gramata Real",cientifico:"Gramma loreto",familia:"Grammatidae",tipo:"marinho",emoji:"👑",origem:"Caribe",tamanho:"7-8 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico, territorial",alimentacao:"Carnívoro",dificuldade:"Fácil",vida:"5-10 anos",compatibilidade:"Pacíficos marinhos",obs:"Metade roxa, metade amarela. Fica de cabeça para baixo — normal!"},
-{id:111,nome:"Peixe Fogo (Firefish)",cientifico:"Nemateleotris magnifica",familia:"Gobiidae",tipo:"marinho",emoji:"🔥",origem:"Indo-Pacífico",tamanho:"7-9 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Muito pacífico, tímido",alimentacao:"Carnívoro",dificuldade:"Fácil",vida:"3-5 anos",compatibilidade:"Pacíficos muito calmos",obs:"PULA — tampa obrigatória!"},
-{id:112,nome:"Goby Guarda (Watchman)",cientifico:"Cryptocentrus cinctus",familia:"Gobiidae",tipo:"marinho",emoji:"🦐",origem:"Indo-Pacífico",tamanho:"8-10 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico (SIMBIOSE com camarão pistola!)",alimentacao:"Carnívoro",dificuldade:"Fácil",vida:"4-6 anos",compatibilidade:"Pacíficos marinhos",obs:"Vive com Camarão Pistola — ele cava a toca, o goby vigia."},
-{id:113,nome:"Wrasse Seis Linhas",cientifico:"Pseudocheilinus hexataenia",familia:"Labridae",tipo:"marinho",emoji:"⚡",origem:"Indo-Pacífico",tamanho:"7-9 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Ativo, pode ser mau com novos",alimentacao:"Carnívoro — come flatworms!",dificuldade:"Fácil",vida:"4-6 anos",compatibilidade:"Pacíficos a semi-agressivos",obs:"Seis listras laranja/azuis. Adicione por último."},
-{id:114,nome:"Hawkfish Chama",cientifico:"Neocirrhites armatus",familia:"Cirrhitidae",tipo:"marinho",emoji:"🦅",origem:"Pacífico (Fiji)",tamanho:"8-10 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Semi-agressivo, pousa em corais",alimentacao:"Carnívoro",dificuldade:"Fácil",vida:"5-10 anos",compatibilidade:"Semi-agressivos",obs:"Vermelho brilhante. Pode comer camarões pequenos."},
-{id:115,nome:"Leão Anão (Lionfish)",cientifico:"Dendrochirus brachypterus",familia:"Scorpaenidae",tipo:"marinho",emoji:"🦁",origem:"Indo-Pacífico",tamanho:"15-18 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Come o que cabe na boca",alimentacao:"Carnívoro",dificuldade:"Médio",vida:"8-12 anos",compatibilidade:"SÓ peixes GRANDES",obs:"Espinhos VENENOSOS! Cuidado!"},
-{id:116,nome:"Moreia Neve (Snowflake Eel)",cientifico:"Echidna nebulosa",familia:"Muraenidae",tipo:"marinho",emoji:"🐍",origem:"Indo-Pacífico",tamanho:"60-90 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico mas come pequenos",alimentacao:"Carnívoro",dificuldade:"Médio",vida:"10-15 anos",compatibilidade:"Grandes demais para comer",obs:"Branca com manchas. Escapa — TAMPA! 300L+."},
-{id:117,nome:"Cavalo-Marinho",cientifico:"Hippocampus erectus",familia:"Syngnathidae",tipo:"marinho",emoji:"🐴",origem:"Atlântico",tamanho:"12-18 cm",temperatura:"22-25 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Muito pacífico, monogâmico",alimentacao:"Artêmia viva (várias vezes/dia)",dificuldade:"Difícil",vida:"3-6 anos",compatibilidade:"SÓ cavalos-marinhos",obs:"Macho carrega os filhotes! Aquário específico."},
-{id:118,nome:"Donzela Azul",cientifico:"Chrysiptera cyanea",familia:"Pomacentridae",tipo:"marinho",emoji:"💙",origem:"Indo-Pacífico",tamanho:"6-8 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Agressivo (adulto)",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"5-8 anos",compatibilidade:"Semi-agressivos robustos",obs:"Azul elétrico. Vira valentão — adicione por último!"},
-{id:119,nome:"Chromis Azul-Verde",cientifico:"Chromis viridis",familia:"Pomacentridae",tipo:"marinho",emoji:"🐟",origem:"Indo-Pacífico",tamanho:"8-10 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Muito pacífico, cardume",alimentacao:"Onívoro — plâncton",dificuldade:"Fácil",vida:"5-8 anos",compatibilidade:"Todos os pacíficos",obs:"A única donzela verdadeiramente pacífica. Cardume lindo."},
-{id:120,nome:"Anthias (Lyretail)",cientifico:"Pseudanthias squamipinnis",familia:"Serranidae",tipo:"marinho",emoji:"🧡",origem:"Indo-Pacífico",tamanho:"10-13 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico, cardume",alimentacao:"Carnívoro plâncton — 3-4x/dia",dificuldade:"Difícil",vida:"5-8 anos",compatibilidade:"Pacíficos calmos",obs:"Fêmeas laranja, macho rosa. Muda de sexo."},
-{id:121,nome:"Goby Neon (Limpador)",cientifico:"Elacatinus oceanops",familia:"Gobiidae",tipo:"marinho",emoji:"💡",origem:"Caribe",tamanho:"4-5 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Muito pacífico, limpador",alimentacao:"Carnívoro — parasitas",dificuldade:"Fácil",vida:"3-5 anos",compatibilidade:"Pacíficos marinhos",obs:"Azul elétrico. Come parasitas de outros peixes!"},
-{id:122,nome:"Tang Sailfin",cientifico:"Zebrasoma veliferum",familia:"Acanthuridae",tipo:"marinho",emoji:"⛵",origem:"Indo-Pacífico",tamanho:"30-40 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico",alimentacao:"Herbívoro — algas",dificuldade:"Médio",vida:"10-15 anos",compatibilidade:"Pacíficos grandes",obs:"Barbatana dorsal enorme. 500L+."},
-{id:123,nome:"Anjo Francês",cientifico:"Pomacanthus paru",familia:"Pomacanthidae",tipo:"marinho",emoji:"🇫🇷",origem:"Atlântico",tamanho:"35-40 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Semi-agressivo, forma par",alimentacao:"Onívoro — esponjas",dificuldade:"Médio",vida:"15-20 anos",compatibilidade:"Grandes",obs:"Preto com escamas amarelas. Casal monogâmico. 500L+."},
-{id:124,nome:"Borboleta Guaxinim",cientifico:"Chaetodon lunula",familia:"Chaetodontidae",tipo:"marinho",emoji:"🦝",origem:"Indo-Pacífico",tamanho:"18-20 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico",alimentacao:"Onívoro (cuidado com corais!)",dificuldade:"Médio",vida:"5-10 anos",compatibilidade:"Pacíficos marinhos",obs:"Máscara preta de guaxinim. Pode beliscar corais."},
-{id:125,nome:"Wrasse Leopardo",cientifico:"Macropharyngodon meleagris",familia:"Labridae",tipo:"marinho",emoji:"🐆",origem:"Indo-Pacífico",tamanho:"12-15 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico, enterra na areia",alimentacao:"Carnívoro",dificuldade:"Médio",vida:"5-8 anos",compatibilidade:"Pacíficos marinhos",obs:"Macho azul-esverdeado com manchas. Areia fina obrigatória!"},
-{id:126,nome:"Dottyback Orquídea",cientifico:"Pseudochromis fridmani",familia:"Pseudochromidae",tipo:"marinho",emoji:"🌸",origem:"Mar Vermelho",tamanho:"6-8 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Semi-agressivo",alimentacao:"Carnívoro",dificuldade:"Fácil",vida:"5-8 anos",compatibilidade:"Pacíficos a semi-agressivos",obs:"Roxo-orquídea brilhante. Adicione por último."},
-{id:127,nome:"Peixe-Jaquim (Harlequin Tusk)",cientifico:"Choerodon fasciatus",familia:"Labridae",tipo:"marinho",emoji:"🎭",origem:"Indo-Pacífico",tamanho:"25-30 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Semi-agressivo, robusto",alimentacao:"Carnívoro — ouriços, moluscos",dificuldade:"Médio",vida:"8-12 anos",compatibilidade:"Grandes",obs:"Listras laranja/azuis + dentes azuis. Come ouriços. 300L+."}
-];
-
-// ===== NAVEGAÇÃO =====
-function mostrarTela(id){ document.querySelectorAll('.tela').forEach(t=>t.classList.remove('ativa')); document.getElementById(id).classList.add('ativa'); const m=document.getElementById('msg-recuperar'); if(m){m.className='mensagem';m.innerHTML='';} }
-function mostrarSubTela(id){ document.getElementById('menu-principal').style.display='none'; document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa')); document.getElementById(id).classList.add('sub-ativa'); if(id==='sub-aquarios') renderizarListaAquarios(); if(id==='sub-banco') renderizarBancoPeixes(); if(id==='sub-peixes') renderizarMeusPeixes(); if(id==='sub-admin') renderizarPainelAdmin(); }
-function voltarMenu(){ document.getElementById('menu-principal').style.display='block'; document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa')); }
-
-// ===== LOGIN / CADASTRO / RECUPERAR =====
-function entrar(){
-    const e=document.getElementById('email-login').value.trim(), s=document.getElementById('senha-login').value;
-    if(!e||!s){ alert('⚠️ Preencha e-mail e senha!'); return; }
-    const c=contas.find(x=>x.email===e&&x.senha===s);
-    if(c){
-        usuario.nome=c.nome; usuario.email=c.email; usuario.aquarios=c.aquarios||[]; usuario.aquarioAtivo=c.aquarioAtivo??(usuario.aquarios.length>0?0:null);
-        document.getElementById('nome-usuario').innerText=`Olá, ${usuario.nome}! 👋`;
-        // Mostra selo e botão admin se for admin
-        const isAdmin = c.admin === true;
-        document.getElementById('admin-badge').style.display = isAdmin ? 'inline-block' : 'none';
-        document.getElementById('card-admin').style.display = isAdmin ? 'block' : 'none';
-        renderizarSeletorAquarios(); atualizarDadosAquarioAtivo(); mostrarTela('tela-app');
-    } else alert('❌ E-mail ou senha incorretos!');
-}
-function cadastrar(){
-    const n=document.getElementById('nome-cad').value.trim(), e=document.getElementById('email-cad').value.trim(), s=document.getElementById('senha-cad').value, cf=document.getElementById('confirma-cad').value;
-    if(!n||!e||!s){ alert('⚠️ Preencha todos os campos!'); return; }
-    if(s!==cf){ alert('⚠️ Senhas não coincidem!'); return; }
-    if(contas.find(x=>x.email===e)){ alert('⚠️ E-mail já cadastrado!'); mostrarTela('tela-login'); return; }
-    contas.push({nome:n,email:e,senha:s,aquarios:[],aquarioAtivo:null,admin:false});
-    usuario={nome:n,email:e,aquarios:[],aquarioAtivo:null};
-    document.getElementById('admin-badge').style.display='none';
-    document.getElementById('card-admin').style.display='none';
-    alert(`🎉 Conta criada! Bem-vindo, ${n}! 🐠`);
-    document.getElementById('nome-usuario').innerText=`Olá, ${n}! 👋`;
-    renderizarSeletorAquarios(); mostrarTela('tela-app');
-}
-function processarRecuperacao(){
-    const e=document.getElementById('email-recuperar').value.trim(), m=document.getElementById('msg-recuperar');
-    if(!e){ m.className='mensagem erro'; m.textContent='⚠️ Digite seu e-mail!'; return; }
-    const c=contas.find(x=>x.email===e);
-    if(c){ const t='AquaVibe'+Math.floor(Math.random()*9999); m.className='mensagem sucesso'; m.innerHTML=`✅ E-mail encontrado!<br>🔑 <strong>Senha temporária:</strong> ${t}`; document.getElementById('email-login').value=e; document.getElementById('senha-login').value=t; c.senha=t; }
-    else { m.className='mensagem erro'; m.textContent='❌ E-mail não cadastrado.'; }
-}
-function sair(){
-    if(!confirm('Sair?')) return;
-    const i=contas.findIndex(x=>x.email===usuario.email); if(i!==-1){ contas[i].aquarios=[...usuario.aquarios]; contas[i].aquarioAtivo=usuario.aquarioAtivo; }
-    document.getElementById('email-login').value=''; document.getElementById('senha-login').value='';
-    document.getElementById('admin-badge').style.display='none';
-    document.getElementById('card-admin').style.display='none';
-    usuario={nome:'',email:'',aquarios:[],aquarioAtivo:null}; mostrarTela('tela-login');
-}
-
-// ===== PAINEL ADMIN =====
-function renderizarPainelAdmin(){
-    document.getElementById('admin-total-usuarios').textContent = contas.length;
-    let totalAq = 0;
-    contas.forEach(c => totalAq += (c.aquarios||[]).length);
-    document.getElementById('admin-total-aquarios').textContent = totalAq;
-    const lista = document.getElementById('admin-lista-usuarios');
-    lista.innerHTML = '';
-    contas.forEach((c,i) => {
-        const div = document.createElement('div');
-        div.className = 'lista-item';
-        div.innerHTML = `<h4>${c.admin?'👑 ':''}${c.nome} ${c.admin?'<span style="color:#f59e0b;">(ADMIN)</span>':''}</h4><p>${c.email} • ${(c.aquarios||[]).length} aquário(s) • ${(c.aquarios||[]).reduce((s,a)=>s+(a.peixes||[]).length,0)} peixes</p>${!c.admin?`<div class="acoes"><button class="btn btn-pequeno btn-perigo" onclick="banirUsuario(${i})">Banir usuário</button></div>`:''}`;
-        lista.appendChild(div);
-    });
-}
-function banirUsuario(i){
-    if(!confirm(`Banir o usuário "${contas[i].nome}"?`)) return;
-    contas.splice(i,1);
-    renderizarPainelAdmin();
-    alert('✅ Usuário banido!');
-}
-function limparTodosUsuarios(){
-    if(!confirm('Apagar TODOS os usuários (exceto admin)?')) return;
-    contas = contas.filter(c => c.admin === true);
-    renderizarPainelAdmin();
-    alert('✅ Todos os usuários foram removidos!');
-}
-
-// ===== AQUÁRIOS =====
-function renderizarSeletorAquarios(){
-    const c=document.getElementById('seletor-aquarios'); c.innerHTML='';
-    usuario.aquarios.forEach((a,i)=>{ const t=document.createElement('span'); t.className=`tag-aquario ${usuario.aquarioAtivo===i?'ativo':''}`; t.textContent=a.nome; t.onclick=()=>selecionarAquario(i); c.appendChild(t); });
-    const n=document.createElement('span'); n.className='tag-aquario tag-novo'; n.textContent='+ Novo'; n.onclick=()=>{mostrarSubTela('sub-aquarios');mostrarFormAquario();}; c.appendChild(n);
-}
-function selecionarAquario(i){ usuario.aquarioAtivo=i; renderizarSeletorAquarios(); atualizarDadosAquarioAtivo(); }
-function atualizarDadosAquarioAtivo(){
-    if(usuario.aquarioAtivo===null) return;
-    const a=usuario.aquarios[usuario.aquarioAtivo];
-    ['aq-nome-param','aq-nome-peixe'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=a.nome; });
-}
-function mostrarFormAquario(){ document.getElementById('form-aquario').style.display='block'; document.getElementById('aq-data').value=new Date().toISOString().split('T')[0]; }
-function esconderFormAquario(){ document.getElementById('form-aquario').style.display='none'; ['aq-nome','aq-volume','aq-obs'].forEach(id=>document.getElementById(id).value=''); }
-function salvarAquario(){
-    const n=document.getElementById('aq-nome').value.trim(); if(!n){ alert('⚠️ Dê um nome!'); return; }
-    usuario.aquarios.push({nome:n, volume:document.getElementById('aq-volume').value||'--', tipo:document.getElementById('aq-tipo').value, dataMontagem:document.getElementById('aq-data').value||'--', observacoes:document.getElementById('aq-obs').value||'', peixes:[]});
-    usuario.aquarioAtivo=usuario.aquarios.length-1;
-    const i=contas.findIndex(x=>x.email===usuario.email); if(i!==-1){ contas[i].aquarios=[...usuario.aquarios]; contas[i].aquarioAtivo=usuario.aquarioAtivo; }
-    alert(`✅ Aquário "${n}" cadastrado! 🐠`); esconderFormAquario(); renderizarListaAquarios(); renderizarSeletorAquarios(); atualizarDadosAquarioAtivo();
-}
-function renderizarListaAquarios(){
-    const c=document.getElementById('lista-aquarios'); c.innerHTML='';
-    if(usuario.aquarios.length===0){ c.innerHTML='<div class="sem-dados">Nenhum aquário ainda 🐠</div>'; return; }
-    usuario.aquarios.forEach((a,i)=>{
-        const it=document.createElement('div'); it.className='lista-item';
-        it.innerHTML=`<h4>${a.nome} ${usuario.aquarioAtivo===i?'✅':''}</h4><p>${a.volume}L • ${a.tipo==='doce'?'💧 Doce':a.tipo==='salobra'?'🌊 Salobra':'🐚 Marinha'} • ${a.peixes.length} peixes</p><div class="acoes"><button class="btn btn-pequeno btn-principal" onclick="selecionarAquario(${i});voltarMenu();">Usar</button><button class="btn btn-pequeno btn-perigo" onclick="excluirAquario(${i})">Excluir</button></div>`;
-        c.appendChild(it);
-    });
-}
-function excluirAquario(i){
-    if(!confirm('Excluir?')) return;
-    usuario.aquarios.splice(i,1);
-    if(usuario.aquarioAtivo===i) usuario.aquarioAtivo=usuario.aquarios.length>0?0:null; else if(usuario.aquarioAtivo>i) usuario.aquarioAtivo--;
-    renderizarListaAquarios(); renderizarSeletorAquarios();
-}
-
-// ===== BANCO POPULARES =====
-function setFiltro(f){ filtroAtual=f; document.querySelectorAll('.filtro-btn').forEach(b=>b.classList.toggle('ativo', b.dataset.filtro===f)); renderizarBancoPeixes(); }
-function renderizarBancoPeixes(){
-    const b=document.getElementById('busca-peixe').value.toLowerCase();
-    const l=BANCO_PEIXES.filter(p=>(filtroAtual==='todos'||p.tipo===filtroAtivo)&&(!b||p.nome.toLowerCase().includes(b)||p.cientifico.toLowerCase().includes(b)));
-    document.getElementById('contador-peixes').textContent=`(${l.length} populares)`;
-    const g=document.getElementById('grade-peixes'); g.innerHTML='';
-    if(l.length===0){ g.innerHTML='<div class="sem-dados" style="grid-column:1/-1;">Nenhuma espécie 🔍</div>'; return; }
-    l.forEach(p=>{
-        const c=document.createElement('div'); c.className='peixe-card'; c.onclick=()=>abrirModal(p.id);
-        c.innerHTML=`<div class="peixe-emoji">${p.emoji}</div><h4>${p.nome}</h4><div class="cientifico">${p.cientifico}</div><span class="tipo-tag ${p.tipo==='doce'?'tipo-doce':'tipo-marinho'}">${p.tipo==='doce'?'💧 Doce':'🌊 Marinho'}</span>`;
-        g.appendChild(c);
-    });
-}
-
-// ===== BUSCA MUNDIAL (WIKIPEDIA) =====
-function mudarAba(a){
-    abaAtual=a;
-    document.getElementById('aba-populares').classList.toggle('ativo', a==='populares');
-    document.getElementById('aba-mundo').classList.toggle('ativo', a==='mundo');
-    document.getElementById('conteudo-populares').style.display = a==='populares' ? 'block' : 'none';
-    document.getElementById('conteudo-mundo').style.display = a==='mundo' ? 'block' : 'none';
-}
-async function buscarWikipedia(){
-    const termo = document.getElementById('busca-wiki').value.trim();
-    if(!termo){ alert('Digite um nome para buscar!'); return; }
-    const res = document.getElementById('resultados-wiki');
-    res.innerHTML = '<div class="carregando"><div class="spinner"></div><p style="margin-top:1rem;">Buscando no banco mundial 🌍...</p></div>';
-    try {
-        const url = `https://pt.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(termo+' peixe')}&gsrlimit=8&prop=pageimages|extracts&pithumbsize=300&exintro&explaintext&exlimit=max&format=json&origin=*`;
-        const r = await fetch(url);
-        const data = await r.json();
-        if(!data.query || !data.query.pages){ res.innerHTML = '<div class="sem-dados">Nenhum resultado 🔍</div>'; return; }
-        const paginas = Object.values(data.query.pages).sort((a,b)=>a.index-b.index);
-        res.innerHTML = '';
-        paginas.forEach(p=>{
-            const div = document.createElement('div');
-            div.className = 'wiki-result';
-            div.onclick = ()=> abrirModalWiki(p);
-            const thumb = p.thumbnail && p.thumbnail.source ? `<img class="wiki-thumb" src="${p.thumbnail.source}" alt="${p.title}" loading="lazy">` : `<div class="wiki-thumb-placeholder">🐟</div>`;
-            div.innerHTML = `${thumb}<div class="wiki-info"><h4>${p.title}</h4><p>${(p.extract||'').slice(0,120)}...</p></div>`;
-            res.appendChild(div);
-        });
-    } catch(err){
-        res.innerHTML = '<div class="sem-dados">⚠️ Erro na busca. Verifique sua internet.</div>';
-    }
-}
-document.addEventListener('keydown', e=>{ if(e.key==='Enter' && document.activeElement.id==='busca-wiki') buscarWikipedia(); });
-
-// ===== MODAL =====
-function abrirModal(id){
-    const p=BANCO_PEIXES.find(x=>x.id===id); if(!p) return;
-    peixeSelecionado=p; qtdAdicionar=1;
-    const dc=p.dificuldade==='Fácil'?'dificuldade-facil':p.dificuldade==='Médio'?'dificuldade-medio':'dificuldade-dificil';
-    document.getElementById('modal-conteudo').innerHTML=`
-        <div class="emoji-grande">${p.emoji}</div>
-        <h2>${p.nome}</h2>
-        <div class="cientifico">${p.cientifico} — ${p.familia}</div>
-        <div class="espec-grid">
-            <div class="espec-item"><div class="label">Tipo</div><div class="valor">${p.tipo==='doce'?'💧 Água Doce':'🌊 Marinho'}</div></div>
-            <div class="espec-item"><div class="label">Dificuldade</div><div class="valor ${dc}">${p.dificuldade}</div></div>
-            <div class="espec-item"><div class="label">Tamanho</div><div class="valor">${p.tamanho}</div></div>
-            <div class="espec-item"><div class="label">Vida</div><div class="valor">${p.vida}</div></div>
-            <div class="espec-item"><div class="label">Temperatura</div><div class="valor">${p.temperatura}</div></div>
-            <div class="espec-item"><div class="label">pH</div><div class="valor">${p.ph}</div></div>
-            ${p.gh?`<div class="espec-item"><div class="label">GH</div><div class="valor">${p.gh}</div></div>`:''}
-            ${p.salinidade?`<div class="espec-item"><div class="label">Salinidade</div><div class="valor">${p.salinidade}</div></div>`:''}
-            <div class="espec-item longo"><div class="label">Origem</div><div class="valor">${p.origem}</div></div>
-            <div class="espec-item longo"><div class="label">Comportamento</div><div class="valor">${p.comportamento}</div></div>
-            <div class="espec-item longo"><div class="label">Alimentação</div><div class="valor">${p.alimentacao}</div></div>
-            <div class="espec-item longo"><div class="label">Compatibilidade</div><div class="valor">${p.compatibilidade}</div></div>
-            <div class="espec-item longo"><div class="label">📝 Observações</div><div class="valor" style="font-weight:400;line-height:1.5;">${p.obs}</div></div>
-        </div>
-        <div class="contador-qtd"><button onclick="mudarQtd(-1)">−</button><span id="qtd-valor">1</span><button onclick="mudarQtd(1)">+</button></div>
-        <button class="btn btn-principal" onclick="adicionarAoAquario()">➕ Adicionar ao meu aquário</button>`;
-    document.getElementById('modal-peixe').classList.add('aberto');
-}
-function abrirModalWiki(p){
-    peixeSelecionado = {id:'wiki_'+p.pageid, nome:p.title, cientifico:p.title, emoji:'🐟', tipo:'desconhecido'};
-    qtdAdicionar=1;
-    const img = p.thumbnail && p.thumbnail.source ? `<img class="foto-peixe" src="${p.thumbnail.source.replace('/300px-','/500px-')}" alt="${p.title}">` : '';
-    document.getElementById('modal-conteudo').innerHTML=`
-        ${img}
-        <h2>${p.title}</h2>
-        <div class="cientifico">Ficha da Wikipedia 🌍</div>
-        <p class="descricao-wiki">${p.extract||'Sem descrição.'}</p>
-        <a class="link-wiki" href="https://pt.wikipedia.org/wiki/${encodeURIComponent(p.title)}" target="_blank">📖 Ver artigo completo</a>
-        <div class="contador-qtd"><button onclick="mudarQtd(-1)">−</button><span id="qtd-valor">1</span><button onclick="mudarQtd(1)">+</button></div>
-        <button class="btn btn-principal" onclick="adicionarAoAquario()">➕ Adicionar ao meu aquário</button>`;
-    document.getElementById('modal-peixe').classList.add('aberto');
-}
-function mudarQtd(d){ qtdAdicionar=Math.max(1,qtdAdicionar+d); document.getElementById('qtd-valor').textContent=qtdAdicionar; }
-function fecharModal(){ document.getElementById('modal-peixe').classList.remove('aberto'); }
-document.getElementById('modal-peixe').addEventListener('click', e=>{ if(e.target.id==='modal-peixe') fecharModal(); });
-
-function adicionarAoAquario(){
-    if(usuario.aquarioAtivo===null){ alert('⚠️ Selecione ou cadastre um aquário primeiro!'); return; }
-    const a=usuario.aquarios[usuario.aquarioAtivo];
-    const ex=a.peixes.find(x=>x.id===peixeSelecionado.id);
-    if(ex) ex.quantidade+=qtdAdicionar;
-    else a.peixes.push({id:peixeSelecionado.id, nome:peixeSelecionado.nome, cientifico:peixeSelecionado.cientifico, emoji:peixeSelecionado.emoji, quantidade:qtdAdicionar, tipo:peixeSelecionado.tipo});
-    const i=contas.findIndex(x=>x.email===usuario.email); if(i!==-1) contas[i].aquarios=[...usuario.aquarios];
-    alert(`✅ ${qtdAdicionar}x ${peixeSelecionado.nome} adicionado(s) ao aquário "${a.nome}"! 🐠`);
-    fecharModal();
-}
-
-// ===== MEUS PEIXES =====
-function renderizarMeusPeixes(){
-    const c=document.getElementById('lista-meus-peixes');
-    if(usuario.aquarioAtivo===null){ c.innerHTML='<div class="sem-dados">Selecione um aquário 🐠</div>'; return; }
-    const a=usuario.aquarios[usuario.aquarioAtivo];
-    if(a.peixes.length===0){ c.innerHTML='<div class="sem-dados">Nenhum peixe ainda 🐟</div>'; return; }
-    c.innerHTML='';
-    a.peixes.forEach((p,i)=>{
-        const it=document.createElement('div'); it.className='lista-item';
-        it.innerHTML=`<h4>${p.emoji} ${p.nome} — <span style="color:var(--azul-medio)">${p.quantidade}x</span></h4><p><em>${p.cientifico}</em></p><div class="acoes"><button class="btn btn-pequeno btn-perigo" onclick="removerPeixe(${i})">Remover</button></div>`;
-        c.appendChild(it);
-    });
-}
-function removerPeixe(i){
-    const a=usuario.aquarios[usuario.aquarioAtivo];
-    if(a.peixes[i].quantidade>1) a.peixes[i].quantidade--; else a.peixes.splice(i,1);
-    const idx=contas.findIndex(x=>x.email===usuario.email); if(idx!==-1) contas[idx].aquarios=[...usuario.aquarios];
-    renderizarMeusPeixes();
-}
-</script>
-</body>
-</html>
+{id:16,nome:"Colisa (Gourami Anão)",cientifico:"Trichogaster lalius",familia:"Osphronemidae",tipo:"doce",emoji:"🐠",origem:"Índia",tamanho:"5-7 cm",temperatura:"24-28 °C",ph:"6.0-7.5",gh:"4-10 dGH",comport
