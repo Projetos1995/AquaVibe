@@ -4,6 +4,322 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AquaVibe 🐠</title>
+    <!-- ==========================================================
+   🐠 AQUAVIBE — CALCULADORAS INTEGRADAS
+   Litragem | Lúmens | Substrato
+   ========================================================== -->
+
+<style>
+/* ---------- ESTILO DAS CALCULADORAS ---------- */
+.calculadoras-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.calc-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s;
+}
+
+.calc-card:hover {
+  transform: translateY(-3px);
+}
+
+.calc-card h3 {
+  color: #0369a1;
+  margin-bottom: 15px;
+  font-size: 1.15em;
+}
+
+.grupo-input {
+  margin: 12px 0;
+}
+
+.grupo-input label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.grupo-input input,
+.grupo-input select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 1em;
+  background: #fafafa;
+}
+
+.grupo-input input:focus,
+.grupo-input select:focus {
+  outline: none;
+  border-color: #0369a1;
+  box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.15);
+}
+
+.calc-card button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #0369a1, #0891b2);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: opacity 0.2s;
+}
+
+.calc-card button:hover {
+  opacity: 0.9;
+}
+
+.resultado {
+  background: linear-gradient(135deg, #e0f2fe, #cff6fe);
+  padding: 16px;
+  border-radius: 12px;
+  border-left: 4px solid #0369a1;
+  color: #0c4a6e;
+  margin-top: 15px;
+  display: none;
+}
+
+.resultado h4 {
+  margin-bottom: 10px;
+}
+
+.resultado strong {
+  color: #0369a1;
+  font-size: 1.1em;
+}
+</style>
+
+<!-- ---------- CONTEÚDO DAS CALCULADORAS ---------- -->
+<div class="calculadoras-container">
+
+  <!-- 📐 LITRAGEM -->
+  <div class="calc-card">
+    <h3>📐 Litragem do Aquário</h3>
+    
+    <div class="grupo-input">
+      <label>Comprimento (cm):</label>
+      <input type="number" id="lit_comprimento" placeholder="Ex: 100">
+    </div>
+    
+    <div class="grupo-input">
+      <label>Largura / Profundidade (cm):</label>
+      <input type="number" id="lit_largura" placeholder="Ex: 50">
+    </div>
+    
+    <div class="grupo-input">
+      <label>Altura da água (cm):</label>
+      <input type="number" id="lit_altura" placeholder="Ex: 45">
+    </div>
+    
+    <button onclick="calcularLitragem()">Calcular ✅</button>
+    
+    <div id="resultado_litragem" class="resultado">
+      <h4>📊 Resultado</h4>
+      <p>Volume bruto: <strong id="res_bruto"></strong> L</p>
+      <p>Volume útil: <strong id="res_util"></strong> L</p>
+      <p>Peso aproximado: <strong id="res_peso"></strong> kg</p>
+      <p id="res_dica_lit" style="margin-top:8px; font-size:0.9em;"></p>
+    </div>
+  </div>
+
+  <!-- 💡 LÚMENS -->
+  <div class="calc-card">
+    <h3>💡 Iluminação — Lúmens</h3>
+    
+    <div class="grupo-input">
+      <label>Comprimento (cm):</label>
+      <input type="number" id="calc_comprimento" placeholder="Ex: 80">
+    </div>
+    
+    <div class="grupo-input">
+      <label>Largura (cm):</label>
+      <input type="number" id="calc_largura" placeholder="Ex: 40">
+    </div>
+    
+    <div class="grupo-input">
+      <label>Altura da água (cm):</label>
+      <input type="number" id="calc_altura" placeholder="Ex: 45">
+    </div>
+    
+    <div class="grupo-input">
+      <label>Tipo de aquário:</label>
+      <select id="calc_tipo">
+        <option value="15">🌿 Low Tech — ~15 lm/L</option>
+        <option value="30" selected>🌱 Média — ~30 lm/L</option>
+        <option value="60">🌳 High Tech — ~60 lm/L</option>
+      </select>
+    </div>
+    
+    <button onclick="calcularLumens()">Calcular ✅</button>
+    
+    <div id="resultado_lumens" class="resultado">
+      <h4>📊 Resultado</h4>
+      <p>Volume do aquário: <strong id="res_volume"></strong> L</p>
+      <p>Lúmens recomendados: <strong id="res_lumens"></strong> lm</p>
+      <p>Potência LED aprox.: <strong id="res_watts"></strong> W</p>
+      <p id="res_dica" style="margin-top:8px; font-size:0.9em;"></p>
+    </div>
+  </div>
+
+  <!-- 🪨 SUBSTRATO -->
+  <div class="calc-card">
+    <h3>🪨 Substrato</h3>
+    
+    <div class="grupo-input">
+      <label>Comprimento (cm):</label>
+      <input type="number" id="sub_comprimento" placeholder="Ex: 80">
+    </div>
+    
+    <div class="grupo-input">
+      <label>Largura (cm):</label>
+      <input type="number" id="sub_largura" placeholder="Ex: 40">
+    </div>
+    
+    <div class="grupo-input">
+      <label>Espessura desejada:</label>
+      <select id="sub_espessura">
+        <option value="3">3 cm — Fina</option>
+        <option value="4" selected>4 cm — Padrão ✅</option>
+        <option value="5">5 cm — Plantas</option>
+        <option value="6">6 cm — Dupla camada</option>
+        <option value="escolha">Personalizada</option>
+      </select>
+    </div>
+    
+    <div class="grupo-input" id="sub_personalizado" style="display:none;">
+      <label>Espessura (cm):</label>
+      <input type="number" id="sub_espessura_pers" placeholder="Ex: 4.5">
+    </div>
+    
+    <button onclick="calcularSubstrato()">Calcular ✅</button>
+    
+    <div id="resultado_substrato" class="resultado">
+      <h4>📊 Resultado</h4>
+      <p>Volume de substrato: <strong id="res_vol_sub"></strong> L</p>
+      <p>Sacos de 2,5 kg: <strong id="res_sacos"></strong> unidade(s)</p>
+      <p>Peso total: <strong id="res_peso_sub"></strong> kg</p>
+      <p id="res_dica_sub" style="margin-top:8px; font-size:0.9em;"></p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ---------- FUNÇÕES JAVASCRIPT ---------- -->
+<script>
+// --- LITRAGEM ---
+function calcularLitragem() {
+  const c = Number(document.getElementById('lit_comprimento').value);
+  const l = Number(document.getElementById('lit_largura').value);
+  const a = Number(document.getElementById('lit_altura').value);
+  
+  if (!c || !l || !a) {
+    alert('Preencha todas as medidas!');
+    return;
+  }
+  
+  const bruto = (c * l * a) / 1000;
+  const util = bruto * 0.85;
+  const peso = util;
+  
+  let dica = util < 50 
+    ? '💡 Aquário pequeno — faça trocas de água com mais frequência.'
+    : util < 150 
+      ? '✅ Aquário médio — equilíbrio estável, manutenção padrão.'
+      : '🌊 Aquário grande — confirme que o móvel suporta o peso!';
+  
+  document.getElementById('res_bruto').textContent = bruto.toFixed(1);
+  document.getElementById('res_util').textContent = util.toFixed(1);
+  document.getElementById('res_peso').textContent = peso.toFixed(1);
+  document.getElementById('res_dica_lit').textContent = dica;
+  document.getElementById('resultado_litragem').style.display = 'block';
+}
+
+// --- LÚMENS ---
+function calcularLumens() {
+  const c = Number(document.getElementById('calc_comprimento').value);
+  const l = Number(document.getElementById('calc_largura').value);
+  const a = Number(document.getElementById('calc_altura').value);
+  const lmPorLitro = Number(document.getElementById('calc_tipo').value);
+  
+  if (!c || !l || !a) {
+    alert('Preencha todas as medidas!');
+    return;
+  }
+  
+  const volume = (c * l * a) / 1000;
+  const lumens = volume * lmPorLitro;
+  const watts = lumens / 60;
+  
+  const dica = lmPorLitro === 15
+    ? '🌿 Luz suave — plantas de crescimento lento, sem CO₂ obrigatório.'
+    : lmPorLitro === 30
+      ? '🌱 Luz moderada — maioria das plantas, CO₂ recomendado.'
+      : '🌳 Luz forte — CO₂ é essencial! Controle nutrientes para evitar algas.';
+  
+  document.getElementById('res_volume').textContent = volume.toFixed(1);
+  document.getElementById('res_lumens').textContent = Math.round(lumens);
+  document.getElementById('res_watts').textContent = watts.toFixed(1);
+  document.getElementById('res_dica').textContent = dica;
+  document.getElementById('resultado_lumens').style.display = 'block';
+}
+
+// --- SUBSTRATO ---
+document.addEventListener('DOMContentLoaded', function() {
+  const selectEsp = document.getElementById('sub_espessura');
+  if (selectEsp) {
+    selectEsp.addEventListener('change', function() {
+      const pers = document.getElementById('sub_personalizado');
+      pers.style.display = this.value === 'escolha' ? 'block' : 'none';
+    });
+  }
+});
+
+function calcularSubstrato() {
+  const c = Number(document.getElementById('sub_comprimento').value);
+  const l = Number(document.getElementById('sub_largura').value);
+  let esp = document.getElementById('sub_espessura').value;
+  
+  if (esp === 'escolha') {
+    esp = Number(document.getElementById('sub_espessura_pers').value);
+  } else {
+    esp = Number(esp);
+  }
+  
+  if (!c || !l || !esp) {
+    alert('Preencha todas as medidas!');
+    return;
+  }
+  
+  const volume = (c * l * esp) / 1000;
+  const sacos = Math.ceil(volume / 15);
+  const pesoTotal = sacos * 2.5;
+  
+  const dica = esp <= 3
+    ? '⚠️ Camada fina — pode não sustentar raízes profundas. Considere 4 cm.'
+    : esp >= 5
+      ? '💡 Camada grossa — ótima para plantas enraizadas. Sifone com cuidado.'
+      : '✅ Camada padrão — ideal para a maioria dos aquários.';
+  
+  document.getElementById('res_vol_sub').textContent = volume.toFixed(1);
+  document.getElementById('res_sacos').textContent = sacos;
+  document.getElementById('res_peso_sub').textContent = pesoTotal.toFixed(1);
+  document.getElementById('res_dica_sub').textContent = dica;
+  document.getElementById('resultado_substrato').style.display = 'block';
+}
+</script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         :root { --azul-escuro:#0c4a6e; --azul-medio:#0ea5e9; --azul-claro:#e0f2fe; --verde-aqua:#10b981; --sombra:0 4px 20px rgba(14,165,233,0.15); }
