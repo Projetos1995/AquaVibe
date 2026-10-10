@@ -6,7 +6,7 @@
 <title>AquaVibe 🐠</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-:root{--azul-escuro:#0c4a6e;--azul-medio:#0ea5e9;--azul-claro:#e0f2fe;--verde-aqua:#10b981;--laranja:#f59e0b;--vermelho:#ef4444;--sombra:0 4px 20px rgba(14,165,233,0.15);}
+:root{--azul-escuro:#0c4a6e;--azul-medio:#0ea5e9;--azul-claro:#e0f2fe;--verde-aqua:#10b981;--sombra:0 4px 20px rgba(14,165,233,0.15);}
 body{background:linear-gradient(135deg,#e0f2fe 0%,#bae6fd 100%);min-height:100vh;}
 .tela{display:none;min-height:100vh;padding:2rem 1.5rem;}
 .ativa{display:block;}
@@ -24,6 +24,8 @@ input:focus,select:focus{outline:none;border-color:var(--azul-medio);}
 .btn:active{transform:scale(.98);}
 .btn-principal{background:linear-gradient(90deg,#0ea5e9,#06b6d4);color:white;margin-top:.5rem;}
 .btn-secundario{background:transparent;color:var(--azul-medio);margin-top:.8rem;}
+.btn-perigo{background:#fee2e2;color:#dc2626;margin-top:1rem;}
+.btn-pequeno{padding:.6rem 1rem;font-size:.9rem;width:auto;display:inline-block;margin:.3rem;}
 .link{text-align:center;margin-top:1.2rem;font-size:.95rem;color:#64748b;}
 .link span{color:var(--azul-medio);font-weight:600;cursor:pointer;}
 .link span:hover{text-decoration:underline;}
@@ -53,11 +55,10 @@ input:focus,select:focus{outline:none;border-color:var(--azul-medio);}
 .dado-linha{display:flex;justify-content:space-between;padding:.7rem 0;border-bottom:1px solid #f1f5f9;}
 .dado-linha:last-child{border-bottom:none;}
 .valor-bom{color:var(--verde-aqua);font-weight:600;}
-.valor-alerta{color:var(--laranja);font-weight:600;}
-.valor-perigo{color:var(--vermelho);font-weight:600;}
+.valor-alerta{color:#f59e0b;font-weight:600;}
 .sem-dados{text-align:center;padding:2rem;color:#94a3b8;}
-.abas{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap;}
-.aba-btn{flex:1;min-width:100px;padding:.7rem;border-radius:12px;border:2px solid var(--azul-medio);background:white;color:var(--azul-medio);cursor:pointer;font-weight:600;font-size:.9rem;}
+.abas{display:flex;gap:.5rem;margin-bottom:1rem;}
+.aba-btn{flex:1;padding:.7rem;border-radius:12px;border:2px solid var(--azul-medio);background:white;color:var(--azul-medio);cursor:pointer;font-weight:600;font-size:.9rem;}
 .aba-btn.ativo{background:var(--azul-medio);color:white;}
 .busca-box{display:flex;gap:.5rem;margin-bottom:1rem;}
 .busca-box input{flex:1;}
@@ -83,9 +84,6 @@ input:focus,select:focus{outline:none;border-color:var(--azul-medio);}
 .resultado{background:linear-gradient(135deg,#e0f2fe,#cff6fe);padding:16px;border-radius:12px;border-left:4px solid #0369a1;color:#0c4a6e;margin-top:15px;display:none;}
 .resultado h4{margin-bottom:10px;}
 .resultado strong{color:#0369a1;font-size:1.1em;}
-.aviso{background:#fffbeb;border-left:4px solid var(--laranja);padding:12px;border-radius:8px;margin-top:10px;color:#92400e;}
-.sucesso{background:#ecfdf2;border-left:4px solid var(--verde-aqua);padding:12px;border-radius:8px;margin-top:10px;color:#065f46;}
-.perigo{background:#fef2f2;border-left:4px solid var(--vermelho);padding:12px;border-radius:8px;margin-top:10px;color:#991b1b;}
 </style>
 </head>
 <body>
@@ -127,7 +125,7 @@ input:focus,select:focus{outline:none;border-color:var(--azul-medio);}
 <div class="card-funcao" onclick="mostrarSubTela('sub-banco')"><div class="icone">📚</div><h3>Banco de Peixes</h3><p>Espécies</p></div>
 <div class="card-funcao" onclick="mostrarSubTela('sub-peixes')"><div class="icone">🐟</div><h3>Meus Peixes</h3><p>No aquário</p></div>
 <div class="card-funcao" onclick="mostrarSubTela('sub-parametros')"><div class="icone">📊</div><h3>Parâmetros</h3><p>pH, temperatura</p></div>
-<div class="card-funcao" onclick="mostrarSubTela('sub-calculadoras')"><div class="icone">🧮</div><h3>Calculadoras</h3><p>Todas ✅</p></div>
+<div class="card-funcao" onclick="mostrarSubTela('sub-calculadoras')"><div class="icone">🧮</div><h3>Calculadoras</h3><p>Litragem, Lúmens, Substrato</p></div>
 <div class="card-funcao" onclick="mostrarSubTela('sub-plantas')"><div class="icone">🌿</div><h3>Plantas</h3><p>Em breve</p></div>
 <div class="card-funcao" onclick="mostrarSubTela('sub-lembretes')"><div class="icone">⏰</div><h3>Lembretes</h3><p>Cuidados</p></div>
 <div class="card-funcao card-admin" id="card-admin" style="display:none;" onclick="mostrarSubTela('sub-admin')"><div class="icone">👑</div><h3>Painel Admin</h3><p>Gerenciar</p></div>
@@ -135,268 +133,74 @@ input:focus,select:focus{outline:none;border-color:var(--azul-medio);}
 <button class="btn btn-secundario sair" onclick="sair()">Sair da conta</button>
 </div>
 
-<!-- ========== TODAS AS CALCULADORAS ========== -->
 <div id="sub-calculadoras" class="sub-tela">
 <div class="voltar" onclick="voltarMenu()">← Voltar</div>
 <h2 style="color:var(--azul-escuro);margin-bottom:1rem;">🧮 Calculadoras do Aquarista</h2>
-
-<div class="abas">
-<button class="aba-btn ativo" onclick="mostrarCalc('calc-litragem',this)">📐 Litragem</button>
-<button class="aba-btn" onclick="mostrarCalc('calc-temperatura',this)">🌡️ Temperatura</button>
-<button class="aba-btn" onclick="mostrarCalc('calc-lumens',this)">💡 Luz</button>
-<button class="aba-btn" onclick="mostrarCalc('calc-substrato',this)">🪨 Substrato</button>
-<button class="aba-btn" onclick="mostrarCalc('calc-dosagem',this)">🧪 Dosagem</button>
-<button class="aba-btn" onclick="mostrarCalc('calc-conversao',this)">🔄 Conversão</button>
-<button class="aba-btn" onclick="mostrarCalc('calc-troca',this)">💧 Troca Água</button>
-<button class="aba-btn" onclick="mostrarCalc('calc-ciclo',this)">⏳ Ciclo</button>
-<button class="aba-btn" onclick="mostrarCalc('calc-compatibilidade',this)">🤝 Compatibilidade</button>
-</div>
-
 <div class="calculadoras-container">
 
-<!-- LITRAGEM -->
-<div id="calc-litragem" class="calc-bloco">
 <div class="calc-card">
 <h3>📐 Litragem do Aquário</h3>
 <div class="grupo-input"><label>Comprimento (cm):</label><input type="number" id="lit_comprimento" placeholder="Ex: 100"></div>
 <div class="grupo-input"><label>Largura (cm):</label><input type="number" id="lit_largura" placeholder="Ex: 50"></div>
 <div class="grupo-input"><label>Altura da água (cm):</label><input type="number" id="lit_altura" placeholder="Ex: 45"></div>
 <button onclick="calcularLitragem()">Calcular ✅</button>
-<div id="res_litragem" class="resultado">
+<div id="resultado_litragem" class="resultado">
 <h4>📊 Resultado</h4>
 <p>Volume bruto: <strong id="res_bruto"></strong> L</p>
 <p>Volume útil: <strong id="res_util"></strong> L</p>
-<p>Peso aprox.: <strong id="res_peso"></strong> kg</p>
+<p>Peso aproximado: <strong id="res_peso"></strong> kg</p>
 <p id="res_dica_lit" style="margin-top:8px;font-size:.9em;"></p>
 </div>
 </div>
-</div>
 
-<!-- 🌡️ TEMPERATURA -->
-<div id="calc-temperatura" class="calc-bloco" style="display:none;">
-<div class="calc-card">
-<h3>🌡️ Conversão de Temperatura</h3>
-<div class="grupo-input"><label>Converter:</label>
-<select id="temp_tipo" onchange="atualizarLabelTemp()">
-<option value="c_f" selected>Celsius → Fahrenheit (°C → °F)</option>
-<option value="f_c">Fahrenheit → Celsius (°F → °C)</option>
-</select>
-</div>
-<div class="grupo-input"><label id="temp_label">Temperatura em °C:</label>
-<input type="number" id="temp_valor" placeholder="Ex: 26" step="0.1">
-</div>
-<button onclick="calcularTemperatura()">Converter ✅</button>
-<div id="res_temperatura" class="resultado">
-<h4>📊 Resultado</h4>
-<p style="font-size:1.4rem;">👉 <strong id="res_temp_val"></strong></p>
-<p id="res_temp_ideal" style="margin-top:10px;"></p>
-</div>
-</div>
-</div>
-
-<!-- LÚMENS -->
-<div id="calc-lumens" class="calc-bloco" style="display:none;">
 <div class="calc-card">
 <h3>💡 Iluminação — Lúmens</h3>
-<div class="grupo-input"><label>Comprimento (cm):</label><input type="number" id="l_comprimento" placeholder="Ex: 80"></div>
-<div class="grupo-input"><label>Largura (cm):</label><input type="number" id="l_largura" placeholder="Ex: 40"></div>
-<div class="grupo-input"><label>Altura da água (cm):</label><input type="number" id="l_altura" placeholder="Ex: 45"></div>
-<div class="grupo-input"><label>Tipo:</label>
-<select id="l_tipo">
+<div class="grupo-input"><label>Comprimento (cm):</label><input type="number" id="calc_comprimento" placeholder="Ex: 80"></div>
+<div class="grupo-input"><label>Largura (cm):</label><input type="number" id="calc_largura" placeholder="Ex: 40"></div>
+<div class="grupo-input"><label>Altura da água (cm):</label><input type="number" id="calc_altura" placeholder="Ex: 45"></div>
+<div class="grupo-input"><label>Tipo de aquário:</label>
+<select id="calc_tipo">
 <option value="15">🌿 Low Tech — ~15 lm/L</option>
 <option value="30" selected>🌱 Média — ~30 lm/L</option>
 <option value="60">🌳 High Tech — ~60 lm/L</option>
 </select>
 </div>
 <button onclick="calcularLumens()">Calcular ✅</button>
-<div id="res_lumens" class="resultado">
+<div id="resultado_lumens" class="resultado">
 <h4>📊 Resultado</h4>
-<p>Volume: <strong id="res_l_vol"></strong> L</p>
-<p>Lúmens: <strong id="res_l_lm"></strong> lm</p>
-<p>LED aprox.: <strong id="res_l_w"></strong> W</p>
-<p id="res_l_dica" style="margin-top:8px;font-size:.9em;"></p>
-</div>
+<p>Volume: <strong id="res_volume"></strong> L</p>
+<p>Lúmens: <strong id="res_lumens"></strong> lm</p>
+<p>LED aprox.: <strong id="res_watts"></strong> W</p>
+<p id="res_dica" style="margin-top:8px;font-size:.9em;"></p>
 </div>
 </div>
 
-<!-- SUBSTRATO -->
-<div id="calc-substrato" class="calc-bloco" style="display:none;">
 <div class="calc-card">
 <h3>🪨 Substrato</h3>
-<div class="grupo-input"><label>Comprimento (cm):</label><input type="number" id="s_comprimento" placeholder="Ex: 80"></div>
-<div class="grupo-input"><label>Largura (cm):</label><input type="number" id="s_largura" placeholder="Ex: 40"></div>
+<div class="grupo-input"><label>Comprimento (cm):</label><input type="number" id="sub_comprimento" placeholder="Ex: 80"></div>
+<div class="grupo-input"><label>Largura (cm):</label><input type="number" id="sub_largura" placeholder="Ex: 40"></div>
 <div class="grupo-input"><label>Espessura:</label>
-<select id="s_espessura" onchange="document.getElementById('s_pers').style.display=this.value==='pers'?'block':'none'">
+<select id="sub_espessura" onchange="document.getElementById('sub_personalizado').style.display=this.value==='escolha'?'block':'none'">
 <option value="3">3 cm — Fina</option>
 <option value="4" selected>4 cm — Padrão ✅</option>
 <option value="5">5 cm — Plantas</option>
 <option value="6">6 cm — Dupla camada</option>
-<option value="pers">Personalizada</option>
+<option value="escolha">Personalizada</option>
 </select>
 </div>
-<div class="grupo-input" id="s_pers" style="display:none;"><label>Espessura (cm):</label><input type="number" id="s_val_pers" placeholder="Ex: 4.5"></div>
+<div class="grupo-input" id="sub_personalizado" style="display:none;"><label>Espessura (cm):</label><input type="number" id="sub_espessura_pers" placeholder="Ex: 4.5"></div>
 <button onclick="calcularSubstrato()">Calcular ✅</button>
-<div id="res_substrato" class="resultado">
+<div id="resultado_substrato" class="resultado">
 <h4>📊 Resultado</h4>
-<p>Volume: <strong id="res_s_vol"></strong> L</p>
-<p>Sacos 2,5kg: <strong id="res_s_sacos"></strong> unid.</p>
-<p>Peso total: <strong id="res_s_peso"></strong> kg</p>
+<p>Volume: <strong id="res_vol_sub"></strong> L</p>
+<p>Sacos 2,5kg: <strong id="res_sacos"></strong> unid.</p>
+<p>Peso total: <strong id="res_peso_sub"></strong> kg</p>
+<p id="res_dica_sub" style="margin-top:8px;font-size:.9em;"></p>
 </div>
-</div>
-</div>
-
-<!-- DOSAGEM DE PRODUTOS -->
-<div id="calc-dosagem" class="calc-bloco" style="display:none;">
-<div class="calc-card">
-<h3>🧪 Dosagem de Produtos</h3>
-<div class="grupo-input"><label>Volume do aquário (L):</label><input type="number" id="dos_vol" placeholder="Ex: 100"></div>
-<div class="grupo-input"><label>Produto:</label>
-<select id="dos_produto" onchange="atualizarDosagem()">
-<option value="">Selecione...</option>
-<option value="condicionador">💧 Condicionador de Água</option>
-<option value="fertilizante">🌿 Fertilizante Líquido</option>
-<option value="sal">🧂 Sal de Aquário</option>
-<option value="bicarbonato">⚗️ Bicarbonato (KH)</option>
-<option value="medicamento">💊 Medicamento</option>
-</select>
-</div>
-<div class="grupo-input"><label>Dose por litro (ml/g):</label><input type="number" id="dos_por_litro" placeholder="Auto-preenche" step="0.1"></div>
-<button onclick="calcularDosagem()">Calcular ✅</button>
-<div id="res_dosagem" class="resultado">
-<h4>📊 Dosagem</h4>
-<p>Para <strong id="res_d_vol"></strong> litros:</p>
-<p style="font-size:1.2rem;margin-top:8px;">👉 <strong id="res_d_qtd"></strong></p>
-<p id="res_d_dica" style="margin-top:8px;font-size:.9em;"></p>
 </div>
 </div>
 </div>
 
-<!-- CONVERSÃO DE MEDIDAS -->
-<div id="calc-conversao" class="calc-bloco" style="display:none;">
-<div class="calc-card">
-<h3>🔄 Conversão de Medidas</h3>
-<div class="grupo-input"><label>Converter:</label>
-<select id="conv_tipo" onchange="trocarConversao()">
-<option value="l_gal">🪣 Litros → Galões (EUA)</option>
-<option value="gal_l">🪣 Galões → Litros</option>
-<option value="cm_pol">📏 cm → Polegadas</option>
-<option value="pol_cm">📏 Polegadas → cm</option>
-<option value="kg_lb">⚖️ kg → Libras</option>
-<option value="lb_kg">⚖️ Libras → kg</option>
-</select>
-</div>
-<div class="grupo-input"><label id="conv_label">Valor em Litros:</label>
-<input type="number" id="conv_valor" placeholder="Digite o valor" step="0.1">
-</div>
-<button onclick="calcularConversao()">Converter ✅</button>
-<div id="res_conversao" class="resultado">
-<h4>📊 Resultado</h4>
-<p style="font-size:1.3rem;">👉 <strong id="res_conv_val"></strong></p>
-</div>
-</div>
-</div>
-
-<!-- TROCA DE ÁGUA -->
-<div id="calc-troca" class="calc-bloco" style="display:none;">
-<div class="calc-card">
-<h3>💧 Troca de Água</h3>
-<div class="grupo-input"><label>Volume total do aquário (L):</label><input type="number" id="troca_vol_total" placeholder="Ex: 100"></div>
-<div class="grupo-input"><label>Porcentagem a trocar (%):</label>
-<select id="troca_porcentagem" onchange="document.getElementById('troca_pers').style.display=this.value==='pers'?'block':'none'">
-<option value="10">10% — Manutenção leve</option>
-<option value="25" selected>25% — Recomendado ✅</option>
-<option value="30">30% — Padrão</option>
-<option value="50">50% — Renovação forte</option>
-<option value="pers">Personalizada</option>
-</select>
-</div>
-<div class="grupo-input" id="troca_pers" style="display:none;"><label>Porcentagem (%):</label><input type="number" id="troca_val_pers" placeholder="Ex: 20"></div>
-<div class="grupo-input"><label>Condicionador já na água nova:</label>
-<select id="troca_cond">
-<option value="sim">✅ Sim (já adicionei)</option>
-<option value="nao">❌ Não (vou adicionar agora)</option>
-</select>
-</div>
-<button onclick="calcularTrocaAgua()">Calcular ✅</button>
-<div id="res_troca" class="resultado">
-<h4>📊 Troca de Água</h4>
-<p>Retirar: <strong id="res_t_retirar"></strong> L</p>
-<p>Adicionar: <strong id="res_t_adicionar"></strong> L de água nova</p>
-<p id="res_t_cond" style="margin-top:8px;"></p>
-<p id="res_t_dica" class="aviso" style="margin-top:10px;">💡 Dica: iguale a temperatura e adicione condicionador!</p>
-</div>
-</div>
-</div>
-
-<!-- TEMPO DE CICLO -->
-<div id="calc-ciclo" class="calc-bloco" style="display:none;">
-<div class="calc-card">
-<h3>⏳ Tempo de Ciclo do Aquário</h3>
-<div class="grupo-input"><label>Tipo de ciclagem:</label>
-<select id="ciclo_tipo">
-<option value="peixe">🐠 Com peixes já dentro</option>
-<option value="sempeixe" selected>🧪 Sem peixes (recomendado ✅)</option>
-<option value="plantado">🌿 Aquário plantado</option>
-<option value="iniciado">🧬 Com bactéria pronta</option>
-</select>
-</div>
-<div class="grupo-input"><label>Temperatura média da água (°C):</label><input type="number" id="ciclo_temp" value="25" placeholder="Ex: 25"></div>
-<div class="grupo-input"><label>Filtro biológico já estabelecido?</label>
-<select id="ciclo_filtro">
-<option value="nao" selected>❌ Não, novo</option>
-<option value="sim">✅ Sim, de outro aquário</option>
-</select>
-</div>
-<button onclick="calcularCiclo()">Estimar ⏳</button>
-<div id="res_ciclo" class="resultado">
-<h4>📊 Previsão de Ciclo</h4>
-<p>Tempo estimado: <strong id="res_c_dias"></strong></p>
-<p>Próxima etapa: <strong id="res_c_etapa"></strong></p>
-<p id="res_c_detalhe" style="margin-top:8px;font-size:.9em;"></p>
-<p id="res_c_alerta" class="perigo" style="margin-top:10px;"></p>
-</div>
-</div>
-</div>
-
-<!-- COMPATIBILIDADE DE PEIXES -->
-<div id="calc-compatibilidade" class="calc-bloco" style="display:none;">
-<div class="calc-card">
-<h3>🤝 Compatibilidade de Peixes</h3>
-<div class="grupo-input"><label>Peixe principal:</label>
-<select id="comp_peixe1">
-<option value="">Selecione...</option>
-<option value="neon">Neon Tetra</option>
-<option value="guppy">Guppy</option>
-<option value="betta">Betta</option>
-<option value="corydora">Corydora</option>
-<option value="ouro">Peixe Dourado</option>
-<option value="acara">Acara Disco</option>
-</select>
-</div>
-<div class="grupo-input"><label>Peixe para colocar junto:</label>
-<select id="comp_peixe2">
-<option value="">Selecione...</option>
-<option value="neon">Neon Tetra</option>
-<option value="guppy">Guppy</option>
-<option value="betta">Betta</option>
-<option value="corydora">Corydora</option>
-<option value="ouro">Peixe Dourado</option>
-<option value="acara">Acara Disco</option>
-</select>
-</div>
-<button onclick="verificarCompatibilidade()">Verificar 🤝</button>
-<div id="res_compatibilidade" class="resultado">
-<h4>📊 Resultado</h4>
-<p id="res_c_status"></p>
-<p id="res_c_mensagem" style="margin-top:8px;"></p>
-</div>
-</div>
-</div>
-
-</div>
-</div>
-
-<!-- OUTRAS TELAS -->
 <div id="sub-banco" class="sub-tela">
 <div class="voltar" onclick="voltarMenu()">← Voltar</div>
 <div class="cartao-dados">
@@ -454,7 +258,6 @@ input:focus,select:focus{outline:none;border-color:var(--azul-medio);}
 <div class="dado-linha"><span>Nitrato</span><span class="valor-alerta">25 ppm ⚠️</span></div>
 </div>
 </div>
-</div>
 
 <div id="sub-admin" class="sub-tela">
 <div class="voltar" onclick="voltarMenu()">← Voltar</div>
@@ -465,7 +268,7 @@ input:focus,select:focus{outline:none;border-color:var(--azul-medio);}
 </div>
 </div>
 
-<div class="rodape">AquaVibe © 2026 💧🐠 — Todas as calculadoras prontas!</div>
+<div class="rodape">AquaVibe © 2026 💧🐠</div>
 </section>
 
 <script>
@@ -478,38 +281,16 @@ const BANCO_PEIXES = [
 {id:2,nome:"Guppy",tipo:"doce",emoji:"🐟",tamanho:"3-6 cm",temperatura:"22-28 °C",ph:"7.0-8.5",dificuldade:"Fácil"},
 {id:3,nome:"Corydora",tipo:"doce",emoji:"🐟",tamanho:"5-7 cm",temperatura:"22-26 °C",ph:"6.0-7.5",dificuldade:"Fácil"},
 {id:4,nome:"Betta",tipo:"doce",emoji:"🐟",tamanho:"6-8 cm",temperatura:"24-28 °C",ph:"6.5-7.5",dificuldade:"Fácil"},
-{id:5,nome:"Peixe Dourado",tipo:"doce",emoji:"🐡",tamanho:"15-30 cm",temperatura:"18-22 °C",ph:"6.5-8.0",dificuldade:"Média"},
-{id:6,nome:"Acara Disco",tipo:"doce",emoji:"🐠",tamanho:"15-20 cm",temperatura:"28-30 °C",ph:"6.0-6.5",dificuldade:"Avançado"},
-{id:7,nome:"Peixe Palhaço",tipo:"marinho",emoji:"🤡",tamanho:"8-11 cm",temperatura:"24-27 °C",ph:"8.1-8.4",dificuldade:"Fácil"}
+{id:5,nome:"Palhaço",tipo:"marinho",emoji:"🤡",tamanho:"8-11 cm",temperatura:"24-27 °C",ph:"8.1-8.4",dificuldade:"Fácil"}
 ];
 
-const COMPATIBILIDADE = {
-neon:{amigos:['neon','corydora','guppy'],neutro:[],inimigos:['betta','ouro','acara'],minTemp:22,maxTemp:26,minPh:6.0,maxPh:7.0},
-guppy:{amigos:['guppy','neon','corydora'],neutro:[],inimigos:['betta','ouro','acara'],minTemp:22,maxTemp:28,minPh:7.0,maxPh:8.5},
-corydora:{amigos:['corydora','neon','guppy'],neutro:[],inimigos:['betta','ouro','acara'],minTemp:22,maxTemp:26,minPh:6.0,maxPh:7.5},
-betta:{amigos:[],neutro:['corydora'],inimigos:['neon','guppy','ouro','acara','betta'],minTemp:24,maxTemp:28,minPh:6.5,maxPh:7.5},
-ouro:{amigos:['ouro'],neutro:[],inimigos:['neon','guppy','betta','acara'],minTemp:18,maxTemp:22,minPh:6.5,maxPh:8.0},
-acara:{amigos:['acara'],neutro:[],inimigos:['neon','guppy','betta','ouro'],minTemp:28,maxTemp:30,minPh:6.0,maxPh:6.5}
-};
-
-const DOSES = {
-condicionador:{porLitro:0.5,unidade:'ml',dica:'Geralmente 5ml para cada 10L — confira o rótulo do produto!'},
-fertilizante:{porLitro:0.3,unidade:'ml',dica:'Comece com metade da dose recomendada se tiver poucas plantas.'},
-sal:{porLitro:3,unidade:'g',dica:'Dissolva em água separada antes de colocar no aquário.'},
-bicarbonato:{porLitro:0.1,unidade:'g',dica:'Aumenta o KH aos poucos — meça antes e depois.'},
-medicamento:{porLitro:1,unidade:'ml',dica:'Siga sempre a bula! Remova carvão ativado antes de medicar.'}
-};
-
-// === NAVEGAÇÃO ===
 function mostrarTela(id){document.querySelectorAll('.tela').forEach(t=>t.classList.remove('ativa'));document.getElementById(id).classList.add('ativa');}
 function mostrarSubTela(id){document.getElementById('menu-principal').style.display='none';document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa'));document.getElementById(id).classList.add('sub-ativa');}
 function voltarMenu(){document.getElementById('menu-principal').style.display='block';document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa'));}
-function mostrarCalc(id,btn){document.querySelectorAll('.aba-btn').forEach(b=>b.classList.remove('ativo'));if(btn)btn.classList.add('ativo');document.querySelectorAll('.calc-bloco').forEach(c=>c.style.display='none');document.getElementById(id).style.display='block';}
 
-// === LOGIN & CADASTRO ===
 function entrar(){
 const e=document.getElementById('email-login').value.trim(),s=document.getElementById('senha-login').value;
-if(!e||!s){alert('Preencha e-mail e senha!');return;}
+if(!e||!s){alert('Preencha tudo!');return;}
 const c=contas.find(x=>x.email===e&&x.senha===s);
 if(c){
 usuario.nome=c.nome;usuario.email=c.email;usuario.aquarios=c.aquarios||[];usuario.aquarioAtivo=c.aquarioAtivo;
@@ -523,8 +304,8 @@ renderizarSeletorAquarios();mostrarTela('tela-app');
 function cadastrar(){
 const n=document.getElementById('nome-cad').value.trim(),e=document.getElementById('email-cad').value.trim(),s=document.getElementById('senha-cad').value,cf=document.getElementById('confirma-cad').value;
 if(!n||!e||!s){alert('Preencha tudo!');return;}
-if(s!==cf){alert('As senhas não coincidem!');return;}
-if(contas.find(x=>x.email===e)){alert('E-mail já cadastrado! Use outro ou faça login.');return;}
+if(s!==cf){alert('Senhas não coincidem!');return;}
+if(contas.find(x=>x.email===e)){alert('E-mail já cadastrado!');return;}
 contas.push({nome:n,email:e,senha:s,aquarios:[],aquarioAtivo:null,admin:false});
 usuario={nome:n,email:e,aquarios:[],aquarioAtivo:null};
 alert(`Bem-vindo, ${n}! 🐠`);
@@ -533,14 +314,13 @@ renderizarSeletorAquarios();mostrarTela('tela-app');
 }
 
 function sair(){
-if(!confirm('Tem certeza que deseja sair?'))return;
+if(!confirm('Sair?'))return;
 const i=contas.findIndex(x=>x.email===usuario.email);if(i!==-1)contas[i].aquarios=[...usuario.aquarios];
 usuario={nome:'',email:'',aquarios:[],aquarioAtivo:null};
 document.getElementById('email-login').value='';document.getElementById('senha-login').value='';
 mostrarTela('tela-login');
 }
 
-// === AQUÁRIOS ===
 function renderizarSeletorAquarios(){
 const c=document.getElementById('seletor-aquarios');c.innerHTML='';
 usuario.aquarios.forEach((a,i)=>{
@@ -558,57 +338,59 @@ document.getElementById('aq-nome-param').textContent=a?a.nome:'Selecione um aqu�
 function mostrarFormAquario(){document.getElementById('form-aquario').style.display='block';}
 function esconderFormAquario(){document.getElementById('form-aquario').style.display='none';}
 function salvarAquario(){
-const n=document.getElementById('aq-nome').value.trim(),v=document.getElementById('aq-volume').value;
-if(!n){alert('Dê um nome para o seu aquário!');return;}
-usuario.aquarios.push({nome:n,volume:v||'--',peixes:[],tipo:document.getElementById('aq-tipo').value});
+const n=document.getElementById('aq-nome').value.trim();if(!n){alert('Dê um nome!');return;}
+usuario.aquarios.push({nome:n,volume:document.getElementById('aq-volume').value||'--',peixes:[]});
 usuario.aquarioAtivo=usuario.aquarios.length-1;
 const i=contas.findIndex(x=>x.email===usuario.email);if(i!==-1){contas[i].aquarios=[...usuario.aquarios];contas[i].aquarioAtivo=usuario.aquarioAtivo;}
-alert(`Aquário "${n}" criado com sucesso! 🐠`);esconderFormAquario();renderizarSeletorAquarios();atualizarNomes();voltarMenu();
+alert(`Aquário "${n}" criado! 🐠`);esconderFormAquario();renderizarSeletorAquarios();atualizarNomes();voltarMenu();
 }
 
-// === BANCO DE PEIXES ===
 function setFiltro(f){filtroAtual=f;document.querySelectorAll('.filtro-btn').forEach(b=>b.classList.toggle('ativo',b.dataset.filtro===f));renderizarBancoPeixes();}
 function renderizarBancoPeixes(){
 const b=document.getElementById('busca-peixe').value.toLowerCase();
 const l=BANCO_PEIXES.filter(p=>(filtroAtual==='todos'||p.tipo===filtroAtual)&&(!b||p.nome.toLowerCase().includes(b)));
 const g=document.getElementById('grade-peixes');g.innerHTML='';
 l.forEach(p=>{
-const c=document.createElement('div');c.className='peixe-card';c.innerHTML=`<div class="peixe-emoji">${p.emoji}</div><h4>${p.nome}</h4><span class="tipo-tag ${p.tipo==='doce'?'tipo-doce':'tipo-marinho'}">${p.tipo==='doce'?'💧 Doce':'🌊 Marinho'}</span><p style="font-size:.7rem;margin-top:.3rem;">${p.temperatura} | pH ${p.ph}</p>`;
+const c=document.createElement('div');c.className='peixe-card';c.innerHTML=`<div class="peixe-emoji">${p.emoji}</div><h4>${p.nome}</h4><span class="tipo-tag ${p.tipo==='doce'?'tipo-doce':'tipo-marinho'}">${p.tipo==='doce'?'💧 Doce':'🌊 Marinho'}</span>`;
 g.appendChild(c);
 });
 }
 
-// =====================================================
-// 🔢 TODAS AS CALCULADORAS — FUNÇÕES COMPLETAS
-// =====================================================
-
-// 1. LITRAGEM
+// === CALCULADORAS ===
 function calcularLitragem(){
 const c=+document.getElementById('lit_comprimento').value,l=+document.getElementById('lit_largura').value,a=+document.getElementById('lit_altura').value;
-if(!c||!l||!a){alert('Preencha comprimento, largura e altura!');return;}
+if(!c||!l||!a){alert('Preencha tudo!');return;}
 const bruto=(c*l*a)/1000,util=bruto*0.85;
 document.getElementById('res_bruto').textContent=bruto.toFixed(1);
 document.getElementById('res_util').textContent=util.toFixed(1);
 document.getElementById('res_peso').textContent=util.toFixed(1);
-document.getElementById('res_dica_lit').textContent=util<50?'Aquário pequeno — faça trocas de água com frequência 💧':util<150?'Aquário médio — boa estabilidade ✅':'Aquário grande — confira suporte e peso! ⚠️';
-document.getElementById('res_litragem').style.display='block';
+document.getElementById('res_dica_lit').textContent=util<50?'Aquário pequeno — trocas frequentes':util<150?'Aquário médio — estável':'Aquário grande — verifique suporte!';
+document.getElementById('resultado_litragem').style.display='block';
 }
 
-// 2. 🌡️ TEMPERATURA (NOVA!)
-function atualizarLabelTemp(){
-const t=document.getElementById('temp_tipo').value;
-document.getElementById('temp_label').textContent=t==='c_f'?'Temperatura em °C:':'Temperatura em °F:';
-document.getElementById('res_temperatura').style.display='none';
+function calcularLumens(){
+const c=+document.getElementById('calc_comprimento').value,l=+document.getElementById('calc_largura').value,a=+document.getElementById('calc_altura').value,lm=+document.getElementById('calc_tipo').value;
+if(!c||!l||!a){alert('Preencha tudo!');return;}
+const vol=(c*l*a)/1000,lumens=vol*lm,watts=lumens/60;
+document.getElementById('res_volume').textContent=vol.toFixed(1);
+document.getElementById('res_lumens').textContent=Math.round(lumens);
+document.getElementById('res_watts').textContent=watts.toFixed(1);
+document.getElementById('res_dica').textContent=lm===15?'Baixa luz — sem CO₂':lm===30?'Média — CO₂ recomendado':'Alta — CO₂ essencial!';
+document.getElementById('resultado_lumens').style.display='block';
 }
-function calcularTemperatura(){
-const t=document.getElementById('temp_tipo').value,v=+document.getElementById('temp_valor').value;
-if(!v&&v!==0){alert('Digite um valor!');return;}
-let res,ideal;
-if(t==='c_f'){
-res=(v*9/5)+32;
-if(v>=24&&v<=28)ideal='✅ Temperatura ideal para maioria dos peixes tropicais!';
-else if(v<22)ideal='❌ Muito frio — aqueça a água!';
-else if(v>30)ideal='⚠️ Muito quente — resfrie o aquário!';
-document.getElementById('res_temp_val').textContent=`${v} °C = ${res.toFixed(1)} °F`;
-}else{
-res=(v-32
+
+function calcularSubstrato(){
+const c=+document.getElementById('sub_comprimento').value,l=+document.getElementById('sub_largura').value;
+let esp=document.getElementById('sub_espessura').value;
+if(esp==='escolha')esp=+document.getElementById('sub_espessura_pers').value;else esp=+esp;
+if(!c||!l||!esp){alert('Preencha tudo!');return;}
+const vol=(c*l*esp)/1000,sacos=Math.ceil(vol/15);
+document.getElementById('res_vol_sub').textContent=vol.toFixed(1);
+document.getElementById('res_sacos').textContent=sacos;
+document.getElementById('res_peso_sub').textContent=(sacos*2.5).toFixed(1);
+document.getElementById('res_dica_sub').textContent=esp<=3?'Camada fina — considere 4cm':esp>=5?'Camada grossa — ótima para plantas':'Padrão — ideal para maioria';
+document.getElementById('resultado_substrato').style.display='block';
+}
+</script>
+</body>
+</html>
