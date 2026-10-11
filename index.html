@@ -126,19 +126,17 @@ button.calc-btn:hover{opacity:.9;}
 <div class="card-funcao" onclick="mostrarSubTela('sub-banco')"><div class="icone">📚</div><h3>Banco de Peixes</h3><p>Espécies cadastradas</p></div>
 <div class="card-funcao" onclick="mostrarSubTela('sub-peixes')"><div class="icone">🐟</div><h3>Meus Peixes</h3><p>No aquário</p></div>
 <div class="card-funcao" onclick="mostrarSubTela('sub-parametros')"><div class="icone">📊</div><h3>Parâmetros</h3><p>Histórico</p></div>
-<div class="card-funcao" onclick="mostrarSubTela('sub-calculadoras')"><div class="icone">🧮</div><h3>Calculadoras</h3><p>Todas inclusas</p></div>
+<div class="card-funcao" onclick="mostrarSubTela('sub-calculadoras')"><div class="icone">🧮</div><h3>Calculadoras</h3><p>Todas ativas</p></div>
+<div class="card-funcao" onclick="mostrarSubTela('sub-plantas')"><div class="icone">🌿</div><h3>Plantas</h3><p>Em breve</p></div>
 <div class="card-funcao" onclick="mostrarSubTela('sub-lembretes')"><div class="icone">⏰</div><h3>Lembretes</h3><p>Manutenção</p></div>
 <div class="card-funcao card-admin" id="card-admin" style="display:none;" onclick="mostrarSubTela('sub-admin')"><div class="icone">👑</div><h3>Painel Admin</h3><p>Gerenciar</p></div>
 </div>
 <button class="btn btn-secundario sair" onclick="sair()">Sair da conta</button>
 </div>
 
-<!-- BANCO DE DADOS ORIGINAL -->
 <script>
 const BANCO_DADOS = {
-  usuarios: [
-    {id:1,nome:"Administrador",email:"admin@aquavibe.com",senha:"admin123",criado_em:"2026-10-11",admin:true}
-  ],
+  usuarios: [{id:1,nome:"Administrador",email:"admin@aquavibe.com",senha:"admin123",criado_em:"2026-10-11",admin:true}],
   aquarios: [],
   especies_peixes: [
     {id:1,nome_comum:"Neon Tetra",nome_cientifico:"Paracheirodon innesi",tipo_agua:"doce",tamanho_min_cm:3,tamanho_max_cm:4,temperatura_min_c:22,temperatura_max_c:26,ph_min:6.0,ph_max:7.0,dificuldade:"Fácil",comportamento:"Pacífico",tamanho_cardume_min:6,volume_minimo_l:40,alimentacao:"Onívoro",origem:"América do Sul",emoji:"🐟",aprovado:true},
@@ -152,11 +150,9 @@ const BANCO_DADOS = {
 };
 </script>
 
-<!-- CALCULADORAS -->
 <div id="sub-calculadoras" class="sub-tela">
 <div class="voltar" onclick="voltarMenu()">← Voltar</div>
 <h2 style="color:var(--azul-escuro);margin-bottom:1rem;">🧮 Calculadoras do Aquarista</h2>
-
 <div class="calc-abas">
 <button class="calc-aba-btn ativo" data-calc="litragem" onclick="trocarAbaCalc('litragem')">📐 Litragem</button>
 <button class="calc-aba-btn" data-calc="aquecedor" onclick="trocarAbaCalc('aquecedor')">🌡️ Aquecedor</button>
@@ -170,7 +166,6 @@ const BANCO_DADOS = {
 <button class="calc-aba-btn" data-calc="biocarga" onclick="trocarAbaCalc('biocarga')">🐟 Biocarga</button>
 </div>
 
-<!-- LITRAGEM -->
 <div id="calc-litragem" class="calc-painel ativo">
 <div class="calc-card">
 <h3>📐 Litragem do Aquário</h3>
@@ -190,7 +185,6 @@ const BANCO_DADOS = {
 </div>
 </div>
 
-<!-- AQUECEDOR -->
 <div id="calc-aquecedor" class="calc-painel">
 <div class="calc-card">
 <h3>🌡️ Potência do Aquecedor</h3>
@@ -210,7 +204,6 @@ const BANCO_DADOS = {
 </div>
 </div>
 
-<!-- FILTRO -->
 <div id="calc-filtro" class="calc-painel">
 <div class="calc-card">
 <h3>🔄 Vazão do Filtro / Bomba</h3>
@@ -234,7 +227,6 @@ const BANCO_DADOS = {
 </div>
 </div>
 
-<!-- ILUMINAÇÃO -->
 <div id="calc-iluminacao" class="calc-painel">
 <div class="calc-card">
 <h3>💡 Iluminação</h3>
@@ -243,24 +235,23 @@ const BANCO_DADOS = {
 <div class="grupo-input"><label>Largura (cm)</label><input type="number" id="il_l" placeholder="Ex: 40"></div>
 </div>
 <div class="grupo-input">
-<label>Nível</label>
+<label>Nível de iluminação</label>
 <select id="il_nivel">
-<option value="15">🌿 Low Tech</option>
-<option value="30" selected>🌱 Médio</option>
-<option value="60">🌳 High Tech</option>
+<option value="15">🌿 Low Tech — ~15 lm/L</option>
+<option value="30" selected>🌱 Média — ~30 lm/L</option>
+<option value="60">🌳 High Tech — ~60 lm/L</option>
 </select>
 </div>
 <button class="calc-btn" onclick="calcIluminacao()">Calcular ✅</button>
 <div id="res-iluminacao" class="resultado">
 <h4>📊 Resultado</h4>
-<p>Volume: <strong id="il-vol">0</strong> L</p>
+<p>Volume estimado: <strong id="il-vol">0</strong> L</p>
 <p>Lúmens totais: <strong id="il-lm">0</strong> lm</p>
 <p>LED aproximado: <strong id="il-w">0</strong> W</p>
 </div>
 </div>
 </div>
 
-<!-- SUBSTRATO -->
 <div id="calc-substrato" class="calc-painel">
 <div class="calc-card">
 <h3>🪨 Substrato</h3>
@@ -272,14 +263,13 @@ const BANCO_DADOS = {
 <button class="calc-btn" onclick="calcSubstrato()">Calcular ✅</button>
 <div id="res-substrato" class="resultado">
 <h4>📊 Resultado</h4>
-<p>Volume: <strong id="sub-vol">0</strong> L</p>
+<p>Volume de substrato: <strong id="sub-vol">0</strong> L</p>
 <p>Sacos de 2,5 kg: <strong id="sub-sacos">0</strong> unid.</p>
 <p>Peso total: <strong id="sub-peso">0</strong> kg</p>
 </div>
 </div>
 </div>
 
-<!-- TROCA DE ÁGUA -->
 <div id="calc-troca" class="calc-painel">
 <div class="calc-card">
 <h3>💧 Troca de Água</h3>
@@ -297,13 +287,12 @@ const BANCO_DADOS = {
 </div>
 </div>
 
-<!-- CO2 -->
 <div id="calc-co2" class="calc-painel">
 <div class="calc-card">
 <h3>💨 CO₂ Dissolvido</h3>
 <div class="linhas">
-<div class="grupo-input"><label>KH</label><input type="number" id="co2_kh" placeholder="Ex: 6"></div>
-<div class="grupo-input"><label>pH</label><input type="number" step="0.01" id="co2_ph" placeholder="Ex: 6.6"></div>
+<div class="grupo-input"><label>Alcalinidade KH</label><input type="number" id="co2_kh" placeholder="Ex: 6"></div>
+<div class="grupo-input"><label>pH medido</label><input type="number" step="0.01" id="co2_ph" placeholder="Ex: 6.6"></div>
 </div>
 <button class="calc-btn" onclick="calcCO2()">Calcular ✅</button>
 <div id="res-co2" class="resultado">
@@ -314,13 +303,13 @@ const BANCO_DADOS = {
 </div>
 </div>
 
-<!-- SALINIDADE -->
 <div id="calc-sal" class="calc-painel">
 <div class="calc-card">
 <h3>🧂 Salinidade</h3>
 <div class="linhas">
-<div class="grupo-input"><label>Volume (L)</label><input type="number" id="sal_vol" placeholder="Ex: 150"></div>
-<div class="grupo-input"><label>Densidade alvo</label>
+<div class="grupo-input"><label>Volume de água (L)</label><input type="number" id="sal_vol" placeholder="Ex: 150"></div>
+<div class="grupo-input">
+<label>Densidade alvo</label>
 <select id="sal_dens">
 <option value="34">1.025 — Reef ✅</option>
 <option value="32">1.023 — Peixes</option>
@@ -337,13 +326,12 @@ const BANCO_DADOS = {
 </div>
 </div>
 
-<!-- ENERGIA -->
 <div id="calc-energia" class="calc-painel">
 <div class="calc-card">
 <h3>⚡ Consumo de Energia</h3>
 <div class="linhas">
 <div class="grupo-input"><label>Filtro (W)</label><input type="number" id="en-filtro" value="8"></div>
-<div class="grupo-input"><label>Luz (W)</label><input type="number" id="en-luz" value="40"></div>
+<div class="grupo-input"><label>Iluminação (W)</label><input type="number" id="en-luz" value="40"></div>
 <div class="grupo-input"><label>Aquecedor (W)</label><input type="number" id="en-aquec" value="100"></div>
 <div class="grupo-input"><label>Tarifa R$/kWh</label><input type="number" step="0.01" id="en-tarifa" value="0.75"></div>
 </div>
@@ -352,28 +340,25 @@ const BANCO_DADOS = {
 <h4>📊 Consumo Mensal</h4>
 <p>Diário: <strong id="en-diario">0</strong> kWh</p>
 <p>Mensal: <strong id="en-mensal">0</strong> kWh</p>
-<p>Custo: <strong id="en-custo">R$ 0,00</strong></p>
+<p>Custo mensal: <strong id="en-custo">R$ 0,00</strong></p>
 </div>
 </div>
 </div>
 
-<!-- BIOCARGA -->
 <div id="calc-biocarga" class="calc-painel">
 <div class="calc-card">
 <h3>🐟 Biocarga</h3>
-<div="grupo-input"><label>Volume útil (L)</label><input type="number" id="bio_vol" placeholder="Ex: 100"></div>
+<div class="grupo-input"><label>Volume útil (L)</label><input type="number" id="bio_vol" placeholder="Ex: 100"></div>
 <button class="calc-btn" onclick="calcBiocarga()">Calcular ✅</button>
 <div id="res-biocarga" class="resultado">
-<h4>📊 Capacidade</h4>
-<p>Comprimento total: <strong id="bio-cm">0</strong> cm</p>
-<p>~<strong id="bio-neon">0</strong> peixes de 4 cm</p>
+<h4>📊 Capacidade Estimada</h4>
+<p>Comprimento total: <strong id="bio-cm">0</strong> cm de peixe</p>
+<p>Exemplo: ~<strong id="bio-neon">0</strong> peixes de 4 cm</p>
+</div>
 </div>
 </div>
 </div>
 
-</div>
-
-<!-- BANCO DE PEIXES -->
 <div id="sub-banco" class="sub-tela">
 <div class="voltar" onclick="voltarMenu()">← Voltar</div>
 <div class="cartao-dados">
@@ -381,14 +366,13 @@ const BANCO_DADOS = {
 <div class="busca-box"><input type="text" id="busca-peixe" placeholder="🔍 Buscar..." oninput="renderizarBancoPeixes()"></div>
 <div class="filtros">
 <button class="filtro-btn ativo" onclick="setFiltro('todos')">Todos</button>
-<button class="filtro-btn" onclick="setFiltro('doce')">💧 Doce</button>
+<button class="filtro-btn" onclick="setFiltro('doce')">💧 Água Doce</button>
 <button class="filtro-btn" onclick="setFiltro('marinho')">🌊 Marinho</button>
 </div>
 <div class="grade-peixes" id="grade-peixes"></div>
 </div>
 </div>
 
-<!-- MEUS AQUÁRIOS -->
 <div id="sub-aquarios" class="sub-tela">
 <div class="voltar" onclick="voltarMenu()">← Voltar</div>
 <div class="cartao-dados">
@@ -400,7 +384,7 @@ const BANCO_DADOS = {
 <div class="grupo-input"><label>Nome</label><input type="text" id="aq-nome" placeholder="Ex: Principal"></div>
 <div class="grupo-input"><label>Volume (L)</label><input type="number" id="aq-volume" placeholder="Ex: 100"></div>
 <div class="grupo-input">
-<label>Tipo</label>
+<label>Tipo de Água</label>
 <select id="aq-tipo">
 <option value="doce">💧 Doce</option>
 <option value="salobra">🌊 Salobra</option>
@@ -413,13 +397,9 @@ const BANCO_DADOS = {
 </div>
 </div>
 
-<!-- OUTRAS TELAS -->
 <div id="sub-peixes" class="sub-tela">
 <div class="voltar" onclick="voltarMenu()">← Voltar</div>
-<div class="cartao-dados">
-<h3>🐟 Meus Peixes</h3>
-<div class="sem-dados">Selecione um aquário 🐠</div>
-</div>
+<div class="cartao-dados"><h3>🐟 Meus Peixes</h3><div class="sem-dados">Selecione um aquário 🐠</div></div>
 </div>
 
 <div id="sub-parametros" class="sub-tela">
@@ -434,189 +414,188 @@ const BANCO_DADOS = {
 </div>
 </div>
 
+<div id="sub-plantas" class="sub-tela">
+<div class="voltar" onclick="voltarMenu()">← Voltar</div>
+<div class="cartao-dados"><h3>🌿 Plantas</h3><div class="sem-dados">Em desenvolvimento 🌱</div></div>
+</div>
+
 <div id="sub-lembretes" class="sub-tela">
 <div class="voltar" onclick="voltarMenu()">← Voltar</div>
 <div class="cartao-dados">
 <h3>⏰ Lembretes</h3>
 <div class="dado-linha"><span>🔄 Troca de água</span><span class="valor-bom">Amanhã</span></div>
-<div class="dado-linha"><span>🧪 Testar parâmetros</span><span class="valor-bom">Terça</span></div>
+<div class="dado-linha"><span>🧪 Testar parâmetros</span><span class="valor-bom">Terça-feira</span></div>
 </div>
 </div>
 
 <div id="sub-admin" class="sub-tela">
 <div class="voltar" onclick="voltarMenu()">← Voltar</div>
 <div class="cartao-dados">
-<h3>👑 Painel Admin</h3>
-<div class="dado-linha"><span>Usuários</span><span id="adm-usuarios">1</span></div>
-<div class="dado-linha"><span>Espécies</span><span id="adm-especies">5</span></div>
+<h3>👑 Painel Administrativo</h3>
+<div class="dado-linha"><span>Total de usuários</span><span id="adm-usuarios">1</span></div>
+<div class="dado-linha"><span>Espécies no banco</span><span id="adm-especies">5</span></div>
+<div class="dado-linha"><span>Aquários ativos</span><span id="adm-aquarios">0</span></div>
 </div>
 </div>
 
-<div class="rodape">AquaVibe © 2026 💧🐠 — Funcionando ✅</div>
+<div class="rodape">AquaVibe © 2026 💧🐠 — Todas as calculadoras ativas ✅</div>
 </section>
 
 <script>
-// VARIÁVEIS
 let contas = [{nome:"Administrador",email:"admin@aquavibe.com",senha:"admin123",admin:true,aquarios:[]}];
-let usuario = {nome:'',email:'',aquarios:[],aquarioAtivo:null,admin:false};
+let usuario = {nome:'',email:'',aquarios:[],admin:false};
 let filtroAtual = 'todos';
 
-// NAVEGAÇÃO
 function mostrarTela(id){document.querySelectorAll('.tela').forEach(t=>t.classList.remove('ativa'));document.getElementById(id).classList.add('ativa');}
 function mostrarSubTela(id){document.getElementById('menu-principal').style.display='none';document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa'));document.getElementById(id).classList.add('sub-ativa');}
 function voltarMenu(){document.getElementById('menu-principal').style.display='block';document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa'));}
 
-// LOGIN
 function entrar(){
   const e=document.getElementById('email-login').value.trim(),s=document.getElementById('senha-login').value;
   const c=contas.find(x=>x.email===e&&x.senha===s);
   if(c){
     usuario={nome:c.nome,email:c.email,aquarios:c.aquarios||[],admin:!!c.admin};
-    document.getElementById('admin-badge').style.display=usuario.admin?'inline':'none';
+    document.getElementById('admin-badge').style.display=usuario.admin?'inline-block':'none';
     document.getElementById('card-admin').style.display=usuario.admin?'block':'none';
     document.getElementById('nome-usuario').innerText=`Olá, ${usuario.nome}! 👋`;
     document.getElementById('qtd-especies').textContent=BANCO_DADOS.especies_peixes.length;
+    document.getElementById('adm-especies').textContent=BANCO_DADOS.especies_peixes.length;
     renderizarSeletorAquarios();renderizarBancoPeixes();
     mostrarTela('tela-app');
-  }else alert('E-mail ou senha incorretos!');
+  }else{alert('E-mail ou senha incorretos!');}
 }
+
 function cadastrar(){
   const n=document.getElementById('nome-cad').value.trim(),e=document.getElementById('email-cad').value.trim(),s=document.getElementById('senha-cad').value,cf=document.getElementById('confirma-cad').value;
-  if(!n||!e||!s){alert('Preencha tudo!');return;}
-  if(s!==cf){alert('Senhas não coincidem!');return;}
+  if(!n||!e||!s){alert('Preencha todos os campos!');return;}
+  if(s!==cf){alert('As senhas não coincidem!');return;}
+  if(contas.find(x=>x.email===e)){alert('E-mail já cadastrado!');return;}
   contas.push({nome:n,email:e,senha:s,aquarios:[],admin:false});
   usuario={nome:n,email:e,aquarios:[],admin:false};
   alert(`Bem-vindo, ${n}! 🐠`);
   document.getElementById('qtd-especies').textContent=BANCO_DADOS.especies_peixes.length;
-  renderizarBancoPeixes();mostrarTela('tela-app');
-}
-function sair(){
-  usuario={nome:'',email:'',aquarios:[],admin:false};
-  mostrarTela('tela-login');
+  document.getElementById('adm-especies').textContent=BANCO_DADOS.especies_peixes.length;
+  renderizarBancoPeixes();
+  mostrarTela('tela-app');
 }
 
-// AQUÁRIOS
+function sair(){if(confirm('Deseja sair?')){usuario={nome:'',email:'',aquarios:[],admin:false};mostrarTela('tela-login');}}
+
 function renderizarSeletorAquarios(){
   const sel=document.getElementById('seletor-aquarios');sel.innerHTML='';
-  usuario.aquarios.forEach((a,i)=>{
-    const t=document.createElement('span');t.className='tag-aquario';t.textContent=a.nome;sel.appendChild(t);
-  });
+  usuario.aquarios.forEach(a=>{const t=document.createElement('span');t.className='tag-aquario';t.textContent=a.nome;sel.appendChild(t);});
   const n=document.createElement('span');n.className='tag-aquario tag-novo';n.textContent='+ Novo';n.onclick=()=>mostrarSubTela('sub-aquarios');sel.appendChild(n);
   const lista=document.getElementById('lista-aquarios');
-  if(!usuario.aquarios.length){lista.innerHTML='<div class="sem-dados">Nenhum aquário cadastrado 🐠</div>';return;}
+  if(!usuario.aquarios.length){lista.innerHTML='<div class="sem-dados">Nenhum aquário cadastrado 🐠</div>';document.getElementById('adm-aquarios').textContent='0';return;}
   lista.innerHTML='';
-  usuario.aquarios.forEach(a=>{
-    const d=document.createElement('div');d.className='dado-linha';d.innerHTML=`<span><strong>${a.nome}</strong><br><small>${a.volume}L • ${a.tipo_agua}</small></span>`;lista.appendChild(d);
-  });
+  usuario.aquarios.forEach(a=>{const d=document.createElement('div');d.className='dado-linha';d.innerHTML=`<span><strong>${a.nome}</strong><br><small>${a.volume}L • ${a.tipo_agua}</small></span>`;lista.appendChild(d);});
+  document.getElementById('adm-aquarios').textContent=usuario.aquarios.length;
 }
+
 function salvarAquario(){
-  const n=document.getElementById('aq-nome').value.trim(),v=document.getElementById('aq-volume').value,t=document.getElementById('aq-tipo').value;
-  if(!n||!v){alert('Preencha nome e volume!');return;}
-  usuario.aquarios.push({nome:n,volume:v,tipo_agua:t});
-  alert(`Aquário "${n}" salvo! 🐠`);
+  const nome=document.getElementById('aq-nome').value.trim(),vol=document.getElementById('aq-volume').value,tipo=document.getElementById('aq-tipo').value;
+  if(!nome||!vol){alert('Preencha nome e volume!');return;}
+  usuario.aquarios.push({nome:nome,volume:vol,tipo_agua:tipo});
+  alert(`Aquário "${nome}" salvo! 🐠`);
   document.getElementById('form-aquario').style.display='none';
+  document.getElementById('aq-nome').value='';document.getElementById('aq-volume').value='';
   renderizarSeletorAquarios();
 }
 
-// BANCO DE PEIXES
-function setFiltro(f){filtroAtual=f;document.querySelectorAll('.filtro-btn').forEach(b=>b.classList.toggle('ativo',b.textContent.includes(f==='todos'?'Todos':f==='doce'?'Doce':'Marinho')));renderizarBancoPeixes();}
+function setFiltro(f){
+  filtroAtual=f;
+  document.querySelectorAll('.filtro-btn').forEach(b=>{
+    const txt=b.textContent;
+    b.classList.toggle('ativo',(f==='todos'&&txt.includes('Todos'))||(f==='doce'&&txt.includes('Doce'))||(f==='marinho'&&txt.includes('Marinho')));
+  });
+  renderizarBancoPeixes();
+}
+
 function renderizarBancoPeixes(){
   const b=document.getElementById('busca-peixe').value.toLowerCase();
   const lista=BANCO_DADOS.especies_peixes.filter(p=>(filtroAtual==='todos'||p.tipo_agua===filtroAtual)&&(!b||p.nome_comum.toLowerCase().includes(b)));
   const g=document.getElementById('grade-peixes');g.innerHTML='';
   lista.forEach(p=>{
-    const c=document.createElement('div');c.className='peixe-card';c.innerHTML=`<div class="peixe-emoji">${p.emoji}</div><h4>${p.nome_comum}</h4><span class="tipo-tag ${p.tipo_agua==='doce'?'tipo-doce':'tipo-marinho'}">${p.tipo_agua==='doce'?'💧 Doce':'🌊 Marinho'}</span><p style="font-size:.7rem;margin-top:.3rem;">${p.temperatura_min_c}–${p.temperatura_max_c}°C | pH ${p.ph_min}–${p.ph_max}</p>`;
+    const c=document.createElement('div');c.className='peixe-card';
+    c.innerHTML=`<div class="peixe-emoji">${p.emoji}</div><h4>${p.nome_comum}</h4><span class="tipo-tag ${p.tipo_agua==='doce'?'tipo-doce':'tipo-marinho'}">${p.tipo_agua==='doce'?'💧 Doce':'🌊 Marinho'}</span><p style="font-size:.7rem;margin-top:.3rem;color:#64748b;">${p.temperatura_min_c}–${p.temperatura_max_c}°C | pH ${p.ph_min}–${p.ph_max}</p>`;
     g.appendChild(c);
   });
 }
 
-// TROCA DE ABA
 function trocarAbaCalc(nome){
   document.querySelectorAll('.calc-aba-btn').forEach(b=>b.classList.toggle('ativo',b.dataset.calc===nome));
   document.querySelectorAll('.calc-painel').forEach(p=>p.classList.remove('ativo'));
   document.getElementById('calc-'+nome).classList.add('ativo');
 }
 
-// ======================================
-// FUNÇÕES DE CÁLCULO — TODAS FUNCIONANDO
-// ======================================
 function calcLitragem(){
-  const c=+document.getElementById('lit_c').value,l=+document.getElementById('lit_l').value,a=+document.getElementById('lit_a').value;
-  if(!c||!l||!a){alert('Preencha os 3 valores!');return;}
+  const c=parseFloat(document.getElementById('lit_c').value),l=parseFloat(document.getElementById('lit_l').value),a=parseFloat(document.getElementById('lit_a').value);
+  if(!c||!l||!a){alert('Preencha comprimento, largura e altura!');return;}
   const bruto=(c*l*a)/1000,util=bruto*0.85;
   document.getElementById('lit-bruto').textContent=bruto.toFixed(1);
   document.getElementById('lit-util').textContent=util.toFixed(1);
   document.getElementById('lit-peso').textContent=util.toFixed(1);
+  let dicaTxt='';
+  if(util<50)dicaTxt='Aquário pequeno — faça trocas parciais frequentes (20-30% por semana).';
+  else if(util<150)dicaTxt='Aquário médio — boa estabilidade biológica, mantenha a rotina de manutenção.';
+  else dicaTxt='Aquário grande — excelente estabilidade! Verifique a capacidade de suporte do móvel.';
+  document.getElementById('lit-dica').textContent=dicaTxt;
   document.getElementById('res-litragem').classList.add('visivel');
 }
+
 function calcAquecedor(){
-  const v=+document.getElementById('aq_vol').value,amb=+document.getElementById('aq_amb').value,alvo=+document.getElementById('aq_alvo').value;
-  if(!v||!amb||!alvo){alert('Preencha tudo!');return;}
-  const d=alvo-amb;
-  if(d<=0){alert('Temp. desejada ≤ ambiente — aquecedor pode não ser necessário.');return;}
-  const min=v*d*0.238,rec=min*1.3;
-  document.getElementById('aq-delta').textContent=d.toFixed(1);
-  document.getElementById('aq-min').textContent=Math.ceil(min);
-  document.getElementById('aq-rec').textContent=Math.ceil(rec);
+  const v=parseFloat(document.getElementById('aq_vol').value),amb=parseFloat(document.getElementById('aq_amb').value),alvo=parseFloat(document.getElementById('aq_alvo').value);
+  if(!v||!amb||!alvo){alert('Preencha volume, temp. ambiente e temp. desejada!');return;}
+  const delta=alvo-amb;
+  if(delta<=0){alert('Temp. desejada ≤ ambiente — aquecedor pode não ser necessário.');return;}
+  const minimo=v*delta*0.238,recomendado=minimo*1.3;
+  document.getElementById('aq-delta').textContent=delta.toFixed(1);
+  document.getElementById('aq-min').textContent=Math.ceil(minimo);
+  document.getElementById('aq-rec').textContent=Math.ceil(recomendado);
+  let dicaTxt=delta>8?'⚠️ Grande diferença — use dois aquecedores distribuídos.':'Coloque o aquecedor próximo à saída do filtro.';
+  document.getElementById('aq-dica').textContent=dicaTxt;
   document.getElementById('res-aquecedor').classList.add('visivel');
 }
+
 function calcFiltro(){
-  const v=+document.getElementById('fil_vol').value,f=+document.getElementById('fil_tipo').value;
+  const v=parseFloat(document.getElementById('fil_vol').value),f=parseFloat(document.getElementById('fil_tipo').value);
   if(!v){alert('Informe o volume!');return;}
-  document.getElementById('fil-min').textContent=(v*4).toFixed(0);
-  document.getElementById('fil-ideal').textContent=(v*f).toFixed(0);
-  document.getElementById('fil-max').textContent=(v*f*1.5).toFixed(0);
+  document.getElementById('fil-min').textContent=Math.round(v*4);
+  document.getElementById('fil-ideal').textContent=Math.round(v*f);
+  document.getElementById('fil-max').textContent=Math.round(v*f*1.5);
   document.getElementById('res-filtro').classList.add('visivel');
 }
+
 function calcIluminacao(){
-  const c=+document.getElementById('il_c').value,l=+document.getElementById('il_l').value,n=+document.getElementById('il_nivel').value;
+  const c=parseFloat(document.getElementById('il_c').value),l=parseFloat(document.getElementById('il_l').value),n=parseFloat(document.getElementById('il_nivel').value);
   if(!c||!l){alert('Preencha comprimento e largura!');return;}
-  const area=c*l/10000,vol=area*40,lm=vol*n,w=lm/80;
+  const vol=(c*l*40)/1000,lm=vol*n,w=lm/80;
   document.getElementById('il-vol').textContent=vol.toFixed(1);
   document.getElementById('il-lm').textContent=lm.toFixed(0);
   document.getElementById('il-w').textContent=w.toFixed(0);
   document.getElementById('res-iluminacao').classList.add('visivel');
 }
+
 function calcSubstrato(){
-  const c=+document.getElementById('sub_c').value,l=+document.getElementById('sub_l').value,e=+document.getElementById('sub_esp').value;
-  if(!c||!l||!e){alert('Preencha comprimento e largura!');return;}
+  const c=parseFloat(document.getElementById('sub_c').value),l=parseFloat(document.getElementById('sub_l').value),e=parseFloat(document.getElementById('sub_esp').value);
+  if(!c||!l||!e){alert('Preencha comprimento, largura e espessura!');return;}
   const vol=(c*l*e)/1000,sacos=Math.ceil(vol/2.5),peso=vol*1.5;
   document.getElementById('sub-vol').textContent=vol.toFixed(1);
   document.getElementById('sub-sacos').textContent=sacos;
   document.getElementById('sub-peso').textContent=peso.toFixed(1);
   document.getElementById('res-substrato').classList.add('visivel');
 }
+
 function calcTroca(){
-  const v=+document.getElementById('tr_vol').value,p=+document.getElementById('tr_pct').value;
-  if(!v||!p){alert('Preencha volume e %!');return;}
+  const v=parseFloat(document.getElementById('tr_vol').value),p=parseFloat(document.getElementById('tr_pct').value);
+  if(!v||!p){alert('Preencha volume e % de troca!');return;}
   const qtd=v*p/100,cond=qtd/10*5;
   document.getElementById('tr-qtd').textContent=qtd.toFixed(1);
   document.getElementById('tr-repo').textContent=qtd.toFixed(1);
   document.getElementById('tr-cond').textContent=cond.toFixed(1);
   document.getElementById('res-troca').classList.add('visivel');
 }
+
 function calcCO2(){
-  const kh=+document.getElementById('co2_kh').value,ph=+document.getElementById('co2_ph').value;
-  if(!kh||!ph){alert('Preencha KH e pH!');return;}
-  const co2=Math.round(Math.pow(10,7.477+Math.log10(kh)-ph)*10)/10;
-  let status='',cor='';
-  if(co2<10)status='⚠️ Muito baixo — aumente injeção';
-  else if(co2<=25)status='✅ Ideal';
-  else status='⚠️ Muito alto — reduza';
-  document.getElementById('co2-ppm').textContent=co2;
-  document.getElementById('co2-status').textContent=status;
-  document.getElementById('res-co2').classList.add('visivel');
-}
-function calcSalinidade(){
-  const v=+document.getElementById('sal_vol').value,d=+document.getElementById('sal_dens').value;
-  if(!v){alert('Informe o volume!');return;}
-  const g=v*d,kg=g/1000;
-  document.getElementById('sal-qtd').textContent=g.toFixed(0);
-  document.getElementById('sal-kg').textContent=kg.toFixed(2);
-  document.getElementById('res-sal').classList.add('visivel');
-}
-function calcEnergia(){
-  const f=+document.getElementById('en-filtro').value,l=+document.getElementById('en-luz').value,a=+document.getElementById('en-aquec').value,t=+document.getElementById('en-tarifa').value;
-  const di=(f*24+l*8+a*12)/1000,me=di*30,custo=me*t;
-  document.getElementById('en-diario').textContent=di.toFixed(2);
-  document.getElementById('en-mensal').textContent=me.toFixed
+  const kh=parseFloat(document.getElementById('co2_kh').value),ph=parseFloat(document.getElementById('co2_ph').value);
+  if(!kh||!ph){alert('Preencha KH
