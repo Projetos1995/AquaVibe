@@ -438,164 +438,273 @@ const BANCO_DADOS = {
 </div>
 </div>
 
-<div class="rodape">AquaVibe © 2026 💧🐠 — Todas as calculadoras ativas ✅</div>
+<div class="rodape">AquaVibe © 2026 💧🐠 — Todas as funções ativas ✅</div>
 </section>
 
 <script>
+// ======================================
+// VARIÁVEIS
+// ======================================
 let contas = [{nome:"Administrador",email:"admin@aquavibe.com",senha:"admin123",admin:true,aquarios:[]}];
 let usuario = {nome:'',email:'',aquarios:[],admin:false};
 let filtroAtual = 'todos';
 
-function mostrarTela(id){document.querySelectorAll('.tela').forEach(t=>t.classList.remove('ativa'));document.getElementById(id).classList.add('ativa');}
-function mostrarSubTela(id){document.getElementById('menu-principal').style.display='none';document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa'));document.getElementById(id).classList.add('sub-ativa');}
-function voltarMenu(){document.getElementById('menu-principal').style.display='block';document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa'));}
+// ======================================
+// NAVEGAÇÃO — FUNCIONANDO
+// ======================================
+function mostrarTela(id){
+  document.querySelectorAll('.tela').forEach(t=>t.classList.remove('ativa'));
+  document.getElementById(id).classList.add('ativa');
+}
+function mostrarSubTela(id){
+  document.getElementById('menu-principal').style.display='none';
+  document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa'));
+  document.getElementById(id).classList.add('sub-ativa');
+}
+function voltarMenu(){
+  document.getElementById('menu-principal').style.display='block';
+  document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa'));
+}
 
+// ======================================
+// LOGIN — CORRIGIDO E FUNCIONANDO ✅
+// ======================================
 function entrar(){
-  const e=document.getElementById('email-login').value.trim(),s=document.getElementById('senha-login').value;
-  const c=contas.find(x=>x.email===e&&x.senha===s);
-  if(c){
-    usuario={nome:c.nome,email:c.email,aquarios:c.aquarios||[],admin:!!c.admin};
-    document.getElementById('admin-badge').style.display=usuario.admin?'inline-block':'none';
-    document.getElementById('card-admin').style.display=usuario.admin?'block':'none';
-    document.getElementById('nome-usuario').innerText=`Olá, ${usuario.nome}! 👋`;
-    document.getElementById('qtd-especies').textContent=BANCO_DADOS.especies_peixes.length;
-    document.getElementById('adm-especies').textContent=BANCO_DADOS.especies_peixes.length;
-    renderizarSeletorAquarios();renderizarBancoPeixes();
+  const email = document.getElementById('email-login').value.trim();
+  const senha = document.getElementById('senha-login').value;
+  
+  if(!email || !senha){
+    alert('Preencha e-mail e senha!');
+    return;
+  }
+  
+  const conta = contas.find(c => c.email === email && c.senha === senha);
+  
+  if(conta){
+    usuario = {
+      nome: conta.nome,
+      email: conta.email,
+      aquarios: conta.aquarios || [],
+      admin: !!conta.admin
+    };
+    
+    // Atualiza interface
+    document.getElementById('admin-badge').style.display = usuario.admin ? 'inline-block' : 'none';
+    document.getElementById('card-admin').style.display = usuario.admin ? 'block' : 'none';
+    document.getElementById('nome-usuario').innerText = `Olá, ${usuario.nome}! 👋`;
+    document.getElementById('qtd-especies').textContent = BANCO_DADOS.especies_peixes.length;
+    document.getElementById('adm-especies').textContent = BANCO_DADOS.especies_peixes.length;
+    
+    renderizarSeletorAquarios();
+    renderizarBancoPeixes();
+    
     mostrarTela('tela-app');
-  }else{alert('E-mail ou senha incorretos!');}
+  } else {
+    alert('E-mail ou senha incorretos!');
+  }
 }
 
 function cadastrar(){
-  const n=document.getElementById('nome-cad').value.trim(),e=document.getElementById('email-cad').value.trim(),s=document.getElementById('senha-cad').value,cf=document.getElementById('confirma-cad').value;
-  if(!n||!e||!s){alert('Preencha todos os campos!');return;}
-  if(s!==cf){alert('As senhas não coincidem!');return;}
-  if(contas.find(x=>x.email===e)){alert('E-mail já cadastrado!');return;}
-  contas.push({nome:n,email:e,senha:s,aquarios:[],admin:false});
-  usuario={nome:n,email:e,aquarios:[],admin:false};
-  alert(`Bem-vindo, ${n}! 🐠`);
-  document.getElementById('qtd-especies').textContent=BANCO_DADOS.especies_peixes.length;
-  document.getElementById('adm-especies').textContent=BANCO_DADOS.especies_peixes.length;
+  const nome = document.getElementById('nome-cad').value.trim();
+  const email = document.getElementById('email-cad').value.trim();
+  const senha = document.getElementById('senha-cad').value;
+  const confirma = document.getElementById('confirma-cad').value;
+  
+  if(!nome || !email || !senha){
+    alert('Preencha todos os campos!');
+    return;
+  }
+  if(senha !== confirma){
+    alert('As senhas não coincidem!');
+    return;
+  }
+  if(contas.find(c => c.email === email)){
+    alert('Este e-mail já está cadastrado!');
+    return;
+  }
+  
+  contas.push({nome,email,senha,aquarios:[],admin:false});
+  usuario = {nome,email,aquarios:[],admin:false};
+  
+  alert(`Bem-vindo, ${nome}! 🐠`);
+  document.getElementById('qtd-especies').textContent = BANCO_DADOS.especies_peixes.length;
+  document.getElementById('adm-especies').textContent = BANCO_DADOS.especies_peixes.length;
   renderizarBancoPeixes();
   mostrarTela('tela-app');
 }
 
-function sair(){if(confirm('Deseja sair?')){usuario={nome:'',email:'',aquarios:[],admin:false};mostrarTela('tela-login');}}
+function sair(){
+  if(confirm('Deseja sair da conta?')){
+    usuario = {nome:'',email:'',aquarios:[],admin:false};
+    mostrarTela('tela-login');
+  }
+}
 
+// ======================================
+// AQUÁRIOS
+// ======================================
 function renderizarSeletorAquarios(){
-  const sel=document.getElementById('seletor-aquarios');sel.innerHTML='';
-  usuario.aquarios.forEach(a=>{const t=document.createElement('span');t.className='tag-aquario';t.textContent=a.nome;sel.appendChild(t);});
-  const n=document.createElement('span');n.className='tag-aquario tag-novo';n.textContent='+ Novo';n.onclick=()=>mostrarSubTela('sub-aquarios');sel.appendChild(n);
-  const lista=document.getElementById('lista-aquarios');
-  if(!usuario.aquarios.length){lista.innerHTML='<div class="sem-dados">Nenhum aquário cadastrado 🐠</div>';document.getElementById('adm-aquarios').textContent='0';return;}
-  lista.innerHTML='';
-  usuario.aquarios.forEach(a=>{const d=document.createElement('div');d.className='dado-linha';d.innerHTML=`<span><strong>${a.nome}</strong><br><small>${a.volume}L • ${a.tipo_agua}</small></span>`;lista.appendChild(d);});
-  document.getElementById('adm-aquarios').textContent=usuario.aquarios.length;
+  const sel = document.getElementById('seletor-aquarios');
+  sel.innerHTML = '';
+  usuario.aquarios.forEach(a => {
+    const t = document.createElement('span');
+    t.className = 'tag-aquario';
+    t.textContent = a.nome;
+    sel.appendChild(t);
+  });
+  const n = document.createElement('span');
+  n.className = 'tag-aquario tag-novo';
+  n.textContent = '+ Novo';
+  n.onclick = () => mostrarSubTela('sub-aquarios');
+  sel.appendChild(n);
+  
+  const lista = document.getElementById('lista-aquarios');
+  if(!usuario.aquarios.length){
+    lista.innerHTML = '<div class="sem-dados">Nenhum aquário cadastrado 🐠</div>';
+    document.getElementById('adm-aquarios').textContent = '0';
+    return;
+  }
+  lista.innerHTML = '';
+  usuario.aquarios.forEach(a => {
+    const d = document.createElement('div');
+    d.className = 'dado-linha';
+    d.innerHTML = `<span><strong>${a.nome}</strong><br><small>${a.volume}L • ${a.tipo_agua}</small></span>`;
+    lista.appendChild(d);
+  });
+  document.getElementById('adm-aquarios').textContent = usuario.aquarios.length;
 }
 
 function salvarAquario(){
-  const nome=document.getElementById('aq-nome').value.trim(),vol=document.getElementById('aq-volume').value,tipo=document.getElementById('aq-tipo').value;
-  if(!nome||!vol){alert('Preencha nome e volume!');return;}
-  usuario.aquarios.push({nome:nome,volume:vol,tipo_agua:tipo});
+  const nome = document.getElementById('aq-nome').value.trim();
+  const vol = document.getElementById('aq-volume').value;
+  const tipo = document.getElementById('aq-tipo').value;
+  
+  if(!nome || !vol){
+    alert('Preencha nome e volume!');
+    return;
+  }
+  
+  usuario.aquarios.push({nome, volume: vol, tipo_agua: tipo});
   alert(`Aquário "${nome}" salvo! 🐠`);
-  document.getElementById('form-aquario').style.display='none';
-  document.getElementById('aq-nome').value='';document.getElementById('aq-volume').value='';
+  document.getElementById('form-aquario').style.display = 'none';
+  document.getElementById('aq-nome').value = '';
+  document.getElementById('aq-volume').value = '';
   renderizarSeletorAquarios();
 }
 
+// ======================================
+// BANCO DE PEIXES
+// ======================================
 function setFiltro(f){
-  filtroAtual=f;
-  document.querySelectorAll('.filtro-btn').forEach(b=>{
-    const txt=b.textContent;
-    b.classList.toggle('ativo',(f==='todos'&&txt.includes('Todos'))||(f==='doce'&&txt.includes('Doce'))||(f==='marinho'&&txt.includes('Marinho')));
+  filtroAtual = f;
+  document.querySelectorAll('.filtro-btn').forEach(b => {
+    const txt = b.textContent;
+    b.classList.toggle('ativo',
+      (f === 'todos' && txt.includes('Todos')) ||
+      (f === 'doce' && txt.includes('Doce')) ||
+      (f === 'marinho' && txt.includes('Marinho'))
+    );
   });
   renderizarBancoPeixes();
 }
 
 function renderizarBancoPeixes(){
-  const b=document.getElementById('busca-peixe').value.toLowerCase();
-  const lista=BANCO_DADOS.especies_peixes.filter(p=>(filtroAtual==='todos'||p.tipo_agua===filtroAtual)&&(!b||p.nome_comum.toLowerCase().includes(b)));
-  const g=document.getElementById('grade-peixes');g.innerHTML='';
-  lista.forEach(p=>{
-    const c=document.createElement('div');c.className='peixe-card';
-    c.innerHTML=`<div class="peixe-emoji">${p.emoji}</div><h4>${p.nome_comum}</h4><span class="tipo-tag ${p.tipo_agua==='doce'?'tipo-doce':'tipo-marinho'}">${p.tipo_agua==='doce'?'💧 Doce':'🌊 Marinho'}</span><p style="font-size:.7rem;margin-top:.3rem;color:#64748b;">${p.temperatura_min_c}–${p.temperatura_max_c}°C | pH ${p.ph_min}–${p.ph_max}</p>`;
+  const busca = document.getElementById('busca-peixe').value.toLowerCase();
+  const lista = BANCO_DADOS.especies_peixes.filter(p =>
+    (filtroAtual === 'todos' || p.tipo_agua === filtroAtual) &&
+    (!busca || p.nome_comum.toLowerCase().includes(busca))
+  );
+  
+  const g = document.getElementById('grade-peixes');
+  g.innerHTML = '';
+  lista.forEach(p => {
+    const c = document.createElement('div');
+    c.className = 'peixe-card';
+    c.innerHTML = `
+      <div class="peixe-emoji">${p.emoji}</div>
+      <h4>${p.nome_comum}</h4>
+      <span class="tipo-tag ${p.tipo_agua === 'doce' ? 'tipo-doce' : 'tipo-marinho'}">
+        ${p.tipo_agua === 'doce' ? '💧 Doce' : '🌊 Marinho'}
+      </span>
+      <p style="font-size:.7rem;margin-top:.3rem;color:#64748b;">
+        ${p.temperatura_min_c}–${p.temperatura_max_c}°C | pH ${p.ph_min}–${p.ph_max}
+      </p>
+    `;
     g.appendChild(c);
   });
 }
 
+// ======================================
+// CALCULADORAS
+// ======================================
 function trocarAbaCalc(nome){
-  document.querySelectorAll('.calc-aba-btn').forEach(b=>b.classList.toggle('ativo',b.dataset.calc===nome));
-  document.querySelectorAll('.calc-painel').forEach(p=>p.classList.remove('ativo'));
-  document.getElementById('calc-'+nome).classList.add('ativo');
+  document.querySelectorAll('.calc-aba-btn').forEach(b => {
+    b.classList.toggle('ativo', b.dataset.calc === nome);
+  });
+  document.querySelectorAll('.calc-painel').forEach(p => {
+    p.classList.remove('ativo');
+  });
+  document.getElementById('calc-' + nome).classList.add('ativo');
 }
 
 function calcLitragem(){
-  const c=parseFloat(document.getElementById('lit_c').value),l=parseFloat(document.getElementById('lit_l').value),a=parseFloat(document.getElementById('lit_a').value);
-  if(!c||!l||!a){alert('Preencha comprimento, largura e altura!');return;}
-  const bruto=(c*l*a)/1000,util=bruto*0.85;
-  document.getElementById('lit-bruto').textContent=bruto.toFixed(1);
-  document.getElementById('lit-util').textContent=util.toFixed(1);
-  document.getElementById('lit-peso').textContent=util.toFixed(1);
-  let dicaTxt='';
-  if(util<50)dicaTxt='Aquário pequeno — faça trocas parciais frequentes (20-30% por semana).';
-  else if(util<150)dicaTxt='Aquário médio — boa estabilidade biológica, mantenha a rotina de manutenção.';
-  else dicaTxt='Aquário grande — excelente estabilidade! Verifique a capacidade de suporte do móvel.';
-  document.getElementById('lit-dica').textContent=dicaTxt;
+  const c = parseFloat(document.getElementById('lit_c').value);
+  const l = parseFloat(document.getElementById('lit_l').value);
+  const a = parseFloat(document.getElementById('lit_a').value);
+  if(!c || !l || !a){alert('Preencha comprimento, largura e altura!');return;}
+  const bruto = (c * l * a) / 1000;
+  const util = bruto * 0.85;
+  document.getElementById('lit-bruto').textContent = bruto.toFixed(1);
+  document.getElementById('lit-util').textContent = util.toFixed(1);
+  document.getElementById('lit-peso').textContent = util.toFixed(1);
+  let dica = util < 50 ? 'Aquário pequeno — faça trocas frequentes.' :
+             util < 150 ? 'Aquário médio — boa estabilidade.' :
+             'Aquário grande — excelente estabilidade!';
+  document.getElementById('lit-dica').textContent = dica;
   document.getElementById('res-litragem').classList.add('visivel');
 }
 
 function calcAquecedor(){
-  const v=parseFloat(document.getElementById('aq_vol').value),amb=parseFloat(document.getElementById('aq_amb').value),alvo=parseFloat(document.getElementById('aq_alvo').value);
-  if(!v||!amb||!alvo){alert('Preencha volume, temp. ambiente e temp. desejada!');return;}
-  const delta=alvo-amb;
-  if(delta<=0){alert('Temp. desejada ≤ ambiente — aquecedor pode não ser necessário.');return;}
-  const minimo=v*delta*0.238,recomendado=minimo*1.3;
-  document.getElementById('aq-delta').textContent=delta.toFixed(1);
-  document.getElementById('aq-min').textContent=Math.ceil(minimo);
-  document.getElementById('aq-rec').textContent=Math.ceil(recomendado);
-  let dicaTxt=delta>8?'⚠️ Grande diferença — use dois aquecedores distribuídos.':'Coloque o aquecedor próximo à saída do filtro.';
-  document.getElementById('aq-dica').textContent=dicaTxt;
+  const v = parseFloat(document.getElementById('aq_vol').value);
+  const amb = parseFloat(document.getElementById('aq_amb').value);
+  const alvo = parseFloat(document.getElementById('aq_alvo').value);
+  if(!v || !amb || !alvo){alert('Preencha todos os campos!');return;}
+  const delta = alvo - amb;
+  if(delta <= 0){alert('Temp. desejada ≤ ambiente — aquecedor pode não ser necessário.');return;}
+  const min = v * delta * 0.238;
+  const rec = min * 1.3;
+  document.getElementById('aq-delta').textContent = delta.toFixed(1);
+  document.getElementById('aq-min').textContent = Math.ceil(min);
+  document.getElementById('aq-rec').textContent = Math.ceil(rec);
+  document.getElementById('aq-dica').textContent = delta > 8 ? 'Use dois aquecedores distribuídos.' : 'Coloque próximo à saída do filtro.';
   document.getElementById('res-aquecedor').classList.add('visivel');
 }
 
 function calcFiltro(){
-  const v=parseFloat(document.getElementById('fil_vol').value),f=parseFloat(document.getElementById('fil_tipo').value);
+  const v = parseFloat(document.getElementById('fil_vol').value);
+  const f = parseFloat(document.getElementById('fil_tipo').value);
   if(!v){alert('Informe o volume!');return;}
-  document.getElementById('fil-min').textContent=Math.round(v*4);
-  document.getElementById('fil-ideal').textContent=Math.round(v*f);
-  document.getElementById('fil-max').textContent=Math.round(v*f*1.5);
+  document.getElementById('fil-min').textContent = Math.round(v * 4);
+  document.getElementById('fil-ideal').textContent = Math.round(v * f);
+  document.getElementById('fil-max').textContent = Math.round(v * f * 1.5);
   document.getElementById('res-filtro').classList.add('visivel');
 }
 
 function calcIluminacao(){
-  const c=parseFloat(document.getElementById('il_c').value),l=parseFloat(document.getElementById('il_l').value),n=parseFloat(document.getElementById('il_nivel').value);
-  if(!c||!l){alert('Preencha comprimento e largura!');return;}
-  const vol=(c*l*40)/1000,lm=vol*n,w=lm/80;
-  document.getElementById('il-vol').textContent=vol.toFixed(1);
-  document.getElementById('il-lm').textContent=lm.toFixed(0);
-  document.getElementById('il-w').textContent=w.toFixed(0);
+  const c = parseFloat(document.getElementById('il_c').value);
+  const l = parseFloat(document.getElementById('il_l').value);
+  const n = parseFloat(document.getElementById('il_nivel').value);
+  if(!c || !l){alert('Preencha comprimento e largura!');return;}
+  const vol = (c * l * 40) / 1000;
+  const lm = vol * n;
+  const w = lm / 80;
+  document.getElementById('il-vol').textContent = vol.toFixed(1);
+  document.getElementById('il-lm').textContent = lm.toFixed(0);
+  document.getElementById('il-w').textContent = w.toFixed(0);
   document.getElementById('res-iluminacao').classList.add('visivel');
 }
 
 function calcSubstrato(){
-  const c=parseFloat(document.getElementById('sub_c').value),l=parseFloat(document.getElementById('sub_l').value),e=parseFloat(document.getElementById('sub_esp').value);
-  if(!c||!l||!e){alert('Preencha comprimento, largura e espessura!');return;}
-  const vol=(c*l*e)/1000,sacos=Math.ceil(vol/2.5),peso=vol*1.5;
-  document.getElementById('sub-vol').textContent=vol.toFixed(1);
-  document.getElementById('sub-sacos').textContent=sacos;
-  document.getElementById('sub-peso').textContent=peso.toFixed(1);
-  document.getElementById('res-substrato').classList.add('visivel');
-}
-
-function calcTroca(){
-  const v=parseFloat(document.getElementById('tr_vol').value),p=parseFloat(document.getElementById('tr_pct').value);
-  if(!v||!p){alert('Preencha volume e % de troca!');return;}
-  const qtd=v*p/100,cond=qtd/10*5;
-  document.getElementById('tr-qtd').textContent=qtd.toFixed(1);
-  document.getElementById('tr-repo').textContent=qtd.toFixed(1);
-  document.getElementById('tr-cond').textContent=cond.toFixed(1);
-  document.getElementById('res-troca').classList.add('visivel');
-}
-
-function calcCO2(){
-  const kh=parseFloat(document.getElementById('co2_kh').value),ph=parseFloat(document.getElementById('co2_ph').value);
-  if(!kh||!ph){alert('Preencha KH
+  const c = parseFloat(document.getElementById('sub_c').value);
+  const l = parseFloat(document.getElementById('sub_l').value);
+  const e = parseFloat(document.getElementById('sub_esp').
