@@ -49,7 +49,7 @@ input:focus,select:focus{outline:none;border-color:var(--am)}
 .aba-btn{flex:1;border-radius:12px}.aba-btn.ativo,.filtro-btn.ativo{background:var(--am);color:#fff}
 .grade-peixes{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem}
 .peixe-card{background:#fff;border-radius:14px;padding:1rem;text-align:center;box-shadow:var(--sb);cursor:pointer;border:3px solid transparent}
-.peixe-card:hover{border-color:var(--am)}.peixe-emoji{font-size:2.5rem}.peixe-card h4{color:var(--ae);font-size:.95rem}
+.peixe-card:hover{border-color:var(--am)}.peixe-foto{width:100%;height:100px;border-radius:10px;overflow:hidden;background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin-bottom:.5rem}.peixe-foto img{width:100%;height:100%;object-fit:cover}.peixe-card h4{color:var(--ae);font-size:.95rem}
 .cientifico{font-size:.8rem;font-style:italic;color:#94a3b8;margin-top:.2rem}
 .tipo-tag{display:inline-block;margin-top:.4rem;padding:.15rem .6rem;border-radius:10px;font-size:.7rem;font-weight:600}
 .tipo-doce{background:#dbeafe;color:#1e40af}.tipo-marinho{background:#cffafe;color:#155e75}
@@ -136,7 +136,7 @@ input:focus,select:focus{outline:none;border-color:var(--am)}
 <div id="conteudo-populares">
 <div class="busca-box"><input type="text" id="busca-peixe" placeholder="🔍 Buscar nos populares..." oninput="renderizarBancoPeixes()"></div>
 <div class="filtros"><button class="filtro-btn ativo" data-filtro="todos" onclick="setFiltro('todos')">Todos</button><button class="filtro-btn" data-filtro="doce" onclick="setFiltro('doce')">💧 Doce</button><button class="filtro-btn" data-filtro="marinho" onclick="setFiltro('marinho')">🌊 Marinho</button></div>
-<div class="grade-peixes" id="grade-peixes"></div></div>
+<div class="grade-peixes" id="grade-peixes"></div><p style="font-size:.7rem;color:#94a3b8;text-align:center;margin-top:1rem">📷 Fotos: Wikipedia / Wikimedia Commons (carregadas online)</p></div>
 <div id="conteudo-mundo" style="display:none">
 <p style="font-size:.85rem;color:#64748b;margin-bottom:.8rem">🔍 Pesquise qualquer espécie (precisa de internet). Dados da Wikipedia.</p>
 <div class="busca-box"><input type="text" id="busca-wiki" placeholder="Digite o nome do peixe..."><button class="btn btn-principal" style="width:auto;padding:.9rem 1.5rem" onclick="buscarWikipedia()">Buscar</button></div>
@@ -195,17 +195,59 @@ let usuario={nome:'',email:'',aquarios:[],aquarioAtivo:null};
 let filtroAtual='todos',peixeSelecionado=null,qtdAdicionar=1;
 
 // ===== BANCO DE PEIXES =====
-// Amostra. Cole aqui o restante das espécies do seu array BANCO_PEIXES original (mesmo formato).
-const BANCO_PEIXES=[
-{id:1,nome:"Neon Tetra",cientifico:"Paracheirodon innesi",familia:"Characidae",tipo:"doce",emoji:"🐟",origem:"Amazônia",tamanho:"3-4 cm",temperatura:"22-26 °C",ph:"6.0-7.0",gh:"1-10 dGH",comportamento:"Pacífico, cardume (mín. 6)",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"5-8 anos",compatibilidade:"Pequenos e pacíficos",obs:"O mais popular do mundo."},
-{id:3,nome:"Guppy",cientifico:"Poecilia reticulata",familia:"Poeciliidae",tipo:"doce",emoji:"🐟",origem:"América do Sul",tamanho:"3-6 cm",temperatura:"22-28 °C",ph:"7.0-8.5",gh:"8-20 dGH",comportamento:"Pacífico, ativo",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"2-3 anos",compatibilidade:"Pacíficos similares",obs:"Reproduz fácil — filhotes vivos."},
-{id:8,nome:"Disco (Discus)",cientifico:"Symphysodon aequifasciatus",familia:"Cichlidae",tipo:"doce",emoji:"🐠",origem:"Bacia Amazônica",tamanho:"15-20 cm",temperatura:"28-31 °C",ph:"5.5-7.0",gh:"1-8 dGH",comportamento:"Pacífico, cardume (mín. 4)",alimentacao:"Carnívoro exigente",dificuldade:"Difícil",vida:"10-15 anos",compatibilidade:"Apistogramas, coridoras",obs:"O 'rei do aquário'."},
-{id:10,nome:"Betta",cientifico:"Betta splendens",familia:"Osphronemidae",tipo:"doce",emoji:"🐟",origem:"Tailândia",tamanho:"6-8 cm",temperatura:"24-28 °C",ph:"6.5-7.5",gh:"2-12 dGH",comportamento:"Machos agressivos entre si",alimentacao:"Carnívoro",dificuldade:"Fácil",vida:"3-5 anos",compatibilidade:"Sozinho ou fêmeas",obs:"Respira ar. NUNCA dois machos juntos."},
-{id:101,nome:"Palhaço Ocellaris (Nemo)",cientifico:"Amphiprion ocellaris",familia:"Pomacentridae",tipo:"marinho",emoji:"🤡",origem:"Indo-Pacífico",tamanho:"8-11 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico, forma par (anêmona)",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"6-10 anos",compatibilidade:"Pacíficos marinhos",obs:"O mais famoso! Muda de sexo."},
-{id:103,nome:"Tang Azul (Dory)",cientifico:"Paracanthurus hepatus",familia:"Acanthuridae",tipo:"marinho",emoji:"💙",origem:"Indo-Pacífico",tamanho:"25-30 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico, ativo",alimentacao:"Herbívoro — algas",dificuldade:"Médio",vida:"8-12 anos",compatibilidade:"Pacíficos grandes",obs:"A famosa Dory! 300L+."},
-{id:109,nome:"Mandarim (Dragonet)",cientifico:"Synchiropus splendidus",familia:"Callionymidae",tipo:"marinho",emoji:"🐉",origem:"Pacífico Ocidental",tamanho:"6-8 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico, tímido",alimentacao:"SÓ copépodos vivos!",dificuldade:"Difícil",vida:"3-6 anos",compatibilidade:"Pacíficos muito calmos",obs:"O peixe mais colorido do mundo. Não para iniciantes!"},
-{id:117,nome:"Cavalo-Marinho",cientifico:"Hippocampus erectus",familia:"Syngnathidae",tipo:"marinho",emoji:"🐴",origem:"Atlântico",tamanho:"12-18 cm",temperatura:"22-25 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Muito pacífico, monogâmico",alimentacao:"Artêmia viva",dificuldade:"Difícil",vida:"3-6 anos",compatibilidade:"SÓ cavalos-marinhos",obs:"Macho carrega os filhotes!"}
-];
+// Banco de espécies. Formato: id|nome|científico|família|tipo|emoji|origem|tamanho|temperatura|pH|GH ou salinidade|aquário mínimo|comportamento|alimentação|dificuldade|vida|compatibilidade|observações
+const _DADOS=`
+1|Neon Tetra|Paracheirodon innesi|Characidae|doce|🐟|Amazônia (Peru/Brasil)|3-4 cm|22-26 °C|6.0-7.0|1-10 dGH|40 L|Pacífico, cardume mín. 8|Onívoro (flocos, micro-pellets)|Fácil|3-5 anos|Peixes pequenos e calmos|Sensível a água nova: coloque só em aquário já ciclado.
+2|Cardinal Tetra|Paracheirodon axelrodi|Characidae|doce|🐠|Rio Negro (Amazônia)|4-5 cm|23-28 °C|4.5-6.5|1-8 dGH|60 L|Pacífico, cardume mín. 8|Onívoro|Médio|3-4 anos|Peixes pequenos e calmos|Prefere água ácida e macia.
+3|Guppy|Poecilia reticulata|Poeciliidae|doce|🐟|Venezuela e Caribe|3-6 cm|22-28 °C|7.0-8.0|8-20 dGH|40 L|Pacífico, ativo|Onívoro|Fácil|2-3 anos|Peixes pacíficos|Vivíparo, reproduz rápido. Mantenha mais fêmeas que machos.
+4|Molly|Poecilia sphenops|Poeciliidae|doce|🐠|México a Colômbia|8-12 cm|24-28 °C|7.5-8.5|10-25 dGH|80 L|Pacífico, ativo|Onívoro (aceita algas)|Fácil|3-5 anos|Peixes pacíficos|Gosta de água dura e de uma pitada de sal marinho.
+5|Platy|Xiphophorus maculatus|Poeciliidae|doce|🐟|México e Guatemala|4-6 cm|20-26 °C|7.0-8.2|10-28 dGH|50 L|Pacífico|Onívoro|Fácil|3-4 anos|Peixes pacíficos|Resistente, ótimo para iniciantes.
+6|Espada (Swordtail)|Xiphophorus hellerii|Poeciliidae|doce|🗡️|México a Honduras|10-12 cm|22-28 °C|7.0-8.3|12-30 dGH|100 L|Ativo, machos brigam|Onívoro|Fácil|3-5 anos|Peixes pacíficos e médios|Pula: use tampa no aquário.
+7|Betta|Betta splendens|Osphronemidae|doce|🐟|Tailândia|6-7 cm|24-28 °C|6.5-7.5|2-12 dGH|20 L com aquecedor|Macho agressivo com outros machos|Carnívoro (pellets, congelados)|Fácil|3-5 anos|Sozinho ou com peixes calmos de fundo|Respira ar da superfície. Nunca dois machos juntos.
+8|Kinguio (Goldfish)|Carassius auratus|Cyprinidae|doce|🐠|China|15-30 cm|15-23 °C|7.0-8.4|8-20 dGH|100 L + 50 L por peixe extra|Pacífico, produz muito resíduo|Onívoro|Fácil|10-20 anos|Só com kinguios|Água fria, sem aquecedor. Não vive em tigela. Filtro potente.
+9|Danio Zebra|Danio rerio|Cyprinidae|doce|🐟|Índia|4-5 cm|18-25 °C|6.5-7.5|5-19 dGH|60 L|Pacífico, ativo, cardume mín. 6|Onívoro|Fácil|3-5 anos|Peixes ativos pacíficos|Muito resistente; nada na superfície.
+10|Barbo Tigre|Puntigrus tetrazona|Cyprinidae|doce|🐯|Indonésia|6-7 cm|20-26 °C|6.0-7.5|5-19 dGH|100 L|Ativo, belisca nadadeiras; cardume mín. 6|Onívoro|Fácil|5-7 anos|Peixes rápidos|Evite com bettas e kinguios de cauda longa.
+11|Rasbora Arlequim|Trigonostigma heteromorpha|Cyprinidae|doce|🐟|Sudeste Asiático|4-5 cm|22-27 °C|6.0-7.5|2-12 dGH|60 L|Pacífico, cardume mín. 8|Onívoro|Fácil|5-8 anos|Peixes pequenos e calmos|Prefere água macia e aquário plantado.
+12|Acará Bandeira|Pterophyllum scalare|Cichlidae|doce|🐟|Bacia Amazônica|15 cm (altura até 25 cm)|24-30 °C|6.0-7.5|3-12 dGH|200 L (alto)|Semi-agressivo|Carnívoro|Médio|8-10 anos|Peixes médios; come neons|Precisa de aquário alto. Come peixes que caibam na boca.
+13|Disco (Discus)|Symphysodon aequifasciatus|Cichlidae|doce|🐠|Bacia Amazônica|15-20 cm|28-31 °C|5.5-7.0|1-8 dGH|250 L|Pacífico, grupo mín. 5|Carnívoro exigente|Difícil|10-15 anos|Tetras e coridoras|Exige trocas de água frequentes; sensível a nitrato.
+14|Oscar|Astronotus ocellatus|Cichlidae|doce|🐡|Amazônia|30-40 cm|23-27 °C|6.0-8.0|5-20 dGH|300 L|Agressivo, inteligente|Carnívoro|Médio|10-15 anos|Só peixes grandes|Produz muito resíduo: filtragem forte.
+15|Ramirezi|Mikrogeophagus ramirezi|Cichlidae|doce|🐠|Venezuela e Colômbia|5-7 cm|26-30 °C|5.0-7.0|1-10 dGH|60 L|Pacífico, forma casal|Carnívoro|Médio|2-4 anos|Peixes pequenos e calmos|Precisa de água quente e muito limpa.
+16|Kribensis|Pelvicachromis pulcher|Cichlidae|doce|🐠|Nigéria|8-10 cm|23-27 °C|6.0-8.0|5-20 dGH|80 L|Pacífico, territorial na desova|Onívoro|Fácil|5-8 anos|Peixes médios pacíficos|Precisa de tocas para desovar.
+17|Corydora|Corydoras paleatus|Callichthyidae|doce|🐟|América do Sul|5-7 cm|20-25 °C|6.0-7.8|2-15 dGH|60 L|Pacífico, cardume mín. 6|Onívoro de fundo (pastilhas)|Fácil|5-10 anos|Todos os pacíficos|Use areia fina para proteger os barbilhões.
+18|Cascudo Ancistrus|Ancistrus cirrhosus|Loricariidae|doce|🐡|América do Sul|12-15 cm|22-28 °C|6.5-7.5|4-18 dGH|100 L|Pacífico, noturno|Herbívoro (algas, vegetais)|Fácil|10-15 anos|Todos|Precisa de toco de madeira para roer.
+19|Otocinclus|Otocinclus affinis|Loricariidae|doce|🐟|Amazônia|3-5 cm|21-26 °C|6.0-7.5|2-15 dGH|60 L|Pacífico, grupo mín. 4|Algas e biofilme|Médio|3-5 anos|Peixes pequenos e calmos|Só em aquário maduro com algas; passa fome em tanque novo.
+20|Colisa (Gourami Anão)|Trichogaster lalius|Osphronemidae|doce|🐠|Índia e Bangladesh|5-7 cm|24-28 °C|6.0-7.5|4-10 dGH|60 L|Pacífico, tímido|Onívoro|Fácil|3-4 anos|Peixes pequenos e calmos|Respira ar da superfície; evite ar frio sobre a água.
+21|Bóia (Clown Loach)|Chromobotia macracanthus|Botiidae|doce|🤡|Indonésia|20-30 cm|25-30 °C|6.0-7.5|5-12 dGH|300 L|Pacífico, grupo mín. 5|Onívoro (come caracóis)|Médio|10-20 anos|Peixes pacíficos|Fica grande; sensível a ictio e a alguns remédios.
+22|Peixe Arco-Íris|Melanotaenia praecox|Melanotaeniidae|doce|🌈|Nova Guiné|6-8 cm|22-28 °C|7.0-8.0|8-20 dGH|100 L|Pacífico, ativo, cardume mín. 6|Onívoro|Fácil|4-6 anos|Peixes ativos|Cores melhoram com espaço e plantas.
+23|Tetra Serpae|Hyphessobrycon eques|Characidae|doce|🐠|Brasil e Paraguai|4 cm|22-27 °C|5.5-7.5|5-15 dGH|60 L|Semi-agressivo, belisca nadadeiras|Onívoro|Fácil|4-6 anos|Peixes ativos|Cardume de 8+ reduz a agressão.
+24|Apistograma|Apistogramma cacatuoides|Cichlidae|doce|🐟|Amazônia|5-8 cm|23-29 °C|5.0-7.0|1-10 dGH|80 L|Territorial, 1 macho com várias fêmeas|Carnívoro|Médio|3-5 anos|Tetras pequenos|Precisa de tocas e água macia.
+101|Palhaço Ocellaris (Nemo)|Amphiprion ocellaris|Pomacentridae|marinho|🤡|Indo-Pacífico|8-11 cm|24-27 °C|8.1-8.4|1.020-1.025|100 L|Pacífico, forma par|Onívoro|Fácil|6-10 anos|Peixes marinhos pacíficos|Adicione só em aquário ciclado. Anêmona é opcional.
+102|Palhaço Tomato|Amphiprion frenatus|Pomacentridae|marinho|🍅|Indo-Pacífico|12-14 cm|24-27 °C|8.1-8.4|1.020-1.025|150 L|Semi-agressivo, territorial|Onívoro|Fácil|6-10 anos|Peixes robustos|Mais territorial que o ocellaris.
+103|Tang Azul (Dory)|Paracanthurus hepatus|Acanthuridae|marinho|💙|Indo-Pacífico|25-30 cm|24-27 °C|8.1-8.4|1.020-1.025|400 L|Pacífico, ativo|Herbívoro (algas marinhas)|Médio|8-12 anos|Peixes pacíficos|Precisa de muito espaço para nadar; propenso a ictio.
+104|Tang Amarelo|Zebrasoma flavescens|Acanthuridae|marinho|💛|Havaí|15-20 cm|24-27 °C|8.1-8.4|1.020-1.025|300 L|Pacífico, agressivo com outros tangs|Herbívoro (algas)|Fácil|10-20 anos|Peixes pacíficos|Ótimo comedor de algas.
+105|Anjo Imperador|Pomacanthus imperator|Pomacanthidae|marinho|👑|Indo-Pacífico|35-40 cm|24-27 °C|8.1-8.4|1.020-1.025|600 L|Semi-agressivo|Onívoro (esponjas, mysis)|Difícil|15-20 anos|Peixes grandes|Jovem azul com anéis; adulto listrado.
+106|Anjo Flame|Centropyge loricula|Pomacanthidae|marinho|🔥|Pacífico|8-10 cm|24-27 °C|8.1-8.4|1.020-1.025|250 L|Semi-agressivo|Onívoro (algas e mysis)|Médio|5-10 anos|Peixes pacíficos|Precisa de muitas rochas para se esconder.
+107|Borboleta Bico de Cobre|Chelmon rostratus|Chaetodontidae|marinho|🦋|Indo-Pacífico|18-20 cm|24-27 °C|8.1-8.4|1.020-1.025|300 L|Pacífico, tímido|Carnívoro (come Aiptasia)|Difícil|5-10 anos|Peixes pacíficos|Muitos recusam comida no começo.
+108|Mandarim (Dragonet)|Synchiropus splendidus|Callionymidae|marinho|🐉|Pacífico Ocidental|6-8 cm|24-27 °C|8.1-8.4|1.020-1.025|300 L maduro|Pacífico, tímido|Só copépodos vivos|Difícil|3-6 anos|Peixes muito calmos|Não indicado a iniciantes: morre de fome sem copépodos.
+109|Gramma Real|Gramma loreto|Grammatidae|marinho|👑|Caribe|7-8 cm|24-27 °C|8.1-8.4|1.020-1.025|200 L|Pacífico, territorial|Carnívoro|Fácil|5-10 anos|Peixes pacíficos|Metade roxa, metade amarela. Nada de cabeça para baixo (normal).
+110|Peixe Fogo (Firefish)|Nemateleotris magnifica|Gobiidae|marinho|🔥|Indo-Pacífico|7-9 cm|24-27 °C|8.1-8.4|1.020-1.025|150 L|Muito pacífico, tímido|Carnívoro (zooplâncton)|Fácil|3-5 anos|Peixes calmos|Pula: tampa obrigatória.
+111|Goby Guarda (Watchman)|Cryptocentrus cinctus|Gobiidae|marinho|🦐|Indo-Pacífico|8-10 cm|24-27 °C|8.1-8.4|1.020-1.025|150 L|Pacífico|Carnívoro|Fácil|4-6 anos|Peixes pacíficos|Vive em simbiose com camarão-pistola.
+112|Wrasse Seis Linhas|Pseudocheilinus hexataenia|Labridae|marinho|⚡|Indo-Pacífico|7-9 cm|24-27 °C|8.1-8.4|1.020-1.025|200 L|Ativo, pode perseguir novatos|Carnívoro (come flatworms)|Fácil|4-6 anos|Peixes pacíficos e semi-agressivos|Adicione por último.
+113|Hawkfish Chama|Neocirrhites armatus|Cirrhitidae|marinho|🦅|Pacífico (Fiji)|8-10 cm|24-27 °C|8.1-8.4|1.020-1.025|200 L|Semi-agressivo, pousa em corais|Carnívoro|Fácil|5-10 anos|Peixes robustos|Pode comer camarões pequenos.
+114|Leão Anão (Lionfish)|Dendrochirus brachypterus|Scorpaenidae|marinho|🦁|Indo-Pacífico|15-18 cm|24-27 °C|8.1-8.4|1.020-1.025|300 L|Predador|Carnívoro (come o que cabe na boca)|Médio|8-12 anos|Só peixes grandes|Espinhos venenosos: cuidado na manutenção.
+115|Moreia Neve|Echidna nebulosa|Muraenidae|marinho|🐍|Indo-Pacífico|60-90 cm|24-27 °C|8.1-8.4|1.020-1.025|400 L|Pacífico, come pequenos|Carnívoro|Médio|10-15 anos|Peixes grandes|Escapa: tampa bem fechada.
+116|Cavalo-Marinho|Hippocampus erectus|Syngnathidae|marinho|🐴|Atlântico|12-18 cm|22-25 °C|8.1-8.4|1.020-1.025|150 L|Muito pacífico, monogâmico|Artêmia viva, várias vezes ao dia|Difícil|3-6 anos|Só cavalos-marinhos|Aquário específico, sem concorrência por comida.
+117|Donzela Azul|Chrysiptera cyanea|Pomacentridae|marinho|💙|Indo-Pacífico|6-8 cm|24-27 °C|8.1-8.4|1.020-1.025|150 L|Agressivo com o tempo|Onívoro|Fácil|5-8 anos|Peixes robustos|Adicione por último.
+118|Chromis Azul-Verde|Chromis viridis|Pomacentridae|marinho|🐟|Indo-Pacífico|8-10 cm|24-27 °C|8.1-8.4|1.020-1.025|200 L|Muito pacífico, cardume mín. 5|Onívoro (plâncton)|Fácil|5-8 anos|Peixes pacíficos|Cardume bonito; precisa de boa oxigenação.
+119|Goby Neon (Limpador)|Elacatinus oceanops|Gobiidae|marinho|💡|Caribe|4-5 cm|24-27 °C|8.1-8.4|1.020-1.025|100 L|Muito pacífico, limpador|Carnívoro (parasitas, mysis)|Fácil|3-5 anos|Peixes pacíficos|Limpa parasitas de outros peixes.
+120|Dottyback Orquídea|Pseudochromis fridmani|Pseudochromidae|marinho|🌸|Mar Vermelho|6-8 cm|24-27 °C|8.1-8.4|1.020-1.025|150 L|Semi-agressivo|Carnívoro|Fácil|5-8 anos|Peixes pacíficos e semi-agressivos|Adicione por último.
+`;
+const BANCO_PEIXES=_DADOS.trim().split('\n').map(l=>{
+  const f=l.split('|');
+  const o={id:+f[0],nome:f[1],cientifico:f[2],familia:f[3],tipo:f[4],emoji:f[5],origem:f[6],tamanho:f[7],temperatura:f[8],ph:f[9],litros:f[11],comportamento:f[12],alimentacao:f[13],dificuldade:f[14],vida:f[15],compatibilidade:f[16],obs:f[17]};
+  if(f[4]==='doce')o.gh=f[10];else o.salinidade=f[10];
+  return o;
+});
 
 // ===== NAVEGAÇÃO =====
 function mostrarTela(id){document.querySelectorAll('.tela').forEach(t=>t.classList.remove('ativa'));document.getElementById(id).classList.add('ativa');const m=document.getElementById('msg-recuperar');if(m){m.className='mensagem';m.innerHTML='';}}
@@ -350,8 +392,8 @@ function renderizarBancoPeixes(){
   if(!l.length){g.innerHTML='<div class="sem-dados" style="grid-column:1/-1">Nenhuma espécie 🔍</div>';return;}
   l.forEach(p=>{
     const c=document.createElement('div');c.className='peixe-card';c.onclick=()=>abrirModal(p.id);
-    c.innerHTML=`<div class="peixe-emoji">${p.emoji}</div><h4>${esc(p.nome)}</h4><div class="cientifico">${esc(p.cientifico)}</div><span class="tipo-tag ${p.tipo==='doce'?'tipo-doce':'tipo-marinho'}">${p.tipo==='doce'?'💧 Doce':'🌊 Marinho'}</span>`;
-    g.appendChild(c);
+    c.innerHTML=`<div class="peixe-foto">${p.emoji}</div><h4>${esc(p.nome)}</h4><div class="cientifico">${esc(p.cientifico)}</div><span class="tipo-tag ${p.tipo==='doce'?'tipo-doce':'tipo-marinho'}">${p.tipo==='doce'?'💧 Doce':'🌊 Marinho'}</span>`;
+    g.appendChild(c);aplicarFoto(p.cientifico,c.querySelector('.peixe-foto'));
   });
 }
 
@@ -382,6 +424,35 @@ async function buscarWikipedia(){
   }catch(err){res.innerHTML='<div class="sem-dados">⚠️ Erro na busca. Verifique sua internet.</div>';}
 }
 
+// ===== FOTOS (Wikipedia, com cache) =====
+const CHAVE_FOTOS='aquavibe_fotos';
+async function buscarFoto(c){
+  let cache={};try{cache=JSON.parse(localStorage.getItem(CHAVE_FOTOS)||'{}');}catch(e){}
+  if(c in cache)return cache[c];
+  let url='';
+  for(const lang of ['en','pt']){
+    try{
+      const r=await fetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(c.replace(/ /g,'_'))}`);
+      if(!r.ok)continue;
+      const d=await r.json();
+      if(d.thumbnail&&d.thumbnail.source){url=d.thumbnail.source;break;}
+    }catch(e){return '';}
+  }
+  cache[c]=url;
+  try{localStorage.setItem(CHAVE_FOTOS,JSON.stringify(cache));}catch(e){}
+  return url;
+}
+function aplicarFoto(c,el,grande){
+  if(!el)return;
+  buscarFoto(c).then(u=>{
+    if(!u||!document.body.contains(el))return;
+    const img=new Image();img.alt=c;
+    if(grande)img.className='foto-peixe';
+    img.onload=()=>{el.innerHTML='';el.appendChild(img);};
+    img.src=grande?u.replace(/\/\d+px-/,'/500px-'):u;
+  });
+}
+
 // ===== MODAL =====
 function abrirModal(id){
   const p=BANCO_PEIXES.find(x=>x.id===id);if(!p)return;
@@ -389,17 +460,18 @@ function abrirModal(id){
   const dc=p.dificuldade.startsWith('Fácil')?'dificuldade-facil':p.dificuldade==='Médio'?'dificuldade-medio':'dificuldade-dificil';
   const it=(l,v,x='')=>`<div class="espec-item ${x}"><div class="label">${l}</div><div class="valor">${esc(v)}</div></div>`;
   document.getElementById('modal-conteudo').innerHTML=`
-    <div class="emoji-grande">${p.emoji}</div><h2>${esc(p.nome)}</h2><div class="cientifico">${esc(p.cientifico)} — ${esc(p.familia)}</div>
+    <div id="foto-modal"><div class="emoji-grande">${p.emoji}</div></div><h2>${esc(p.nome)}</h2><div class="cientifico">${esc(p.cientifico)} — ${esc(p.familia)}</div>
     <div class="espec-grid">
       ${it('Tipo',p.tipo==='doce'?'💧 Água Doce':'🌊 Marinho')}
       <div class="espec-item"><div class="label">Dificuldade</div><div class="valor ${dc}">${esc(p.dificuldade)}</div></div>
-      ${it('Tamanho',p.tamanho)}${it('Vida',p.vida)}${it('Temperatura',p.temperatura)}${it('pH',p.ph)}
+      ${it('Tamanho',p.tamanho)}${it('Vida',p.vida)}${p.litros?it('Aquário mínimo',p.litros):''}${it('Temperatura',p.temperatura)}${it('pH',p.ph)}
       ${p.gh?it('GH',p.gh):''}${p.salinidade?it('Salinidade',p.salinidade):''}
       ${it('Origem',p.origem,'longo')}${it('Comportamento',p.comportamento,'longo')}${it('Alimentação',p.alimentacao,'longo')}${it('Compatibilidade',p.compatibilidade,'longo')}${it('📝 Observações',p.obs,'longo')}
     </div>
     <div class="contador-qtd"><button onclick="mudarQtd(-1)">−</button><span id="qtd-valor">1</span><button onclick="mudarQtd(1)">+</button></div>
     <button class="btn btn-principal" onclick="adicionarAoAquario()">➕ Adicionar ao meu aquário</button>`;
   document.getElementById('modal-peixe').classList.add('aberto');
+  aplicarFoto(p.cientifico,document.getElementById('foto-modal'),true);
 }
 function abrirModalWiki(p){
   peixeSelecionado={id:'wiki_'+p.pageid,nome:p.title,cientifico:p.title,emoji:'🐟',tipo:'desconhecido'};qtdAdicionar=1;
