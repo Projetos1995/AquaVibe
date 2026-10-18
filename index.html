@@ -174,7 +174,8 @@ input:focus,select:focus{outline:none;border-color:var(--am)}
 
 <script>
 // ===== PERSISTÊNCIA (localStorage) =====
-const CHAVE_CONTAS='aquavibe_contas', CHAVE_SESSAO='aquavibe_sessao';
+const CHAVE_CONTAS='aquavibe_contas', CHAVE_SESSAO='aquavibe_sessao', CHAVE_VIEW='aquavibe_view';
+function salvarView(v){try{localStorage.setItem(CHAVE_VIEW,v);}catch(e){}}
 const ADMIN_PADRAO={nome:"Administrador",email:"admin@aquavibe.com",senha:"admin123",aquarios:[],aquarioAtivo:null,admin:true};
 function carregarContas(){
   try{const s=localStorage.getItem(CHAVE_CONTAS);if(s){const l=JSON.parse(s);if(Array.isArray(l)&&l.length)return l;}}catch(e){}
@@ -212,12 +213,13 @@ function mostrarSubTela(id){
   document.getElementById('menu-principal').style.display='none';
   document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa'));
   document.getElementById(id).classList.add('sub-ativa');
+  salvarView(id);
   if(id==='sub-aquarios')renderizarListaAquarios();
   if(id==='sub-banco')renderizarBancoPeixes();
   if(id==='sub-peixes')renderizarMeusPeixes();
   if(id==='sub-admin')renderizarPainelAdmin();
 }
-function voltarMenu(){document.getElementById('menu-principal').style.display='block';document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa'));}
+function voltarMenu(){salvarView('menu');document.getElementById('menu-principal').style.display='block';document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa'));}
 
 // ===== LOGIN / CADASTRO =====
 function abrirApp(c){
@@ -263,7 +265,7 @@ function processarRecuperacao(){
 function sair(){
   if(!confirm('Sair?'))return;
   salvarDados();
-  try{localStorage.removeItem(CHAVE_SESSAO);}catch(err){}
+  try{localStorage.removeItem(CHAVE_SESSAO);localStorage.removeItem(CHAVE_VIEW);}catch(err){}
   document.getElementById('email-login').value='';document.getElementById('senha-login').value='';
   document.getElementById('admin-badge').style.display='none';document.getElementById('card-admin').style.display='none';
   usuario={nome:'',email:'',aquarios:[],aquarioAtivo:null};mostrarTela('tela-login');
@@ -448,9 +450,14 @@ function removerPeixe(i){
   try{
     const e=localStorage.getItem(CHAVE_SESSAO);if(!e)return;
     const c=contas.find(x=>x.email===e);
-    if(c)abrirApp(c);else localStorage.removeItem(CHAVE_SESSAO);
+    if(c){
+      const v=localStorage.getItem(CHAVE_VIEW); // lê antes: abrirApp volta ao menu
+      abrirApp(c);
+      const el=v&&v!=='menu'?document.getElementById(v):null;
+      if(el&&el.classList.contains('sub-tela')&&(v!=='sub-admin'||c.admin))mostrarSubTela(v);
+    }else localStorage.removeItem(CHAVE_SESSAO);
   }catch(err){}
 })();
 </script>
 </body>
-</html>
+  </html>
