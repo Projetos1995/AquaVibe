@@ -3,718 +3,454 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AquaVibe</title>
+<title>AquaVibe 🐠</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-:root{--azul-escuro:#0c4a6e;--azul-medio:#0ea5e9;--azul-claro:#e0f2fe;--verde-aqua:#10b981;--sombra:0 4px 20px rgba(14,165,233,0.15);}
-body{background:linear-gradient(135deg,#e0f2fe 0%,#bae6fd 100%);min-height:100vh;}
-.tela{display:none;min-height:100vh;padding:2rem 1.5rem;}
-.ativa{display:block;}
-.marca{text-align:center;margin-bottom:2rem;padding-top:1rem;}
-.marca h1{font-size:2.2rem;color:var(--azul-escuro);}
-.marca span{color:var(--verde-aqua);}
-.marca p{color:#475569;margin-top:.3rem;}
-.cartao{background:white;border-radius:20px;padding:2rem;box-shadow:var(--sombra);max-width:420px;margin:0 auto;}
-.cartao h2{text-align:center;color:var(--azul-escuro);margin-bottom:1.5rem;font-size:1.4rem;}
-.grupo-input{margin-bottom:1.2rem;}
-label{display:block;margin-bottom:.5rem;color:#334155;font-weight:500;font-size:.95rem;}
-input,select{width:100%;padding:.85rem 1rem;border:2px solid #e2e8f0;border-radius:12px;font-size:1rem;transition:border .3s;}
-input:focus,select:focus{outline:none;border-color:var(--azul-medio);}
-.btn{width:100%;padding:1rem;border:none;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .2s;}
-.btn:active{transform:scale(.98);}
-.btn-principal{background:linear-gradient(90deg,#0ea5e9,#06b6d4);color:white;margin-top:.5rem;}
-.btn-secundario{background:transparent;color:var(--azul-medio);margin-top:.8rem;}
-.link{text-align:center;margin-top:1.2rem;font-size:.95rem;color:#64748b;}
-.link span{color:var(--azul-medio);font-weight:600;cursor:pointer;}
-.link span:hover{text-decoration:underline;}
-.cabecalho-app{background:white;padding:1.2rem;border-radius:0 0 24px 24px;box-shadow:var(--sombra);margin-bottom:1.5rem;}
-.cabecalho-app h2{color:var(--azul-escuro);font-size:1.4rem;}
-.cabecalho-app p{color:#64748b;margin-top:.3rem;}
-.seletor-aquario{margin-top:.8rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;}
-.tag-aquario{background:var(--azul-claro);padding:.5rem 1rem;border-radius:20px;font-size:.9rem;color:var(--azul-escuro);font-weight:500;cursor:pointer;}
-.tag-aquario.ativo{background:var(--azul-medio);color:white;}
-.tag-novo{background:#e0f2fe;border:2px dashed #0ea5e9;}
-.grade{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;max-width:500px;margin:0 auto;}
-.card-funcao{background:white;border-radius:16px;padding:1.5rem;text-align:center;box-shadow:var(--sombra);cursor:pointer;transition:all .3s;}
-.card-funcao:hover{transform:translateY(-5px);}
-.icone{font-size:2rem;margin-bottom:.5rem;}
-.card-funcao h3{color:var(--azul-escuro);font-size:1rem;}
-.card-funcao p{color:#94a3b8;font-size:.8rem;margin-top:.3rem;}
-.card-admin{background:linear-gradient(135deg,#fbbf24,#f59e0b)!important;}
-.card-admin h3,.card-admin p{color:white!important;}
-.rodape{text-align:center;margin-top:3rem;color:#94a3b8;font-size:.85rem;}
-.sair{max-width:200px;margin:2rem auto 0;}
-.sub-tela{display:none;padding:1rem 0;}
-.sub-ativa{display:block;}
-.voltar{display:inline-flex;align-items:center;gap:.5rem;color:var(--azul-medio);cursor:pointer;margin-bottom:1rem;font-weight:500;}
-.voltar:hover{color:var(--azul-escuro);}
-.cartao-dados{background:white;border-radius:16px;padding:1.5rem;box-shadow:var(--sombra);margin-bottom:1rem;}
-.cartao-dados h3{color:var(--azul-escuro);margin-bottom:1rem;}
-.dado-linha{display:flex;justify-content:space-between;padding:.7rem 0;border-bottom:1px solid #f1f5f9;}
-.dado-linha:last-child{border-bottom:none;}
-.valor-bom{color:var(--verde-aqua);font-weight:600;}
-.valor-alerta{color:#f59e0b;font-weight:600;}
-.sem-dados{text-align:center;padding:2rem;color:#94a3b8;}
-.busca-box{display:flex;gap:.5rem;margin-bottom:1rem;}
-.busca-box input{flex:1;}
-.filtros{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap;}
-.filtro-btn{padding:.5rem 1.2rem;border-radius:20px;border:2px solid var(--azul-medio);background:white;color:var(--azul-medio);cursor:pointer;font-weight:600;font-size:.9rem;}
-.filtro-btn.ativo{background:var(--azul-medio);color:white;}
-.grade-peixes{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.8rem;}
-.peixe-card{background:white;border-radius:14px;padding:1rem;text-align:center;box-shadow:var(--sombra);cursor:pointer;transition:all .25s;border:3px solid transparent;}
-.peixe-card:hover{transform:translateY(-4px);border-color:var(--azul-medio);}
-.peixe-emoji{font-size:2.5rem;margin-bottom:.4rem;}
-.peixe-card h4{color:var(--azul-escuro);font-size:.95rem;}
-.tipo-tag{display:inline-block;margin-top:.4rem;padding:.15rem .6rem;border-radius:10px;font-size:.7rem;font-weight:600;}
-.tipo-doce{background:#dbeafe;color:#1e40af;}
-.tipo-marinho{background:#cffafe;color:#155e75;}
-.admin-badge{background:#fbbf24;color:#78350f;padding:.2rem .6rem;border-radius:10px;font-size:.75rem;font-weight:700;margin-left:.5rem;}
-.calc-abas{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem;}
-.calc-aba-btn{padding:.6rem .9rem;border-radius:10px;border:2px solid var(--azul-medio);background:white;color:var(--azul-medio);cursor:pointer;font-weight:600;font-size:.85rem;transition:all .2s;}
-.calc-aba-btn.ativo{background:var(--azul-medio);color:white;}
-.calc-painel{display:none;}
-.calc-painel.ativo{display:block;animation:fadeIn .3s ease;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
-.calc-card{background:white;border-radius:16px;padding:1.5rem;box-shadow:var(--sombra);margin-bottom:1rem;}
-.calc-card h3{color:var(--azul-escuro);margin-bottom:1rem;font-size:1.1rem;}
-.resultado{background:linear-gradient(135deg,#e0f2fe,#cff6fe);padding:1rem 1.2rem;border-radius:12px;border-left:4px solid #0369a1;color:#0c4a6e;margin-top:1rem;display:none;}
-.resultado.visivel{display:block;}
-.resultado h4{margin-bottom:.7rem;color:var(--azul-escuro);}
-.resultado p{margin:.4rem 0;font-size:.95rem;}
-.resultado strong{color:#0369a1;font-weight:700;}
-.dica{margin-top:.7rem;padding:.6rem;background:#fef3c7;border-radius:8px;color:#92400e;font-size:.85rem;}
-.linhas{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
-button.calc-btn{margin-top:.5rem;width:100%;padding:.9rem;background:linear-gradient(135deg,#0369a1,#0891b2);color:white;border:none;border-radius:10px;font-weight:600;cursor:pointer;transition:opacity .2s;}
-button.calc-btn:hover{opacity:.9;}
-.calc-grupo{margin-bottom:1rem;padding:1rem;background:#f8fafc;border-radius:10px;}
-.calc-grupo h4{color:var(--azul-escuro);margin-bottom:.8rem;font-size:.95rem;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+:root{--ae:#0c4a6e;--am:#0ea5e9;--ac:#e0f2fe;--va:#10b981;--sb:0 4px 20px rgba(14,165,233,.15)}
+body{background:linear-gradient(135deg,#e0f2fe,#bae6fd);min-height:100vh}
+.tela{display:none;min-height:100vh;padding:2rem 1.5rem}.ativa{display:block}
+.marca{text-align:center;margin-bottom:2rem;padding-top:1rem}.marca h1{font-size:2.2rem;color:var(--ae)}.marca span{color:var(--va)}.marca p{color:#475569;margin-top:.3rem}
+.cartao{background:#fff;border-radius:20px;padding:2rem;box-shadow:var(--sb);max-width:420px;margin:0 auto}
+.cartao h2{text-align:center;color:var(--ae);margin-bottom:1.5rem;font-size:1.4rem}
+.ajuda{text-align:center;color:#64748b;margin-bottom:1rem;font-size:.95rem}
+.grupo-input{margin-bottom:1.2rem}label{display:block;margin-bottom:.5rem;color:#334155;font-weight:500}
+input,select{width:100%;padding:.9rem 1rem;border:2px solid #e2e8f0;border-radius:12px;font-size:1rem}
+input:focus,select:focus{outline:none;border-color:var(--am)}
+.btn{width:100%;padding:1rem;border:none;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer}
+.btn:active{transform:scale(.98)}
+.btn-principal{background:linear-gradient(90deg,#0ea5e9,#06b6d4);color:#fff;margin-top:.5rem}
+.btn-secundario{background:transparent;color:var(--am);margin-top:.8rem}
+.btn-perigo{background:#fee2e2;color:#dc2626;margin-top:1rem}
+.btn-pequeno{padding:.6rem 1rem;font-size:.9rem;width:auto;display:inline-block;margin:.3rem}
+.link{text-align:center;margin-top:1.2rem;font-size:.95rem;color:#64748b}.link span{color:var(--am);font-weight:600;cursor:pointer}
+.mensagem{padding:1rem;border-radius:12px;margin:1rem 0;text-align:center;display:none}
+.mensagem.sucesso{background:#d1fae5;color:#065f46;display:block}.mensagem.erro{background:#fee2e2;color:#991b1b;display:block}
+.cabecalho-app{background:#fff;padding:1.2rem;border-radius:0 0 24px 24px;box-shadow:var(--sb);margin-bottom:1.5rem}
+.cabecalho-app h2{color:var(--ae);font-size:1.4rem}.cabecalho-app p{color:#64748b;margin-top:.3rem}
+.seletor-aquario{margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap}
+.tag-aquario{background:var(--ac);padding:.5rem 1rem;border-radius:20px;font-size:.9rem;color:var(--ae);font-weight:500;cursor:pointer}
+.tag-aquario.ativo{background:var(--am);color:#fff}.tag-novo{border:2px dashed #0ea5e9}
+.grade{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;max-width:500px;margin:0 auto}
+.card-funcao{background:#fff;border-radius:16px;padding:1.5rem;text-align:center;box-shadow:var(--sb);cursor:pointer;transition:.3s}
+.card-funcao:hover{transform:translateY(-5px)}.icone{font-size:2rem;margin-bottom:.5rem}
+.card-funcao h3{color:var(--ae);font-size:1rem}.card-funcao p{color:#94a3b8;font-size:.8rem;margin-top:.3rem}
+.card-admin{background:linear-gradient(135deg,#fbbf24,#f59e0b)!important}.card-admin h3,.card-admin p{color:#fff!important}
+.rodape{text-align:center;margin-top:3rem;color:#94a3b8;font-size:.85rem}.sair{max-width:200px;margin:2rem auto 0}
+.sub-tela{display:none;padding:1rem 0}.sub-ativa{display:block}
+.voltar{color:var(--am);cursor:pointer;margin-bottom:1rem;font-weight:500;display:inline-block}
+.cartao-dados{background:#fff;border-radius:16px;padding:1.5rem;box-shadow:var(--sb);margin-bottom:1rem}.cartao-dados h3{color:var(--ae);margin-bottom:1rem}
+.dado-linha{display:flex;justify-content:space-between;padding:.7rem 0;border-bottom:1px solid #f1f5f9}.dado-linha:last-child{border:none}
+.valor-bom{color:var(--va);font-weight:600}.valor-alerta{color:#f59e0b;font-weight:600}
+.lista-item{padding:1rem;border-bottom:1px solid #f1f5f9}.lista-item h4{color:var(--ae)}.lista-item p{font-size:.85rem;color:#64748b;margin-top:.2rem}.lista-item .acoes{margin-top:.5rem}
+.sem-dados{text-align:center;padding:2rem;color:#94a3b8}
+.dificuldade-facil{color:#16a34a;font-weight:700}.dificuldade-medio{color:#d97706;font-weight:700}.dificuldade-dificil{color:#dc2626;font-weight:700}
+.abas,.filtros,.busca-box{display:flex;gap:.5rem;margin-bottom:1rem}.filtros{flex-wrap:wrap}.busca-box input{flex:1}
+.aba-btn,.filtro-btn{padding:.6rem 1rem;border-radius:20px;border:2px solid var(--am);background:#fff;color:var(--am);cursor:pointer;font-weight:600;font-size:.9rem}
+.aba-btn{flex:1;border-radius:12px}.aba-btn.ativo,.filtro-btn.ativo{background:var(--am);color:#fff}
+.grade-peixes{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem}
+.peixe-card{background:#fff;border-radius:14px;padding:1rem;text-align:center;box-shadow:var(--sb);cursor:pointer;border:3px solid transparent}
+.peixe-card:hover{border-color:var(--am)}.peixe-emoji{font-size:2.5rem}.peixe-card h4{color:var(--ae);font-size:.95rem}
+.cientifico{font-size:.8rem;font-style:italic;color:#94a3b8;margin-top:.2rem}
+.tipo-tag{display:inline-block;margin-top:.4rem;padding:.15rem .6rem;border-radius:10px;font-size:.7rem;font-weight:600}
+.tipo-doce{background:#dbeafe;color:#1e40af}.tipo-marinho{background:#cffafe;color:#155e75}
+.wiki-result{display:flex;gap:1rem;padding:.8rem;background:#fff;border-radius:12px;margin-bottom:.7rem;box-shadow:var(--sb);cursor:pointer;align-items:center}
+.wiki-thumb{width:70px;height:70px;border-radius:10px;object-fit:cover;flex-shrink:0}
+.wiki-ph{width:70px;height:70px;border-radius:10px;background:linear-gradient(135deg,#0ea5e9,#06b6d4);display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0}
+.wiki-info{flex:1;min-width:0}.wiki-info h4{color:var(--ae)}.wiki-info p{font-size:.8rem;color:#64748b;margin-top:.25rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.carregando{text-align:center;padding:2rem;color:var(--am)}
+.spinner{display:inline-block;width:30px;height:30px;border:4px solid #e0f2fe;border-top-color:var(--am);border-radius:50%;animation:g 1s linear infinite}@keyframes g{to{transform:rotate(360deg)}}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;padding:1rem}.modal-overlay.aberto{display:flex}
+.modal{background:#fff;border-radius:20px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;padding:1.8rem;position:relative}
+.modal-fechar{position:absolute;top:1rem;right:1rem;background:#fee2e2;color:#dc2626;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-weight:700}
+.modal h2{color:var(--ae);font-size:1.5rem}.modal .cientifico{margin-bottom:1rem;font-size:.95rem}
+.emoji-grande{font-size:4rem;text-align:center}.foto-peixe{width:100%;max-height:250px;object-fit:cover;border-radius:14px;margin-bottom:1rem}
+.espec-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin:1rem 0}.espec-item{background:#f0f9ff;border-radius:10px;padding:.7rem}.espec-item.longo{grid-column:1/-1}
+.espec-item .label{font-size:.7rem;color:#64748b;text-transform:uppercase;font-weight:600}.espec-item .valor{font-size:.9rem;color:var(--ae);font-weight:600;margin-top:.2rem}
+.descricao-wiki{font-size:.9rem;color:#334155;line-height:1.6;margin:1rem 0}.link-wiki{display:block;text-align:center;color:var(--am);font-weight:600;text-decoration:none}
+.contador-qtd{display:flex;align-items:center;justify-content:center;gap:1rem;margin:1rem 0}
+.contador-qtd button{width:40px;height:40px;border-radius:50%;border:none;background:var(--am);color:#fff;font-size:1.3rem;cursor:pointer}
+.contador-qtd span{font-size:1.3rem;font-weight:700;color:var(--ae);min-width:30px;text-align:center}
+.admin-badge{background:#fbbf24;color:#78350f;padding:.2rem .6rem;border-radius:10px;font-size:.75rem;font-weight:700;margin-left:.5rem}
 </style>
 </head>
 <body>
 
 <section id="tela-login" class="tela ativa">
-<div class="marca"><h1>Aqua<span>Vibe</span></h1><p>Sinta a vida do seu aquario</p></div>
-<div class="cartao">
-<h2>Entrar na conta</h2>
-<div class="grupo-input"><label>E-mail</label><input type="email" id="email-login" value="admin@aquavibe.com"></div>
-<div class="grupo-input"><label>Senha</label><input type="password" id="senha-login" value="admin123"></div>
+<div class="marca"><h1>Aqua<span>Vibe</span> 🐠</h1><p>Sinta a vida do seu aquário 💧</p></div>
+<div class="cartao"><h2>Entrar na conta</h2>
+<div class="grupo-input"><label for="email-login">E-mail</label><input type="email" id="email-login" placeholder="seuemail@exemplo.com"></div>
+<div class="grupo-input"><label for="senha-login">Senha</label><input type="password" id="senha-login" placeholder="Sua senha"></div>
 <button class="btn btn-principal" onclick="entrar()">Entrar</button>
-<div class="link"><span onclick="mostrarTela('tela-cadastro')">Nao tem conta? Cadastre-se</span></div>
-</div>
+<div class="link"><span onclick="mostrarTela('tela-recuperar')">Esqueceu a senha?</span></div>
+<div class="link">Não tem conta? <span onclick="mostrarTela('tela-cadastro')">Cadastre-se</span></div></div>
+</section>
+
+<section id="tela-recuperar" class="tela">
+<div class="marca"><h1>Aqua<span>Vibe</span> 🐠</h1><p>Recupere sua senha 💧</p></div>
+<div class="cartao"><h2>Recuperar Senha</h2><p class="ajuda">Digite seu e-mail cadastrado.</p>
+<div class="grupo-input"><label for="email-recuperar">E-mail cadastrado</label><input type="email" id="email-recuperar" placeholder="seuemail@exemplo.com"></div>
+<div id="msg-recuperar" class="mensagem"></div>
+<button class="btn btn-principal" onclick="processarRecuperacao()">Enviar Instruções</button>
+<div class="link">Lembrou? <span onclick="mostrarTela('tela-login')">Voltar ao login</span></div></div>
 </section>
 
 <section id="tela-cadastro" class="tela">
-<div class="marca"><h1>Aqua<span>Vibe</span></h1><p>Crie sua conta</p></div>
-<div class="cartao">
-<h2>Cadastro</h2>
-<div class="grupo-input"><label>Nome completo</label><input type="text" id="nome-cad"></div>
-<div class="grupo-input"><label>E-mail</label><input type="email" id="email-cad"></div>
-<div class="grupo-input"><label>Senha</label><input type="password" id="senha-cad"></div>
-<div class="grupo-input"><label>Confirmar senha</label><input type="password" id="confirma-cad"></div>
+<div class="marca"><h1>Aqua<span>Vibe</span> 🐠</h1><p>Crie sua conta 💧</p></div>
+<div class="cartao"><h2>Cadastro</h2>
+<div class="grupo-input"><label for="nome-cad">Nome completo</label><input type="text" id="nome-cad" placeholder="Seu nome"></div>
+<div class="grupo-input"><label for="email-cad">E-mail</label><input type="email" id="email-cad" placeholder="seuemail@exemplo.com"></div>
+<div class="grupo-input"><label for="senha-cad">Senha</label><input type="password" id="senha-cad" placeholder="Crie uma senha"></div>
+<div class="grupo-input"><label for="confirma-cad">Confirmar senha</label><input type="password" id="confirma-cad" placeholder="Repita a senha"></div>
 <button class="btn btn-principal" onclick="cadastrar()">Criar conta</button>
-<div class="link">Ja tem conta? <span onclick="mostrarTela('tela-login')">Entrar</span></div>
-</div>
+<div class="link">Já tem conta? <span onclick="mostrarTela('tela-login')">Entrar</span></div></div>
 </section>
 
 <section id="tela-app" class="tela">
 <div class="cabecalho-app">
-<h2>Bem-vindo ao AquaVibe<span id="admin-badge" class="admin-badge" style="display:none;">ADMIN</span></h2>
-<p id="nome-usuario">Seu aquario, nosso cuidado</p>
-<div class="seletor-aquario" id="seletor-aquarios"></div>
-</div>
+<h2>Bem-vindo ao AquaVibe 🐟<span id="admin-badge" class="admin-badge" style="display:none">👑 ADMIN</span></h2>
+<p id="nome-usuario">Seu aquário, nosso cuidado 💧</p>
+<div class="seletor-aquario" id="seletor-aquarios"></div></div>
 
-<div id="menu-principal">
-<div class="grade">
-<div class="card-funcao" onclick="mostrarSubTela('sub-aquarios')"><div class="icone">T</div><h3>Meus Aquarios</h3><p>Gerenciar tanques</p></div>
-<div class="card-funcao" onclick="mostrarSubTela('sub-banco')"><div class="icone">B</div><h3>Banco de Peixes</h3><p>Especies</p></div>
-<div class="card-funcao" onclick="mostrarSubTela('sub-peixes')"><div class="icone">P</div><h3>Meus Peixes</h3><p>No aquario</p></div>
-<div class="card-funcao" onclick="mostrarSubTela('sub-parametros')"><div class="icone">G</div><h3>Parametros</h3><p>Historico</p></div>
-<div class="card-funcao" onclick="mostrarSubTela('sub-calculadoras')"><div class="icone">C</div><h3>Calculadoras</h3><p>25 calculadoras</p></div>
-<div class="card-funcao" onclick="mostrarSubTela('sub-lembretes')"><div class="icone">L</div><h3>Lembretes</h3><p>Manutencao</p></div>
-<div class="card-funcao card-admin" id="card-admin" style="display:none;" onclick="mostrarSubTela('sub-admin')"><div class="icone">A</div><h3>Painel Admin</h3><p>Gerenciar</p></div>
-</div>
-<button class="btn btn-secundario sair" onclick="sair()">Sair da conta</button>
-</div>
+<div id="menu-principal"><div class="grade">
+<div class="card-funcao" onclick="mostrarSubTela('sub-aquarios')"><div class="icone">🏝️</div><h3>Meus Aquários</h3><p>Gerenciar tanques</p></div>
+<div class="card-funcao" onclick="mostrarSubTela('sub-banco')"><div class="icone">📚</div><h3>Banco de Peixes</h3><p>Espécies & fotos</p></div>
+<div class="card-funcao" onclick="mostrarSubTela('sub-peixes')"><div class="icone">🐟</div><h3>Meus Peixes</h3><p>No aquário atual</p></div>
+<div class="card-funcao" onclick="mostrarSubTela('sub-parametros')"><div class="icone">📊</div><h3>Parâmetros</h3><p>pH, temperatura</p></div>
+<div class="card-funcao" onclick="mostrarSubTela('sub-plantas')"><div class="icone">🌿</div><h3>Plantas</h3><p>Espécies</p></div>
+<div class="card-funcao" onclick="mostrarSubTela('sub-lembretes')"><div class="icone">⏰</div><h3>Lembretes</h3><p>Cuidados</p></div>
+<div class="card-funcao" onclick="mostrarSubTela('sub-historico')"><div class="icone">📈</div><h3>Histórico</h3><p>Acompanhamento</p></div>
+<div class="card-funcao card-admin" id="card-admin" style="display:none" onclick="mostrarSubTela('sub-admin')"><div class="icone">👑</div><h3>Painel Admin</h3><p>Gerenciar o app</p></div>
+</div><button class="btn btn-secundario sair" onclick="sair()">Sair da conta</button></div>
 
-<!-- ============ CALCULADORAS (25) ============ -->
-<div id="sub-calculadoras" class="sub-tela">
-<div class="voltar" onclick="voltarMenu()">Voltar</div>
-<h2 style="color:var(--azul-escuro);margin-bottom:1rem;">Calculadoras do Aquarista (25)</h2>
-<div class="calc-abas">
-<button class="calc-aba-btn ativo" data-calc="litragem" onclick="trocarAbaCalc('litragem')">Litragem</button>
-<button class="calc-aba-btn" data-calc="aquecedor" onclick="trocarAbaCalc('aquecedor')">Aquecedor</button>
-<button class="calc-aba-btn" data-calc="filtro" onclick="trocarAbaCalc('filtro')">Filtragem</button>
-<button class="calc-aba-btn" data-calc="iluminacao" onclick="trocarAbaCalc('iluminacao')">Luz</button>
-<button class="calc-aba-btn" data-calc="substrato" onclick="trocarAbaCalc('substrato')">Substrato</button>
-<button class="calc-aba-btn" data-calc="troca" onclick="trocarAbaCalc('troca')">Troca de Agua</button>
-<button class="calc-aba-btn" data-calc="co2" onclick="trocarAbaCalc('co2')">CO2</button>
-<button class="calc-aba-btn" data-calc="sal" onclick="trocarAbaCalc('sal')">Salinidade</button>
-<button class="calc-aba-btn" data-calc="energia" onclick="trocarAbaCalc('energia')">Energia</button>
-<button class="calc-aba-btn" data-calc="biocarga" onclick="trocarAbaCalc('biocarga')">Biocarga</button>
-<button class="calc-aba-btn" data-calc="kh" onclick="trocarAbaCalc('kh')">Correcao KH</button>
-<button class="calc-aba-btn" data-calc="remedio" onclick="trocarAbaCalc('remedio')">Medicamentos</button>
-<button class="calc-aba-btn" data-calc="fert" onclick="trocarAbaCalc('fert')">Fertilizantes</button>
-<button class="calc-aba-btn" data-calc="osmo" onclick="trocarAbaCalc('osmo')">Osmose Reversa</button>
-<button class="calc-aba-btn" data-calc="gh" onclick="trocarAbaCalc('gh')">GH / Dureza</button>
-<button class="calc-aba-btn" data-calc="peso" onclick="trocarAbaCalc('peso')">Peso Total</button>
-<button class="calc-aba-btn" data-calc="sump" onclick="trocarAbaCalc('sump')">Sump</button>
-<button class="calc-aba-btn" data-calc="vent" onclick="trocarAbaCalc('vent')">Ventoinhas</button>
-<button class="calc-aba-btn" data-calc="evap" onclick="trocarAbaCalc('evap')">Evaporacao</button>
-<button class="calc-aba-btn" data-calc="cardume" onclick="trocarAbaCalc('cardume')">Cardume</button>
-<button class="calc-aba-btn" data-calc="ciclo" onclick="trocarAbaCalc('ciclo')">Ciclagem</button>
-<button class="calc-aba-btn" data-calc="alim" onclick="trocarAbaCalc('alim')">Alimentacao</button>
-<button class="calc-aba-btn" data-calc="conv" onclick="trocarAbaCalc('conv')">Conversao</button>
-<button class="calc-aba-btn" data-calc="cron" onclick="trocarAbaCalc('cron')">Cronograma</button>
-<button class="calc-aba-btn" data-calc="custo" onclick="trocarAbaCalc('custo')">Custo Montagem</button>
-</div>
+<div id="sub-admin" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div>
+<div class="cartao-dados"><h3>👑 Painel do Administrador</h3>
+<div class="dado-linha"><span>Usuários cadastrados</span><span class="valor-bom" id="admin-total-usuarios">0</span></div>
+<div class="dado-linha"><span>Total de aquários</span><span class="valor-bom" id="admin-total-aquarios">0</span></div>
+<div class="dado-linha"><span>Espécies no banco</span><span class="valor-bom" id="admin-total-especies">0</span></div></div>
+<div class="cartao-dados"><h3>👥 Usuários Cadastrados</h3><div id="admin-lista-usuarios"></div></div>
+<button class="btn btn-perigo" onclick="limparTodosUsuarios()">🗑️ Limpar todos os usuários (exceto admin)</button></div>
 
-<!-- 1 LITRAGEM -->
-<div id="calc-litragem" class="calc-painel ativo">
-<div class="calc-card"><h3>Litragem do Aquario</h3>
-<div class="linhas"><div class="grupo-input"><label>Comprimento (cm)</label><input type="number" id="lit_c"></div>
-<div class="grupo-input"><label>Largura (cm)</label><input type="number" id="lit_l"></div></div>
-<div class="grupo-input"><label>Altura da Agua (cm)</label><input type="number" id="lit_a"></div>
-<button class="calc-btn" onclick="calcLitragem()">Calcular</button>
-<div id="res-litragem" class="resultado"><h4>Resultado</h4>
-<p>Volume bruto: <strong id="lit-bruto">0</strong> L</p>
-<p>Volume util (~85%): <strong id="lit-util">0</strong> L</p>
-<p>Peso da agua: <strong id="lit-peso">0</strong> kg</p>
-<div id="lit-dica" class="dica"></div></div></div></div>
+<div id="sub-banco" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div>
+<div class="cartao-dados"><h3>📚 Banco de Peixes <span id="contador-peixes" style="font-size:.85rem;color:#64748b;font-weight:400"></span></h3>
+<div class="abas"><button class="aba-btn ativo" id="aba-populares" onclick="mudarAba('populares')">⭐ Populares</button><button class="aba-btn" id="aba-mundo" onclick="mudarAba('mundo')">🌍 Busca Mundial</button></div>
+<div id="conteudo-populares">
+<div class="busca-box"><input type="text" id="busca-peixe" placeholder="🔍 Buscar nos populares..." oninput="renderizarBancoPeixes()"></div>
+<div class="filtros"><button class="filtro-btn ativo" data-filtro="todos" onclick="setFiltro('todos')">Todos</button><button class="filtro-btn" data-filtro="doce" onclick="setFiltro('doce')">💧 Doce</button><button class="filtro-btn" data-filtro="marinho" onclick="setFiltro('marinho')">🌊 Marinho</button></div>
+<div class="grade-peixes" id="grade-peixes"></div></div>
+<div id="conteudo-mundo" style="display:none">
+<p style="font-size:.85rem;color:#64748b;margin-bottom:.8rem">🔍 Pesquise qualquer espécie (precisa de internet). Dados da Wikipedia.</p>
+<div class="busca-box"><input type="text" id="busca-wiki" placeholder="Digite o nome do peixe..."><button class="btn btn-principal" style="width:auto;padding:.9rem 1.5rem" onclick="buscarWikipedia()">Buscar</button></div>
+<div id="resultados-wiki"></div></div></div></div>
 
-<!-- 2 AQUECEDOR -->
-<div id="calc-aquecedor" class="calc-painel">
-<div class="calc-card"><h3>Potencia do Aquecedor</h3>
-<div class="linhas"><div class="grupo-input"><label>Volume util (L)</label><input type="number" id="aq_vol"></div>
-<div class="grupo-input"><label>Temp. ambiente (C)</label><input type="number" id="aq_amb"></div></div>
-<div class="grupo-input"><label>Temp. desejada (C)</label><input type="number" id="aq_alvo"></div>
-<button class="calc-btn" onclick="calcAquecedor()">Calcular</button>
-<div id="res-aquecedor" class="resultado"><h4>Resultado</h4>
-<p>Diferenca: <strong id="aq-delta">0</strong> C</p>
-<p>Potencia minima: <strong id="aq-min">0</strong> W</p>
-<p>Potencia recomendada: <strong id="aq-rec">0</strong> W</p>
-<div id="aq-dica" class="dica"></div></div></div></div>
+<div id="sub-peixes" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div>
+<div class="cartao-dados"><h3>🐟 Meus Peixes — <span id="aq-nome-peixe">Selecione um aquário</span></h3><div id="lista-meus-peixes"></div></div>
+<button class="btn btn-principal" onclick="mostrarSubTela('sub-banco')">➕ Adicionar do Banco</button></div>
 
-<!-- 3 FILTRO -->
-<div id="calc-filtro" class="calc-painel">
-<div class="calc-card"><h3>Vazao do Filtro / Bomba</h3>
-<div class="grupo-input"><label>Volume util (L)</label><input type="number" id="fil_vol"></div>
-<div class="grupo-input"><label>Tipo de aquario</label><select id="fil_tipo">
-<option value="4">Agua doce - Comunitario</option><option value="6" selected>Plantado</option>
-<option value="8">Marinho - Peixes</option><option value="10">Marinho - Reef</option></select></div>
-<button class="calc-btn" onclick="calcFiltro()">Calcular</button>
-<div id="res-filtro" class="resultado"><h4>Resultado</h4>
-<p>Minima (4x): <strong id="fil-min">0</strong> L/h</p>
-<p>Ideal: <strong id="fil-ideal">0</strong> L/h</p>
-<p>Maxima recomendada: <strong id="fil-max">0</strong> L/h</p></div></div></div>
+<div id="sub-aquarios" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div>
+<div class="cartao-dados"><h3>🏝️ Meus Aquários</h3><div id="lista-aquarios"></div><button class="btn btn-principal" onclick="mostrarFormAquario()">➕ Cadastrar Novo Aquário</button></div>
+<div id="form-aquario" class="cartao-dados" style="display:none"><h3>Cadastrar Aquário</h3>
+<div class="grupo-input"><label for="aq-nome">Nome</label><input type="text" id="aq-nome" placeholder="Ex: Aquário Principal 🐠"></div>
+<div class="grupo-input"><label for="aq-volume">Volume (L)</label><input type="number" id="aq-volume" placeholder="Ex: 100"></div>
+<div class="grupo-input"><label for="aq-tipo">Tipo de Água</label><select id="aq-tipo"><option value="doce">💧 Doce</option><option value="salobra">🌊 Salobra</option><option value="marinho">🐚 Marinha</option></select></div>
+<div class="grupo-input"><label for="aq-data">Data de Montagem</label><input type="date" id="aq-data"></div>
+<div class="grupo-input"><label for="aq-obs">Observações</label><input type="text" id="aq-obs" placeholder="Ex: Plantado..."></div>
+<button class="btn btn-principal" onclick="salvarAquario()">💾 Salvar</button><button class="btn btn-secundario" onclick="esconderFormAquario()">Cancelar</button></div></div>
 
-<!-- 4 ILUMINACAO -->
-<div id="calc-iluminacao" class="calc-painel">
-<div class="calc-card"><h3>Iluminacao</h3>
-<div class="linhas"><div class="grupo-input"><label>Comprimento (cm)</label><input type="number" id="il_c"></div>
-<div class="grupo-input"><label>Largura (cm)</label><input type="number" id="il_l"></div></div>
-<div class="grupo-input"><label>Nivel</label><select id="il_nivel">
-<option value="15">Low Tech - ~15 lm/L</option><option value="30" selected>Media - ~30 lm/L</option>
-<option value="60">High Tech - ~60 lm/L</option></select></div>
-<button class="calc-btn" onclick="calcIluminacao()">Calcular</button>
-<div id="res-iluminacao" class="resultado"><h4>Resultado</h4>
-<p>Volume estimado: <strong id="il-vol">0</strong> L</p>
-<p>Lumens totais: <strong id="il-lm">0</strong> lm</p>
-<p>LED aproximado: <strong id="il-w">0</strong> W</p></div></div></div>
+<div id="sub-parametros" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div>
+<div class="cartao-dados"><h3>📊 Parâmetros (exemplo) — <span id="aq-nome-param">Selecione um aquário</span></h3>
+<div class="dado-linha"><span>Temperatura</span><span class="valor-bom">26 °C ✅</span></div>
+<div class="dado-linha"><span>pH</span><span class="valor-bom">6.8 ✅</span></div>
+<div class="dado-linha"><span>Amoníaco (NH3)</span><span class="valor-bom">0.0 ppm ✅</span></div>
+<div class="dado-linha"><span>Nitrito (NO2)</span><span class="valor-bom">0.0 ppm ✅</span></div>
+<div class="dado-linha"><span>Nitrato (NO3)</span><span class="valor-alerta">25 ppm ⚠️</span></div></div></div>
 
-<!-- 5 SUBSTRATO -->
-<div id="calc-substrato" class="calc-painel">
-<div class="calc-card"><h3>Substrato</h3>
-<div class="linhas"><div class="grupo-input"><label>Comprimento (cm)</label><input type="number" id="sub_c"></div>
-<div class="grupo-input"><label>Largura (cm)</label><input type="number" id="sub_l"></div></div>
-<div class="grupo-input"><label>Espessura (cm)</label><input type="number" id="sub_esp" value="4"></div>
-<button class="calc-btn" onclick="calcSubstrato()">Calcular</button>
-<div id="res-substrato" class="resultado"><h4>Resultado</h4>
-<p>Volume: <strong id="sub-vol">0</strong> L</p>
-<p>Sacos de 2,5 kg: <strong id="sub-sacos">0</strong> unid.</p>
-<p>Peso total: <strong id="sub-peso">0</strong> kg</p></div></div></div>
-
-<!-- 6 TROCA DE AGUA -->
-<div id="calc-troca" class="calc-painel">
-<div class="calc-card"><h3>Troca de Agua</h3>
-<div class="linhas"><div class="grupo-input"><label>Volume util (L)</label><input type="number" id="tr_vol"></div>
-<div class="grupo-input"><label>% de troca</label><input type="number" id="tr_pct" value="30"></div></div>
-<button class="calc-btn" onclick="calcTroca()">Calcular</button>
-<div id="res-troca" class="resultado"><h4>Resultado</h4>
-<p>Remover: <strong id="tr-qtd">0</strong> L</p>
-<p>Repor: <strong id="tr-repo">0</strong> L</p>
-<p>Condicionador (5ml/10L): <strong id="tr-cond">0</strong> ml</p></div></div></div>
-
-<!-- 7 CO2 -->
-<div id="calc-co2" class="calc-painel">
-<div class="calc-card"><h3>CO2 Dissolvido</h3>
-<div class="linhas"><div class="grupo-input"><label>Alcalinidade KH</label><input type="number" id="co2_kh"></div>
-<div class="grupo-input"><label>pH medido</label><input type="number" step="0.01" id="co2_ph"></div></div>
-<button class="calc-btn" onclick="calcCO2()">Calcular</button>
-<div id="res-co2" class="resultado"><h4>Resultado</h4>
-<p>CO2: <strong id="co2-ppm">0</strong> ppm</p>
-<p>Status: <strong id="co2-status">-</strong></p></div></div></div>
-
-<!-- 8 SALINIDADE -->
-<div id="calc-sal" class="calc-painel">
-<div class="calc-card"><h3>Salinidade</h3>
-<div class="linhas"><div class="grupo-input"><label>Volume de agua (L)</label><input type="number" id="sal_vol"></div>
-<div class="grupo-input"><label>Densidade alvo</label><select id="sal_dens">
-<option value="34">1.025 - Reef</option><option value="32">1.023 - Peixes</option>
-<option value="30">1.020 - Refugio</option></select></div></div>
-<button class="calc-btn" onclick="calcSalinidade()">Calcular</button>
-<div id="res-sal" class="resultado"><h4>Resultado</h4>
-<p>Sal necessaria: <strong id="sal-qtd">0</strong> g</p>
-<p>Ou: <strong id="sal-kg">0</strong> kg</p></div></div></div>
-
-<!-- 9 ENERGIA -->
-<div id="calc-energia" class="calc-painel">
-<div class="calc-card"><h3>Consumo de Energia</h3>
-<div class="linhas"><div class="grupo-input"><label>Filtro (W)</label><input type="number" id="en-filtro" value="8"></div>
-<div class="grupo-input"><label>Luz (W)</label><input type="number" id="en-luz" value="40"></div>
-<div class="grupo-input"><label>Aquecedor (W)</label><input type="number" id="en-aquec" value="100"></div>
-<div class="grupo-input"><label>Tarifa R$/kWh</label><input type="number" step="0.01" id="en-tarifa" value="0.75"></div></div>
-<button class="calc-btn" onclick="calcEnergia()">Calcular</button>
-<div id="res-energia" class="resultado"><h4>Consumo Mensal</h4>
-<p>Diario: <strong id="en-diario">0</strong> kWh</p>
-<p>Mensal: <strong id="en-mensal">0</strong> kWh</p>
-<p>Custo: <strong id="en-custo">R$ 0,00</strong></p></div></div></div>
-
-<!-- 10 BIOCARGA -->
-<div id="calc-biocarga" class="calc-painel">
-<div class="calc-card"><h3>Biocarga</h3>
-<div class="grupo-input"><label>Volume util (L)</label><input type="number" id="bio_vol"></div>
-<button class="calc-btn" onclick="calcBiocarga()">Calcular</button>
-<div id="res-biocarga" class="resultado"><h4>Capacidade Estimada</h4>
-<p>Comprimento total: <strong id="bio-cm">0</strong> cm de peixe</p>
-<p>Exemplo: ~<strong id="bio-neon">0</strong> peixes de 4 cm</p></div></div></div>
-
-<!-- 11 CORRECAO KH -->
-<div id="calc-kh" class="calc-painel">
-<div class="calc-card"><h3>Correcao de KH (Alcalinidade)</h3>
-<div class="linhas"><div class="grupo-input"><label>Volume util (L)</label><input type="number" id="kh_vol"></div>
-<div class="grupo-input"><label>KH atual (dKH)</label><input type="number" id="kh_atual"></div></div>
-<div class="grupo-input"><label>KH desejado (dKH)</label><input type="number" id="kh_alvo" value="6"></div>
-<button class="calc-btn" onclick="calcKH()">Calcular</button>
-<div id="res-kh" class="resultado"><h4>Resultado</h4>
-<p>Bicarbonato de sodio: <strong id="kh-gramas">0</strong> g</p>
-<p>Ou colheres de cha: <strong id="kh-colher">0</strong> (5g cada)</p>
-<div id="kh-dica" class="dica"></div></div></div></div>
-
-<!-- 12 MEDICAMENTOS -->
-<div id="calc-remedio" class="calc-painel">
-<div class="calc-card"><h3>Dosagem de Medicamentos</h3>
-<div class="linhas"><div class="grupo-input"><label>Volume util (L)</label><input type="number" id="rem_vol"></div>
-<div class="grupo-input"><label>Dose do fabricante (ml por 10L)</label><input type="number" id="rem_dose" value="5"></div></div>
-<button class="calc-btn" onclick="calcRemedio()">Calcular</button>
-<div id="res-remedio" class="resultado"><h4>Resultado</h4>
-<p>Dose total: <strong id="rem-qtd">0</strong> ml</p>
-<p>Para 3 dias (se necessario): <strong id="rem-total">0</strong> ml</p>
-<div id="rem-dica" class="dica">Use sempre o volume util, nunca o bruto. Remova o carvao ativado durante o tratamento.</div></div></div></div>
-
-<!-- 13 FERTILIZANTES EI -->
-<div id="calc-fert" class="calc-painel">
-<div class="calc-card"><h3>Dosagem de Fertilizantes (EI - Estimativa Index)</h3>
-<div class="grupo-input"><label>Volume util (L)</label><input type="number" id="fert_vol"></div>
-<div class="grupo-input"><label>Nivel de iluminacao</label><select id="fert_nivel">
-<option value="0.5">Baixa - meia dose</option><option value="1" selected>Media - dose completa</option>
-<option value="1.5">Alta - 1.5x dose</option></select></div>
-<button class="calc-btn" onclick="calcFert()">Calcular</button>
-<div id="res-fert" class="resultado"><h4>Doses Semanais (3x por semana)</h4>
-<p>KNO3 (Nitrato): <strong id="fert-kno3">0</strong> g por dose</p>
-<p>KH2PO4 (Fosfato): <strong id="fert-kh2po4">0</strong> g por dose</p>
-<p>K2SO4 (Potassio): <strong id="fert-k2so4">0</strong> g por dose</p>
-<p>Fe (Micronutrientes): <strong id="fert-fe">0</strong> ml por dose</p>
-<div class="dica">Troca de agua de 50% no final da semana. Valores aproximados - ajuste conforme suas plantas.</div></div></div></div>
-
-<!-- 14 OSMOSE REVERSA -->
-<div id="calc-osmo" class="calc-painel">
-<div class="calc-card"><h3>Mistura Osmose Reversa + Agua de Torneira</h3>
-<div class="linhas"><div class="grupo-input"><label>Volume total (L)</label><input type="number" id="osmo_vol"></div>
-<div class="grupo-input"><label>GH da torneira (dGH)</label><input type="number" id="osmo_torneira"></div></div>
-<div class="grupo-input"><label>GH desejado (dGH)</label><input type="number" id="osmo_alvo" value="4"></div>
-<button class="calc-btn" onclick="calcOsmo()">Calcular</button>
-<div id="res-osmo" class="resultado"><h4>Proporcao da Mistura</h4>
-<p>Agua de Osmose (RO): <strong id="osmo-ro">0</strong> L (<strong id="osmo-ro-pct">0</strong>%)</p>
-<p>Agua de Torneira: <strong id="osmo-tor">0</strong> L (<strong id="osmo-tor-pct">0</strong>%)</p></div></div></div>
-
-<!-- 15 GH / DUREZA -->
-<div id="calc-gh" class="calc-painel">
-<div class="calc-card"><h3>Ajuste de GH (Dureza Geral)</h3>
-<div class="linhas"><div class="grupo-input"><label>Volume util (L)</label><input type="number" id="gh_vol"></div>
-<div class="grupo-input"><label>GH atual (dGH)</label><input type="number" id="gh_atual"></div></div>
-<div class="grupo-input"><label>GH desejado (dGH)</label><input type="number" id="gh_alvo" value="6"></div>
-<button class="calc-btn" onclick="calcGH()">Calcular</button>
-<div id="res-gh" class="resultado"><h4>Resultado</h4>
-<p>Sais de GH (Ca/Mg): <strong id="gh-gramas">0</strong> g</p>
-<p>Aumento de GH: <strong id="gh-delta">0</strong> dGH</p>
-<div id="gh-dica" class="dica"></div></div></div></div>
-
-<!-- 16 PESO TOTAL -->
-<div id="calc-peso" class="calc-painel">
-<div class="calc-card"><h3>Peso Total & Seguranca do Movele</h3>
-<div class="linhas"><div class="grupo-input"><label>Volume util (L)</label><input type="number" id="peso_vol"></div>
-<div class="grupo-input"><label>Peso substrato (kg)</label><input type="number" id="peso_sub" value="15"></div>
-<div class="grupo-input"><label>Peso rochas (kg)</label><input type="number" id="peso_rocha" value="10"></div>
-<div class="grupo-input"><label>Peso vidro (kg)</label><input type="number" id="peso_vidro" value="20"></div></div>
-<button class="calc-btn" onclick="calcPeso()">Calcular</button>
-<div id="res-peso" class="resultado"><h4>Resultado</h4>
-<p>Peso da agua: <strong id="peso-agua">0</strong> kg</p>
-<p>Peso total: <strong id="peso-total">0</strong> kg</p>
-<p>Carga por area: <strong id="peso-carga">0</strong> kg/m2 (estimado)</p>
-<div id="peso-dica" class="dica"></div></div></div></div>
-
-<!-- 17 SUMP -->
-<div id="calc-sump" class="calc-painel">
-<div class="calc-card"><h3>Sump / Refugium (Marinho)</h3>
-<div class="linhas"><div class="grupo-input"><label>Volume do display (L)</label><input type="number" id="sump_vol"></div>
-<div class="grupo-input"><label>Largura disponivel (cm)</label><input type="number" id="sump_lar" value="30"></div></div>
-<div class="grupo-input"><label>Profundidade disponivel (cm)</label><input type="number" id="sump_prof" value="40"></div>
-<button class="calc-btn" onclick="calcSump()">Calcular</button>
-<div id="res-sump" class="resultado"><h4>Resultado</h4>
-<p>Volume ideal do sump: <strong id="sump-ideal">0</strong> L (25% do display)</p>
-<p>Altura da agua no sump: <strong id="sump-alt">0</strong> cm</p>
-<p>Volume de seguranca (inundacao): <strong id="sump-seg">0</strong> L</p></div></div></div>
-
-<!-- 18 VENTOINHAS -->
-<div id="calc-vent" class="calc-painel">
-<div class="calc-card"><h3>Ventoinhas / Resfriamento</h3>
-<div class="linhas"><div class="grupo-input"><label>Volume util (L)</label><input type="number" id="vent_vol"></div>
-<div class="grupo-input"><label>Queda desejada (C)</label><input type="number" id="vent_delta" value="2"></div></div>
-<button class="calc-btn" onclick="calcVent()">Calcular</button>
-<div id="res-vent" class="resultado"><h4>Resultado</h4>
-<p>Numero de ventoinhas: <strong id="vent-qtd">0</strong></p>
-<p>Vazao de ar necessaria: <strong id="vent-vazao">0</strong> m3/h</p>
-<div class="dica">Cada ventoinha de 120mm abaixa ~1-2 C em aquarios de ate 200L. Combine com tampa aberta.</div></div></div></div>
-
-<!-- 19 EVAPORACAO -->
-<div id="calc-evap" class="calc-painel">
-<div class="calc-card"><h3>Evaporacao & Reposicao Diaria</h3>
-<div class="linhas"><div class="grupo-input"><label>Comprimento (cm)</label><input type="number" id="evap_c"></div>
-<div class="grupo-input"><label>Largura (cm)</label><input type="number" id="evap_l"></div></div>
-<div class="grupo-input"><label>Cobertura</label><select id="evap_tampa">
-<option value="2">Aberta (sem tampa)</option><option value="1" selected>Parcialmente coberta</option>
-<option value="0.5">Fechada (com tampa)</option></select></div>
-<button class="calc-btn" onclick="calcEvap()">Calcular</button>
-<div id="res-evap" class="resultado"><h4>Resultado</h4>
-<p>Evaporacao diaria: <strong id="evap-dia">0</strong> L/dia</p>
-<p>Reposicao semanal: <strong id="evap-sem">0</strong> L</p>
-<p>Reservatorio de top-off recomendado: <strong id="evap-res">0</strong> L</p></div></div></div>
-
-<!-- 20 CARDUME -->
-<div id="calc-cardume" class="calc-painel">
-<div class="calc-card"><h3>Tamanho Minimo de Cardume</h3>
-<div class="linhas"><div class="grupo-input"><label>Volume util (L)</label><input type="number" id="card_vol"></div>
-<div class="grupo-input"><label>Tamanho do peixe adulto (cm)</label><input type="number" id="card_tam" value="4"></div></div>
-<div class="grupo-input"><label>Comportamento</label><select id="card_comp">
-<option value="6">Cardume ativo (Neon, Rasta)</option><option value="4" selected>Cardume moderado</option>
-<option value="3">Pouco ativo (Corydora)</option></select></div>
-<button class="calc-btn" onclick="calcCardume()">Calcular</button>
-<div id="res-cardume" class="resultado"><h4>Resultado</h4>
-<p>Minimo absoluto: <strong id="card-min">0</strong> individuos</p>
-<p>Recomendado para bem-estar: <strong id="card-rec">0</strong> individuos</p>
-<p>Maximo neste volume: <strong id="card-max">0</strong> individuos</p></div></div></div>
-
-<!-- 21 CICLAGEM -->
-<div id="calc-ciclo" class="calc-painel">
-<div class="calc-card"><h3>Tempo Estimado de Ciclagem</h3>
-<div class="linhas"><div class="grupo-input"><label>Temperatura (C)</label><input type="number" id="ciclo_temp" value="26"></div>
-<div class="grupo-input"><label>Metodo</label><select id="ciclo_metodo">
-<option value="4">Sem peixe (amonia pura)</option><option value="6" selected>Com peixe (metodo tradicional)</option>
-<option value="2">Bacteria comercial (Tetra SafeStart etc)</option>
-<option value="3">Filtro maduro emprestado</option></select></div></div>
-<button class="calc-btn" onclick="calcCiclo()">Calcular</button>
-<div id="res-ciclo" class="resultado"><h4>Resultado</h4>
-<p>Tempo estimado: <strong id="ciclo-semanas">0</strong> semanas</p>
-<p>Em dias: ~<strong id="ciclo-dias">0</strong> dias</p>
-<div id="ciclo-dica" class="dica"></div></div></div></div>
-
-<!-- 22 ALIMENTACAO -->
-<div id="calc-alim" class="calc-painel">
-<div class="calc-card"><h3>Frequencia de Alimentacao</h3>
-<div class="linhas"><div class="grupo-input"><label>Numero de peixes</label><input type="number" id="alim_qtd" value="10"></div>
-<div class="grupo-input"><label>Tamanho medio (cm)</label><input type="number" id="alim_tam" value="5"></div></div>
-<div class="grupo-input"><label>Tipo</label><select id="alim_tipo">
-<option value="2">Onivoros comunitarios</option><option value="3" selected>Carnivoros/Onivoros ativos</option>
-<option value="1">Herbivoros (Pleco, Molly)</option></select></div>
-<button class="calc-btn" onclick="calcAlim()">Calcular</button>
-<div id="res-alim" class="resultado"><h4>Resultado</h4>
-<p>Vezes por dia: <strong id="alim-vezes">0</strong></p>
-<p>Quantidade por refeicao: <strong id="alim-qtd">0</strong> g (pinça)</p>
-<p>Alimento por semana: ~<strong id="alim-sem">0</strong> g</p>
-<div class="dica">Regra de ouro: tudo que o peixe come em 2 minutos. Jejum de 1 dia por semana.</div></div></div></div>
-
-<!-- 23 CONVERSAO -->
-<div id="calc-conv" class="calc-painel">
-<div class="calc-card"><h3>Conversao de Unidades</h3>
-<div class="grupo-input"><label>Valor</label><input type="number" id="conv_valor" value="100"></div>
-<div class="grupo-input"><label>Converter</label><select id="conv_tipo">
-<option value="lg">Litros -> Galoes (US)</option><option value="gl">Galoes (US) -> Litros</option>
-<option value="cf">Celsius -> Fahrenheit</option><option value="fc">Fahrenheit -> Celsius</option>
-<option value="ci">Centimetros -> Polegadas</option><option value="ic">Polegadas -> Centimetros</option>
-<option value="go">Gramas -> Oncas</option><option value="og">Oncas -> Gramas</option></select></div>
-<button class="calc-btn" onclick="calcConv()">Converter</button>
-<div id="res-conv" class="resultado"><h4>Resultado</h4>
-<p>Resultado: <strong id="conv-res">0</strong></p></div></div></div>
-
-<!-- 24 CRONOGRAMA -->
-<div id="calc-cron" class="calc-painel">
-<div class="calc-card"><h3>Cronograma de Trocas de Agua</h3>
-<div class="linhas"><div class="grupo-input"><label>Volume util (L)</label><input type="number" id="cron_vol"></div>
-<div class="grupo-input"><label>Tipo de aquario</label><select id="cron_tipo">
-<option value="20">Comunitario (doce)</option><option value="40" selected>Plantado (High Tech)</option>
-<option value="30">Plantado (Low Tech)</option><option value="10">Reef (marinho)</option>
-<option value="50">Discus / Sensiveis</option></select></div></div>
-<button class="calc-btn" onclick="calcCron()">Calcular</button>
-<div id="res-cron" class="resultado"><h4>Resultado</h4>
-<p>% por troca: <strong id="cron-pct">0</strong>%</p>
-<p>Volume por troca: <strong id="cron-vol">0</strong> L</p>
-<p>Frequencia: <strong id="cron-freq">0</strong></p>
-<p>Volume mensal trocado: <strong id="cron-mes">0</strong> L</p></div></div></div>
-
-<!-- 25 CUSTO MONTAGEM -->
-<div id="calc-custo" class="calc-painel">
-<div class="calc-card"><h3>Custo Total de Montagem</h3>
-<div class="linhas">
-<div class="grupo-input"><label>Aquario (R$)</label><input type="number" id="cust_aq" value="0"></div>
-<div class="grupo-input"><label>Movele/Suporte (R$)</label><input type="number" id="cust_mov" value="0"></div>
-<div class="grupo-input"><label>Filtro (R$)</label><input type="number" id="cust_fil" value="0"></div>
-<div class="grupo-input"><label>Aquecedor (R$)</label><input type="number" id="cust_aqec" value="0"></div>
-<div class="grupo-input"><label>Iluminacao (R$)</label><input type="number" id="cust_luz" value="0"></div>
-<div class="grupo-input"><label>Substrato (R$)</label><input type="number" id="cust_sub" value="0"></div>
-<div class="grupo-input"><label>Decoracao/Rochas (R$)</label><input type="number" id="cust_dec" value="0"></div>
-<div class="grupo-input"><label>Outros (R$)</label><input type="number" id="cust_out" value="0"></div></div>
-<button class="calc-btn" onclick="calcCusto()">Calcular Total</button>
-<div id="res-custo" class="resultado"><h4>Resultado</h4>
-<p>Custo total: <strong id="cust-total">R$ 0,00</strong></p>
-<p>Itens: <strong id="cust-itens">0</strong></p></div></div></div>
-
-</div>
-
-<!-- BANCO DE PEIXES -->
-<div id="sub-banco" class="sub-tela">
-<div class="voltar" onclick="voltarMenu()">Voltar</div>
-<div class="cartao-dados">
-<h3>Banco de Peixes - <span id="qtd-especies">0</span> especies</h3>
-<div class="busca-box"><input type="text" id="busca-peixe" placeholder="Buscar..." oninput="renderizarBancoPeixes()"></div>
-<div class="filtros">
-<button class="filtro-btn ativo" onclick="setFiltro('todos')">Todos</button>
-<button class="filtro-btn" onclick="setFiltro('doce')">Agua Doce</button>
-<button class="filtro-btn" onclick="setFiltro('marinho')">Marinho</button>
-</div>
-<div class="grade-peixes" id="grade-peixes"></div>
-</div>
-</div>
-
-<!-- AQUARIOS -->
-<div id="sub-aquarios" class="sub-tela">
-<div class="voltar" onclick="voltarMenu()">Voltar</div>
-<div class="cartao-dados">
-<h3>Meus Aquarios</h3>
-<div id="lista-aquarios"><div class="sem-dados">Nenhum aquario cadastrado</div></div>
-<button class="btn btn-principal" onclick="document.getElementById('form-aquario').style.display='block'">Cadastrar Novo</button>
-<div id="form-aquario" style="display:none;margin-top:1rem;">
-<h3>Novo Aquario</h3>
-<div class="grupo-input"><label>Nome</label><input type="text" id="aq-nome"></div>
-<div class="grupo-input"><label>Volume (L)</label><input type="number" id="aq-volume"></div>
-<div class="grupo-input"><label>Tipo de Agua</label><select id="aq-tipo">
-<option value="doce">Doce</option><option value="salobra">Salobra</option><option value="marinho">Marinho</option></select></div>
-<button class="btn btn-principal" onclick="salvarAquario()">Salvar</button>
-<button class="btn btn-secundario" onclick="document.getElementById('form-aquario').style.display='none'">Cancelar</button>
-</div>
-</div>
-</div>
-
-<div id="sub-peixes" class="sub-tela">
-<div class="voltar" onclick="voltarMenu()">Voltar</div>
-<div class="cartao-dados"><h3>Meus Peixes</h3><div class="sem-dados">Selecione um aquario</div></div>
-</div>
-
-<div id="sub-parametros" class="sub-tela">
-<div class="voltar" onclick="voltarMenu()">Voltar</div>
-<div class="cartao-dados">
-<h3>Parametros</h3>
-<div class="dado-linha"><span>Temperatura</span><span class="valor-bom">26 C</span></div>
-<div class="dado-linha"><span>pH</span><span class="valor-bom">6.8</span></div>
-<div class="dado-linha"><span>Amoniaco</span><span class="valor-bom">0.0 ppm</span></div>
-<div class="dado-linha"><span>Nitrito</span><span class="valor-bom">0.0 ppm</span></div>
-<div class="dado-linha"><span>Nitrato</span><span class="valor-alerta">25 ppm</span></div>
-</div>
-</div>
-
-<div id="sub-lembretes" class="sub-tela">
-<div class="voltar" onclick="voltarMenu()">Voltar</div>
-<div class="cartao-dados">
-<h3>Lembretes</h3>
-<div class="dado-linha"><span>Troca de agua</span><span class="valor-bom">Amanha</span></div>
-<div class="dado-linha"><span>Testar parametros</span><span class="valor-bom">Terca-feira</span></div>
-</div>
-</div>
-
-<div id="sub-admin" class="sub-tela">
-<div class="voltar" onclick="voltarMenu()">Voltar</div>
-<div class="cartao-dados">
-<h3>Painel Administrativo</h3>
-<div class="dado-linha"><span>Total de usuarios</span><span id="adm-usuarios">1</span></div>
-<div class="dado-linha"><span>Especies no banco</span><span id="adm-especies">5</span></div>
-<div class="dado-linha"><span>Aquarios ativos</span><span id="adm-aquarios">0</span></div>
-</div>
-</div>
-
-<div class="rodape">AquaVibe 2026 - 25 calculadoras ativas</div>
+<div id="sub-plantas" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div><div class="cartao-dados"><h3>🌿 Plantas</h3><div class="sem-dados">Em breve 🌿</div></div></div>
+<div id="sub-lembretes" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div><div class="cartao-dados"><h3>⏰ Lembretes</h3><div class="sem-dados">Em breve ⏰</div></div></div>
+<div id="sub-historico" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div><div class="cartao-dados"><h3>📈 Histórico</h3><div class="sem-dados">Em breve 📈</div></div></div>
+<div class="rodape">AquaVibe © 2026 — Sinta a vida do seu aquário 💧🐠</div>
 </section>
 
+<div class="modal-overlay" id="modal-peixe"><div class="modal"><button class="modal-fechar" onclick="fecharModal()">✕</button><div id="modal-conteudo"></div></div></div>
+
 <script>
-const BANCO_DADOS = {
-  usuarios: [{id:1,nome:"Administrador",email:"admin@aquavibe.com",senha:"admin123",admin:true}],
-  aquarios: [],
-  especies_peixes: [
-    {id:1,nome_comum:"Neon Tetra",tipo_agua:"doce",emoji:"N",temperatura_min_c:22,temperatura_max_c:26,ph_min:6.0,ph_max:7.0},
-    {id:2,nome_comum:"Guppy",tipo_agua:"doce",emoji:"G",temperatura_min_c:22,temperatura_max_c:28,ph_min:7.0,ph_max:8.5},
-    {id:3,nome_comum:"Corydora",tipo_agua:"doce",emoji:"C",temperatura_min_c:22,temperatura_max_c:26,ph_min:6.0,ph_max:7.5},
-    {id:4,nome_comum:"Betta",tipo_agua:"doce",emoji:"B",temperatura_min_c:24,temperatura_max_c:28,ph_min:6.5,ph_max:7.5},
-    {id:5,nome_comum:"Peixe-Palhaco",tipo_agua:"marinho",emoji:"P",temperatura_min_c:24,temperatura_max_c:27,ph_min:8.1,ph_max:8.4}
-  ],
-  peixes_aquario: [],
-  parametros_registro: []
-};
+// ===== PERSISTÊNCIA (localStorage) =====
+const CHAVE_CONTAS='aquavibe_contas', CHAVE_SESSAO='aquavibe_sessao';
+const ADMIN_PADRAO={nome:"Administrador",email:"admin@aquavibe.com",senha:"admin123",aquarios:[],aquarioAtivo:null,admin:true};
+function carregarContas(){
+  try{const s=localStorage.getItem(CHAVE_CONTAS);if(s){const l=JSON.parse(s);if(Array.isArray(l)&&l.length)return l;}}catch(e){}
+  return [JSON.parse(JSON.stringify(ADMIN_PADRAO))];
+}
+function salvarDados(){
+  try{
+    const i=contas.findIndex(x=>x.email===usuario.email);
+    if(i!==-1){contas[i].aquarios=usuario.aquarios;contas[i].aquarioAtivo=usuario.aquarioAtivo;}
+    localStorage.setItem(CHAVE_CONTAS,JSON.stringify(contas));
+  }catch(e){}
+}
+function esc(t){return String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
-let contas = [{nome:"Administrador",email:"admin@aquavibe.com",senha:"admin123",admin:true,aquarios:[]}];
-let usuario = {nome:'',email:'',aquarios:[],admin:false};
-let filtroAtual = 'todos';
+let contas=carregarContas();
+let usuario={nome:'',email:'',aquarios:[],aquarioAtivo:null};
+let filtroAtual='todos',peixeSelecionado=null,qtdAdicionar=1;
 
-function mostrarTela(id){document.querySelectorAll('.tela').forEach(function(t){t.classList.remove('ativa');});document.getElementById(id).classList.add('ativa');}
-function mostrarSubTela(id){document.getElementById('menu-principal').style.display='none';document.querySelectorAll('.sub-tela').forEach(function(t){t.classList.remove('sub-ativa');});document.getElementById(id).classList.add('sub-ativa');}
-function voltarMenu(){document.getElementById('menu-principal').style.display='block';document.querySelectorAll('.sub-tela').forEach(function(t){t.classList.remove('sub-ativa');});}
+// ===== BANCO DE PEIXES =====
+// Amostra. Cole aqui o restante das espécies do seu array BANCO_PEIXES original (mesmo formato).
+const BANCO_PEIXES=[
+{id:1,nome:"Neon Tetra",cientifico:"Paracheirodon innesi",familia:"Characidae",tipo:"doce",emoji:"🐟",origem:"Amazônia",tamanho:"3-4 cm",temperatura:"22-26 °C",ph:"6.0-7.0",gh:"1-10 dGH",comportamento:"Pacífico, cardume (mín. 6)",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"5-8 anos",compatibilidade:"Pequenos e pacíficos",obs:"O mais popular do mundo."},
+{id:3,nome:"Guppy",cientifico:"Poecilia reticulata",familia:"Poeciliidae",tipo:"doce",emoji:"🐟",origem:"América do Sul",tamanho:"3-6 cm",temperatura:"22-28 °C",ph:"7.0-8.5",gh:"8-20 dGH",comportamento:"Pacífico, ativo",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"2-3 anos",compatibilidade:"Pacíficos similares",obs:"Reproduz fácil — filhotes vivos."},
+{id:8,nome:"Disco (Discus)",cientifico:"Symphysodon aequifasciatus",familia:"Cichlidae",tipo:"doce",emoji:"🐠",origem:"Bacia Amazônica",tamanho:"15-20 cm",temperatura:"28-31 °C",ph:"5.5-7.0",gh:"1-8 dGH",comportamento:"Pacífico, cardume (mín. 4)",alimentacao:"Carnívoro exigente",dificuldade:"Difícil",vida:"10-15 anos",compatibilidade:"Apistogramas, coridoras",obs:"O 'rei do aquário'."},
+{id:10,nome:"Betta",cientifico:"Betta splendens",familia:"Osphronemidae",tipo:"doce",emoji:"🐟",origem:"Tailândia",tamanho:"6-8 cm",temperatura:"24-28 °C",ph:"6.5-7.5",gh:"2-12 dGH",comportamento:"Machos agressivos entre si",alimentacao:"Carnívoro",dificuldade:"Fácil",vida:"3-5 anos",compatibilidade:"Sozinho ou fêmeas",obs:"Respira ar. NUNCA dois machos juntos."},
+{id:101,nome:"Palhaço Ocellaris (Nemo)",cientifico:"Amphiprion ocellaris",familia:"Pomacentridae",tipo:"marinho",emoji:"🤡",origem:"Indo-Pacífico",tamanho:"8-11 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico, forma par (anêmona)",alimentacao:"Onívoro",dificuldade:"Fácil",vida:"6-10 anos",compatibilidade:"Pacíficos marinhos",obs:"O mais famoso! Muda de sexo."},
+{id:103,nome:"Tang Azul (Dory)",cientifico:"Paracanthurus hepatus",familia:"Acanthuridae",tipo:"marinho",emoji:"💙",origem:"Indo-Pacífico",tamanho:"25-30 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico, ativo",alimentacao:"Herbívoro — algas",dificuldade:"Médio",vida:"8-12 anos",compatibilidade:"Pacíficos grandes",obs:"A famosa Dory! 300L+."},
+{id:109,nome:"Mandarim (Dragonet)",cientifico:"Synchiropus splendidus",familia:"Callionymidae",tipo:"marinho",emoji:"🐉",origem:"Pacífico Ocidental",tamanho:"6-8 cm",temperatura:"24-27 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Pacífico, tímido",alimentacao:"SÓ copépodos vivos!",dificuldade:"Difícil",vida:"3-6 anos",compatibilidade:"Pacíficos muito calmos",obs:"O peixe mais colorido do mundo. Não para iniciantes!"},
+{id:117,nome:"Cavalo-Marinho",cientifico:"Hippocampus erectus",familia:"Syngnathidae",tipo:"marinho",emoji:"🐴",origem:"Atlântico",tamanho:"12-18 cm",temperatura:"22-25 °C",ph:"8.1-8.4",salinidade:"1.020-1.025",comportamento:"Muito pacífico, monogâmico",alimentacao:"Artêmia viva",dificuldade:"Difícil",vida:"3-6 anos",compatibilidade:"SÓ cavalos-marinhos",obs:"Macho carrega os filhotes!"}
+];
 
+// ===== NAVEGAÇÃO =====
+function mostrarTela(id){document.querySelectorAll('.tela').forEach(t=>t.classList.remove('ativa'));document.getElementById(id).classList.add('ativa');const m=document.getElementById('msg-recuperar');if(m){m.className='mensagem';m.innerHTML='';}}
+function mostrarSubTela(id){
+  document.getElementById('menu-principal').style.display='none';
+  document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa'));
+  document.getElementById(id).classList.add('sub-ativa');
+  if(id==='sub-aquarios')renderizarListaAquarios();
+  if(id==='sub-banco')renderizarBancoPeixes();
+  if(id==='sub-peixes')renderizarMeusPeixes();
+  if(id==='sub-admin')renderizarPainelAdmin();
+}
+function voltarMenu(){document.getElementById('menu-principal').style.display='block';document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa'));}
+
+// ===== LOGIN / CADASTRO =====
+function abrirApp(c){
+  usuario.nome=c.nome;usuario.email=c.email;usuario.aquarios=c.aquarios||[];
+  usuario.aquarioAtivo=c.aquarioAtivo??(usuario.aquarios.length>0?0:null);
+  if(usuario.aquarioAtivo!==null&&!usuario.aquarios[usuario.aquarioAtivo])usuario.aquarioAtivo=usuario.aquarios.length>0?0:null;
+  document.getElementById('nome-usuario').textContent=`Olá, ${usuario.nome}! 👋`;
+  const adm=c.admin===true;
+  document.getElementById('admin-badge').style.display=adm?'inline-block':'none';
+  document.getElementById('card-admin').style.display=adm?'block':'none';
+  voltarMenu();renderizarSeletorAquarios();atualizarDadosAquarioAtivo();mostrarTela('tela-app');
+}
 function entrar(){
-  var email=document.getElementById('email-login').value.trim(),senha=document.getElementById('senha-login').value;
-  if(!email||!senha){alert('Preencha e-mail e senha!');return;}
-  var conta=null;
-  for(var i=0;i<contas.length;i++){if(contas[i].email===email&&contas[i].senha===senha){conta=contas[i];break;}}
-  if(conta){
-    usuario={nome:conta.nome,email:conta.email,aquarios:conta.aquarios||[],admin:!!conta.admin};
-    document.getElementById('admin-badge').style.display=usuario.admin?'inline-block':'none';
-    document.getElementById('card-admin').style.display=usuario.admin?'block':'none';
-    document.getElementById('nome-usuario').innerText='Ola, '+usuario.nome+'!';
-    document.getElementById('qtd-especies').textContent=BANCO_DADOS.especies_peixes.length;
-    document.getElementById('adm-especies').textContent=BANCO_DADOS.especies_peixes.length;
-    renderizarSeletorAquarios();renderizarBancoPeixes();mostrarTela('tela-app');
-  }else{alert('E-mail ou senha incorretos!');}
+  const e=document.getElementById('email-login').value.trim(),s=document.getElementById('senha-login').value;
+  if(!e||!s){alert('⚠️ Preencha e-mail e senha!');return;}
+  const c=contas.find(x=>x.email===e&&x.senha===s);
+  if(c){try{localStorage.setItem(CHAVE_SESSAO,c.email);}catch(err){}abrirApp(c);}
+  else alert('❌ E-mail ou senha incorretos!');
 }
 function cadastrar(){
-  var n=document.getElementById('nome-cad').value.trim(),e=document.getElementById('email-cad').value.trim(),s=document.getElementById('senha-cad').value,c=document.getElementById('confirma-cad').value;
-  if(!n||!e||!s){alert('Preencha todos os campos!');return;}
-  if(s!==c){alert('As senhas nao coincidem!');return;}
-  for(var i=0;i<contas.length;i++){if(contas[i].email===e){alert('E-mail ja cadastrado!');return;}}
-  contas.push({nome:n,email:e,senha:s,aquarios:[],admin:false});
-  usuario={nome:n,email:e,aquarios:[],admin:false};
-  alert('Bem-vindo, '+n+'!');
-  document.getElementById('qtd-especies').textContent=BANCO_DADOS.especies_peixes.length;
-  document.getElementById('adm-especies').textContent=BANCO_DADOS.especies_peixes.length;
-  renderizarBancoPeixes();mostrarTela('tela-app');
+  const n=document.getElementById('nome-cad').value.trim(),e=document.getElementById('email-cad').value.trim(),s=document.getElementById('senha-cad').value,cf=document.getElementById('confirma-cad').value;
+  if(!n||!e||!s){alert('⚠️ Preencha todos os campos!');return;}
+  if(s!==cf){alert('⚠️ Senhas não coincidem!');return;}
+  if(contas.find(x=>x.email===e)){alert('⚠️ E-mail já cadastrado!');mostrarTela('tela-login');return;}
+  const nova={nome:n,email:e,senha:s,aquarios:[],aquarioAtivo:null,admin:false};
+  contas.push(nova);
+  try{localStorage.setItem(CHAVE_CONTAS,JSON.stringify(contas));localStorage.setItem(CHAVE_SESSAO,e);}catch(err){}
+  alert(`🎉 Conta criada! Bem-vindo, ${n}! 🐠`);
+  abrirApp(nova);
 }
-function sair(){if(confirm('Deseja sair?')){usuario={nome:'',email:'',aquarios:[],admin:false};mostrarTela('tela-login');}}
+function processarRecuperacao(){
+  const e=document.getElementById('email-recuperar').value.trim(),m=document.getElementById('msg-recuperar');
+  if(!e){m.className='mensagem erro';m.textContent='⚠️ Digite seu e-mail!';return;}
+  const c=contas.find(x=>x.email===e);
+  if(c){
+    const t='AquaVibe'+Math.floor(Math.random()*9999);
+    c.senha=t;
+    try{localStorage.setItem(CHAVE_CONTAS,JSON.stringify(contas));}catch(err){}
+    m.className='mensagem sucesso';m.innerHTML=`✅ E-mail encontrado!<br>🔑 <strong>Senha temporária:</strong> ${esc(t)}`;
+    document.getElementById('email-login').value=e;document.getElementById('senha-login').value=t;
+  }else{m.className='mensagem erro';m.textContent='❌ E-mail não cadastrado.';}
+}
+function sair(){
+  if(!confirm('Sair?'))return;
+  salvarDados();
+  try{localStorage.removeItem(CHAVE_SESSAO);}catch(err){}
+  document.getElementById('email-login').value='';document.getElementById('senha-login').value='';
+  document.getElementById('admin-badge').style.display='none';document.getElementById('card-admin').style.display='none';
+  usuario={nome:'',email:'',aquarios:[],aquarioAtivo:null};mostrarTela('tela-login');
+}
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  const id=document.activeElement.id;
+  if(id==='senha-login'||id==='email-login')entrar();
+  else if(id==='busca-wiki')buscarWikipedia();
+});
 
+// ===== PAINEL ADMIN =====
+function renderizarPainelAdmin(){
+  document.getElementById('admin-total-usuarios').textContent=contas.length;
+  document.getElementById('admin-total-aquarios').textContent=contas.reduce((s,c)=>s+(c.aquarios||[]).length,0);
+  document.getElementById('admin-total-especies').textContent=BANCO_PEIXES.length;
+  const l=document.getElementById('admin-lista-usuarios');l.innerHTML='';
+  contas.forEach((c,i)=>{
+    const d=document.createElement('div');d.className='lista-item';
+    const np=(c.aquarios||[]).reduce((s,a)=>s+(a.peixes||[]).length,0);
+    d.innerHTML=`<h4>${c.admin?'👑 ':''}${esc(c.nome)}${c.admin?' <span style="color:#f59e0b">(ADMIN)</span>':''}</h4><p>${esc(c.email)} • ${(c.aquarios||[]).length} aquário(s) • ${np} peixes</p>${!c.admin?`<div class="acoes"><button class="btn btn-pequeno btn-perigo" onclick="banirUsuario(${i})">Banir usuário</button></div>`:''}`;
+    l.appendChild(d);
+  });
+}
+function banirUsuario(i){
+  if(!confirm(`Banir o usuário "${contas[i].nome}"?`))return;
+  contas.splice(i,1);
+  try{localStorage.setItem(CHAVE_CONTAS,JSON.stringify(contas));}catch(e){}
+  renderizarPainelAdmin();alert('✅ Usuário banido!');
+}
+function limparTodosUsuarios(){
+  if(!confirm('Apagar TODOS os usuários (exceto admin)?'))return;
+  contas=contas.filter(c=>c.admin===true);
+  try{localStorage.setItem(CHAVE_CONTAS,JSON.stringify(contas));}catch(e){}
+  renderizarPainelAdmin();alert('✅ Usuários removidos!');
+}
+
+// ===== AQUÁRIOS =====
 function renderizarSeletorAquarios(){
-  var sel=document.getElementById('seletor-aquarios');sel.innerHTML='';
-  for(var i=0;i<usuario.aquarios.length;i++){var t=document.createElement('span');t.className='tag-aquario';t.textContent=usuario.aquarios[i].nome;sel.appendChild(t);}
-  var n=document.createElement('span');n.className='tag-aquario tag-novo';n.textContent='+ Novo';n.onclick=function(){mostrarSubTela('sub-aquarios');};sel.appendChild(n);
-  var lista=document.getElementById('lista-aquarios');
-  if(!usuario.aquarios.length){lista.innerHTML='<div class="sem-dados">Nenhum aquario cadastrado</div>';document.getElementById('adm-aquarios').textContent='0';return;}
-  lista.innerHTML='';
-  for(var j=0;j<usuario.aquarios.length;j++){var aq=usuario.aquarios[j];var d=document.createElement('div');d.className='dado-linha';d.innerHTML='<span><strong>'+aq.nome+'</strong><br><small>'+aq.volume+'L - '+aq.tipo_agua+'</small></span>';lista.appendChild(d);}
-  document.getElementById('adm-aquarios').textContent=usuario.aquarios.length;
+  const c=document.getElementById('seletor-aquarios');c.innerHTML='';
+  usuario.aquarios.forEach((a,i)=>{const t=document.createElement('span');t.className='tag-aquario'+(usuario.aquarioAtivo===i?' ativo':'');t.textContent=a.nome;t.onclick=()=>selecionarAquario(i);c.appendChild(t);});
+  const n=document.createElement('span');n.className='tag-aquario tag-novo';n.textContent='+ Novo';n.onclick=()=>{mostrarSubTela('sub-aquarios');mostrarFormAquario();};c.appendChild(n);
 }
+function selecionarAquario(i){usuario.aquarioAtivo=i;salvarDados();renderizarSeletorAquarios();atualizarDadosAquarioAtivo();}
+function atualizarDadosAquarioAtivo(){
+  if(usuario.aquarioAtivo===null)return;
+  const a=usuario.aquarios[usuario.aquarioAtivo];if(!a)return;
+  ['aq-nome-param','aq-nome-peixe'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=a.nome;});
+}
+function mostrarFormAquario(){document.getElementById('form-aquario').style.display='block';document.getElementById('aq-data').value=new Date().toISOString().split('T')[0];}
+function esconderFormAquario(){document.getElementById('form-aquario').style.display='none';['aq-nome','aq-volume','aq-obs'].forEach(id=>document.getElementById(id).value='');}
 function salvarAquario(){
-  var nome=document.getElementById('aq-nome').value.trim(),vol=document.getElementById('aq-volume').value,tipo=document.getElementById('aq-tipo').value;
-  if(!nome||!vol){alert('Preencha nome e volume!');return;}
-  usuario.aquarios.push({nome:nome,volume:vol,tipo_agua:tipo});
-  alert('Aquario "'+nome+'" salvo!');
-  document.getElementById('form-aquario').style.display='none';
-  document.getElementById('aq-nome').value='';document.getElementById('aq-volume').value='';
-  renderizarSeletorAquarios();
+  const n=document.getElementById('aq-nome').value.trim();if(!n){alert('⚠️ Dê um nome!');return;}
+  usuario.aquarios.push({nome:n,volume:document.getElementById('aq-volume').value||'--',tipo:document.getElementById('aq-tipo').value,dataMontagem:document.getElementById('aq-data').value||'--',observacoes:document.getElementById('aq-obs').value||'',peixes:[]});
+  usuario.aquarioAtivo=usuario.aquarios.length-1;
+  salvarDados();
+  alert(`✅ Aquário "${n}" cadastrado! 🐠`);esconderFormAquario();renderizarListaAquarios();renderizarSeletorAquarios();atualizarDadosAquarioAtivo();
 }
-function setFiltro(f){
-  filtroAtual=f;
-  var botoes=document.querySelectorAll('.filtro-btn');
-  for(var i=0;i<botoes.length;i++){var txt=botoes[i].textContent;var ativo=(f==='todos'&&txt.indexOf('Todos')!==-1)||(f==='doce'&&txt.indexOf('Doce')!==-1)||(f==='marinho'&&txt.indexOf('Marinho')!==-1);botoes[i].classList.toggle('ativo',ativo);}
-  renderizarBancoPeixes();
+function renderizarListaAquarios(){
+  const c=document.getElementById('lista-aquarios');c.innerHTML='';
+  if(!usuario.aquarios.length){c.innerHTML='<div class="sem-dados">Nenhum aquário ainda 🐠</div>';return;}
+  usuario.aquarios.forEach((a,i)=>{
+    const it=document.createElement('div');it.className='lista-item';
+    it.innerHTML=`<h4>${esc(a.nome)} ${usuario.aquarioAtivo===i?'✅':''}</h4><p>${esc(a.volume)}L • ${a.tipo==='doce'?'💧 Doce':a.tipo==='salobra'?'🌊 Salobra':'🐚 Marinha'} • ${a.peixes.length} peixes</p><div class="acoes"><button class="btn btn-pequeno btn-principal" onclick="selecionarAquario(${i});voltarMenu();">Usar</button><button class="btn btn-pequeno btn-perigo" onclick="excluirAquario(${i})">Excluir</button></div>`;
+    c.appendChild(it);
+  });
 }
+function excluirAquario(i){
+  if(!confirm('Excluir?'))return;
+  usuario.aquarios.splice(i,1);
+  if(usuario.aquarioAtivo===i)usuario.aquarioAtivo=usuario.aquarios.length>0?0:null;else if(usuario.aquarioAtivo>i)usuario.aquarioAtivo--;
+  salvarDados();renderizarListaAquarios();renderizarSeletorAquarios();
+}
+
+// ===== BANCO POPULARES =====
+function setFiltro(f){filtroAtual=f;document.querySelectorAll('.filtro-btn').forEach(b=>b.classList.toggle('ativo',b.dataset.filtro===f));renderizarBancoPeixes();}
 function renderizarBancoPeixes(){
-  var busca=document.getElementById('busca-peixe').value.toLowerCase();
-  var g=document.getElementById('grade-peixes');g.innerHTML='';
-  for(var i=0;i<BANCO_DADOS.especies_peixes.length;i++){
-    var p=BANCO_DADOS.especies_peixes[i];
-    if(filtroAtual!=='todos'&&p.tipo_agua!==filtroAtual)continue;
-    if(busca&&p.nome_comum.toLowerCase().indexOf(busca)===-1)continue;
-    var c=document.createElement('div');c.className='peixe-card';
-    var tc=p.tipo_agua==='doce'?'tipo-doce':'tipo-marinho';
-    var tt=p.tipo_agua==='doce'?'Doce':'Marinho';
-    c.innerHTML='<div class="peixe-emoji">'+p.emoji+'</div><h4>'+p.nome_comum+'</h4><span class="tipo-tag '+tc+'">'+tt+'</span><p style="font-size:.7rem;margin-top:.3rem;color:#64748b;">'+p.temperatura_min_c+'-'+p.temperatura_max_c+'C | pH '+p.ph_min+'-'+p.ph_max+'</p>';
+  const b=document.getElementById('busca-peixe').value.toLowerCase();
+  const l=BANCO_PEIXES.filter(p=>(filtroAtual==='todos'||p.tipo===filtroAtual)&&(!b||p.nome.toLowerCase().includes(b)||p.cientifico.toLowerCase().includes(b)));
+  document.getElementById('contador-peixes').textContent=`(${l.length} populares)`;
+  const g=document.getElementById('grade-peixes');g.innerHTML='';
+  if(!l.length){g.innerHTML='<div class="sem-dados" style="grid-column:1/-1">Nenhuma espécie 🔍</div>';return;}
+  l.forEach(p=>{
+    const c=document.createElement('div');c.className='peixe-card';c.onclick=()=>abrirModal(p.id);
+    c.innerHTML=`<div class="peixe-emoji">${p.emoji}</div><h4>${esc(p.nome)}</h4><div class="cientifico">${esc(p.cientifico)}</div><span class="tipo-tag ${p.tipo==='doce'?'tipo-doce':'tipo-marinho'}">${p.tipo==='doce'?'💧 Doce':'🌊 Marinho'}</span>`;
     g.appendChild(c);
-  }
+  });
 }
 
-function trocarAbaCalc(nome){
-  var abas=document.querySelectorAll('.calc-aba-btn');
-  for(var i=0;i<abas.length;i++){abas[i].classList.toggle('ativo',abas[i].dataset.calc===nome);}
-  var paineis=document.querySelectorAll('.calc-painel');
-  for(var j=0;j<paineis.length;j++){paineis[j].classList.remove('ativo');}
-  document.getElementById('calc-'+nome).classList.add('ativo');
+// ===== BUSCA MUNDIAL =====
+function mudarAba(a){
+  document.getElementById('aba-populares').classList.toggle('ativo',a==='populares');
+  document.getElementById('aba-mundo').classList.toggle('ativo',a==='mundo');
+  document.getElementById('conteudo-populares').style.display=a==='populares'?'block':'none';
+  document.getElementById('conteudo-mundo').style.display=a==='mundo'?'block':'none';
 }
-function num(id){return parseFloat(document.getElementById(id).value)||0;}
-function show(id){document.getElementById(id).classList.add('visivel');}
+async function buscarWikipedia(){
+  const termo=document.getElementById('busca-wiki').value.trim();
+  if(!termo){alert('Digite um nome para buscar!');return;}
+  const res=document.getElementById('resultados-wiki');
+  res.innerHTML='<div class="carregando"><div class="spinner"></div><p style="margin-top:1rem">Buscando 🌍...</p></div>';
+  try{
+    const url=`https://pt.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(termo+' peixe')}&gsrlimit=8&prop=pageimages|extracts&pithumbsize=300&exintro&explaintext&exlimit=max&format=json&origin=*`;
+    const data=await (await fetch(url)).json();
+    if(!data.query||!data.query.pages){res.innerHTML='<div class="sem-dados">Nenhum resultado 🔍</div>';return;}
+    const paginas=Object.values(data.query.pages).sort((a,b)=>a.index-b.index);
+    res.innerHTML='';
+    paginas.forEach(p=>{
+      const d=document.createElement('div');d.className='wiki-result';d.onclick=()=>abrirModalWiki(p);
+      const th=p.thumbnail&&p.thumbnail.source?`<img class="wiki-thumb" src="${esc(p.thumbnail.source)}" alt="${esc(p.title)}" loading="lazy">`:'<div class="wiki-ph">🐟</div>';
+      d.innerHTML=`${th}<div class="wiki-info"><h4>${esc(p.title)}</h4><p>${esc((p.extract||'').slice(0,120))}...</p></div>`;
+      res.appendChild(d);
+    });
+  }catch(err){res.innerHTML='<div class="sem-dados">⚠️ Erro na busca. Verifique sua internet.</div>';}
+}
 
-// 1
-function calcLitragem(){var c=num('lit_c'),l=num('lit_l'),a=num('lit_a');if(!c||!l||!a){alert('Preencha os 3 campos!');return;}var bruto=(c*l*a)/1000,util=bruto*0.85;document.getElementById('lit-bruto').textContent=bruto.toFixed(1);document.getElementById('lit-util').textContent=util.toFixed(1);document.getElementById('lit-peso').textContent=util.toFixed(1);document.getElementById('lit-dica').textContent=util<50?'Aquario pequeno - trocas frequentes.':util<150?'Aquario medio - boa estabilidade.':'Aquario grande - excelente estabilidade!';show('res-litragem');}
-// 2
-function calcAquecedor(){var v=num('aq_vol'),amb=num('aq_amb'),alvo=num('aq_alvo');if(!v||!amb||!alvo){alert('Preencha tudo!');return;}var d=alvo-amb;if(d<=0){alert('Temp. desejada menor ou igual a ambiente!');return;}var min=v*d*0.238,rec=min*1.3;document.getElementById('aq-delta').textContent=d.toFixed(1);document.getElementById('aq-min').textContent=Math.ceil(min);document.getElementById('aq-rec').textContent=Math.ceil(rec);document.getElementById('aq-dica').textContent=d>8?'Use dois aquecedores distribuidos.':'Coloque proximo a saida do filtro.';show('res-aquecedor');}
-// 3
-function calcFiltro(){var v=num('fil_vol'),f=num('fil_tipo');if(!v){alert('Informe o volume!');return;}document.getElementById('fil-min').textContent=Math.round(v*4);document.getElementById('fil-ideal').textContent=Math.round(v*f);document.getElementById('fil-max').textContent=Math.round(v*f*1.5);show('res-filtro');}
-// 4
-function calcIluminacao(){var c=num('il_c'),l=num('il_l'),n=num('il_nivel');if(!c||!l){alert('Preencha comprimento e largura!');return;}var vol=(c*l*40)/1000,lm=vol*n,w=lm/80;document.getElementById('il-vol').textContent=vol.toFixed(1);document.getElementById('il-lm').textContent=lm.toFixed(0);document.getElementById('il-w').textContent=w.toFixed(0);show('res-iluminacao');}
-// 5
-function calcSubstrato(){var c=num('sub_c'),l=num('sub_l'),e=num('sub_esp');if(!c||!l||!e){alert('Preencha os campos!');return;}var vol=(c*l*e)/1000,sacos=Math.ceil(vol/2.5),peso=vol*1.5;document.getElementById('sub-vol').textContent=vol.toFixed(1);document.getElementById('sub-sacos').textContent=sacos;document.getElementById('sub-peso').textContent=peso.toFixed(1);show('res-substrato');}
-// 6
-function calcTroca(){var v=num('tr_vol'),p=num('tr_pct');if(!v||!p){alert('Preencha volume e %!');return;}var qtd=v*p/100,cond=qtd/10*5;document.getElementById('tr-qtd').textContent=qtd.toFixed(1);document.getElementById('tr-repo').textContent=qtd.toFixed(1);document.getElementById('tr-cond').textContent=cond.toFixed(1);show('res-troca');}
-// 7
-function calcCO2(){var kh=num('co2_kh'),ph=num('co2_ph');if(!kh||!ph){alert('Preencha KH e pH!');return;}var co2=Math.round(Math.pow(10,7.477+Math.log10(kh)-ph)*10)/10;var st=co2<10?'Muito baixo - aumente injecao':co2<=25?'Ideal':'Muito alto - reduza';document.getElementById('co2-ppm').textContent=co2;document.getElementById('co2-status').textContent=st;show('res-co2');}
-// 8
-function calcSalinidade(){var v=num('sal_vol'),d=num('sal_dens');if(!v){alert('Informe o volume!');return;}var g=v*d,kg=g/1000;document.getElementById('sal-qtd').textContent=g.toFixed(0);document.getElementById('sal-kg').textContent=kg.toFixed(2);show('res-sal');}
-// 9
-function calcEnergia(){var f=num('en-filtro'),l=num('en-luz'),a=num('en-aquec'),t=num('en-tarifa');var di=(f*24+l*8+a*12)/1000,me=di*30,custo=me*t;document.getElementById('en-diario').textContent=di.toFixed(2);document.getElementById('en-mensal').textContent=me.toFixed(2);document.getElementById('en-custo').textContent='R$ '+custo.toFixed(2).replace('.',',');show('res-energia');}
-// 10
-function calcBiocarga(){var v=num('bio_vol');if(!v){alert('Informe o volume!');return;}var cm=v*0.8,neon=Math.floor(cm/4);document.getElementById('bio-cm').textContent=cm.toFixed(0);document.getElementById('bio-neon').textContent=neon;show('res-biocarga');}
-// 11 CORRECAO KH
-function calcKH(){var v=num('kh_vol'),at=num('kh_atual'),al=num('kh_alvo');if(!v||at===undefined){alert('Preencha volume e KH atual!');return;}var delta=al-at;if(delta<=0){alert('KH desejado menor ou igual ao atual!');return;}var gramas=delta*v*0.5;document.getElementById('kh-gramas').textContent=gramas.toFixed(1);document.getElementById('kh-colher').textContent=(gramas/5).toFixed(1);document.getElementById('kh-dica').textContent='Dissolva em agua de aquario e adicione lentamente. Meça novamente apos 24h. Nao aumente mais que 2 dKH por dia.';show('res-kh');}
-// 12 MEDICAMENTOS
-function calcRemedio(){var v=num('rem_vol'),d=num('rem_dose');if(!v){alert('Informe o volume!');return;}var ml=(v/10)*d;document.getElementById('rem-qtd').textContent=ml.toFixed(1);document.getElementById('rem-total').textContent=(ml*3).toFixed(1);show('res-remedio');}
-// 13 FERTILIZANTES
-function calcFert(){var v=num('fert_vol'),n=num('fert_nivel');if(!v){alert('Informe o volume!');return;}var f=v/100;document.getElementById('fert-kno3').textContent=(0.5*f*n).toFixed(2);document.getElementById('fert-kh2po4').textContent=(0.15*f*n).toFixed(2);document.getElementById('fert-k2so4').textContent=(0.3*f*n).toFixed(2);document.getElementById('fert-fe').textContent=(1*f*n).toFixed(1);show('res-fert');}
-// 14 OSMOSE
-function calcOsmo(){var v=num('osmo_vol'),tor=num('osmo_torneira'),al=num('osmo_alvo');if(!v||!tor){alert('Preencha volume e GH da torneira!');return;}if(al>=tor){alert('GH desejado maior ou igual ao da torneira - nao precisa de RO!');return;}var pctTor=(al/tor)*100,pctRO=100-pctTor;document.getElementById('osmo-ro').textContent=(v*pctRO/100).toFixed(1);document.getElementById('osmo-ro-pct').textContent=pctRO.toFixed(0);document.getElementById('osmo-tor').textContent=(v*pctTor/100).toFixed(1);document.getElementById('osmo-tor-pct').textContent=pctTor.toFixed(0);show('res-osmo');}
-// 15 GH
-function calcGH(){var v=num('gh_vol'),at=num('gh_atual'),al=num('gh_alvo');if(!v){alert('Informe o volume!');return;}var delta=al-at;if(delta<=0){alert('GH desejado menor ou igual ao atual!');return;}var gramas=delta*v*0.4;document.getElementById('gh-gramas').textContent=gramas.toFixed(1);document.getElementById('gh-delta').textContent=delta.toFixed(1);document.getElementById('gh-dica').textContent='Use sais de GH (CaSO4 + MgSO4) em proporcao 4:1. Adicione lentamente.';show('res-gh');}
-// 16 PESO TOTAL
-function calcPeso(){var v=num('peso_vol'),sub=num('peso_sub'),roc=num('peso_rocha'),vid=num('peso_vidro');if(!v){alert('Informe o volume!');return;}var agua=v,total=agua+sub+roc+vid;document.getElementById('peso-agua').textContent=agua.toFixed(0);document.getElementById('peso-total').textContent=total.toFixed(0);document.getElementById('peso-carga').textContent=(total/0.5).toFixed(0);document.getElementById('peso-dica').textContent=total>300?'Verifique a capacidade do movele! Peso alto requer estrutura reforcada.':'Peso dentro do normal para moveis de aquario.';show('res-peso');}
-// 17 SUMP
-function calcSump(){var v=num('sump_vol'),lar=num('sump_lar'),prof=num('sump_prof');if(!v){alert('Informe o volume do display!');return;}var ideal=v*0.25,area=(lar*prof)/10000,alt=ideal/area*100,seg=v*0.05;document.getElementById('sump-ideal').textContent=ideal.toFixed(0);document.getElementById('sump-alt').textContent=alt.toFixed(1);document.getElementById('sump-seg').textContent=seg.toFixed(1);show('res-sump');}
-// 18 VENTOINHAS
-function calcVent(){var v=num('vent_vol'),d=num('vent_delta');if(!v||!d){alert('Preencha volume e queda desejada!');return;}var qtd=Math.ceil((v/150)*d),vazao=qtd*100;document.getElementById('vent-qtd').textContent=qtd;document.getElementById('vent-vazao').textContent=vazao;show('res-vent');}
-// 19 EVAPORACAO
-function calcEvap(){var c=num('evap_c'),l=num('evap_l'),t=num('evap_tampa');if(!c||!l){alert('Preencha comprimento e largura!');return;}var area=(c*l)/10000,dia=area*1.5*t,sem=dia*7,res=sem;document.getElementById('evap-dia').textContent=dia.toFixed(1);document.getElementById('evap-sem').textContent=sem.toFixed(1);document.getElementById('evap-res').textContent=Math.ceil(res);show('res-evap');}
-// 20 CARDUME
-function calcCardume(){var v=num('card_vol'),tam=num('card_tam'),comp=num('card_comp');if(!v){alert('Informe o volume!');return;}var min=comp,rec=Math.max(comp,Math.floor(v/(tam*1.5))),max=Math.floor(v/(tam*0.8));document.getElementById('card-min').textContent=min;document.getElementById('card-rec').textContent=rec;document.getElementById('card-max').textContent=max;show('res-cardume');}
-// 21 CICLAGEM
-function calcCiclo(){var temp=num('ciclo_temp'),met=num('ciclo_metodo');var fator=temp<22?1.5:temp<26?1:0.8;var semanas=met*fator;document.getElementById('ciclo-semanas').textContent=semanas.toFixed(1);document.getElementById('ciclo-dias').textContent=Math.round(semanas*7);document.getElementById('ciclo-dica').textContent='Teste amonia, nitrito e nitrato regularmente. O ciclo esta completo quando amonia=0 e nitrito=0 por 3 dias seguidos.';show('res-ciclo');}
-// 22 ALIMENTACAO
-function calcAlim(){var q=num('alim_qtd'),t=num('alim_tam'),tp=num('alim_tipo');var gramas=q*t*0.05,sem=gramas*tp*7;document.getElementById('alim-vezes').textContent=tp;document.getElementById('alim-qtd').textContent=gramas.toFixed(2);document.getElementById('alim-sem').textContent=sem.toFixed(1);show('res-alim');}
-// 23 CONVERSAO
-function calcConv(){var v=num('conv_valor'),t=document.getElementById('conv_tipo').value,r=0,u='';if(t==='lg'){r=v*0.264172;u='galoes (US)';}else if(t==='gl'){r=v*3.78541;u='litros';}else if(t==='cf'){r=v*9/5+32;u='Fahrenheit';}else if(t==='fc'){r=(v-32)*5/9;u='Celsius';}else if(t==='ci'){r=v/2.54;u='polegadas';}else if(t==='ic'){r=v*2.54;u='centimetros';}else if(t==='go'){r=v*0.035274;u='oncas';}else{r=v*28.3495;u='gramas';}document.getElementById('conv-res').textContent=r.toFixed(2)+' '+u;show('res-conv');}
-// 24 CRONOGRAMA
-function calcCron(){var v=num('cron_vol'),p=num('cron_tipo');if(!v){alert('Informe o volume!');return;}var vol=v*p/100,freq=p>=40?'1x por semana':p>=20?'1-2x por semana':'1x por semana (pequenos volumes)';document.getElementById('cron-pct').textContent=p;document.getElementById('cron-vol').textContent=vol.toFixed(1);document.getElementById('cron-freq').textContent=freq;document.getElementById('cron-mes').textContent=(vol*4).toFixed(0);show('res-cron');}
-// 25 CUSTO
-function calcCusto(){var itens=['cust_aq','cust_mov','cust_fil','cust_aqec','cust_luz','cust_sub','cust_dec','cust_out'],total=0,n=0;for(var i=0;i<itens.length;i++){var v=num(itens[i]);if(v>0){total+=v;n++;}}document.getElementById('cust-total').textContent='R$ '+total.toFixed(2).replace('.',',');document.getElementById('cust-itens').textContent=n;show('res-custo');}
+// ===== MODAL =====
+function abrirModal(id){
+  const p=BANCO_PEIXES.find(x=>x.id===id);if(!p)return;
+  peixeSelecionado=p;qtdAdicionar=1;
+  const dc=p.dificuldade.startsWith('Fácil')?'dificuldade-facil':p.dificuldade==='Médio'?'dificuldade-medio':'dificuldade-dificil';
+  const it=(l,v,x='')=>`<div class="espec-item ${x}"><div class="label">${l}</div><div class="valor">${esc(v)}</div></div>`;
+  document.getElementById('modal-conteudo').innerHTML=`
+    <div class="emoji-grande">${p.emoji}</div><h2>${esc(p.nome)}</h2><div class="cientifico">${esc(p.cientifico)} — ${esc(p.familia)}</div>
+    <div class="espec-grid">
+      ${it('Tipo',p.tipo==='doce'?'💧 Água Doce':'🌊 Marinho')}
+      <div class="espec-item"><div class="label">Dificuldade</div><div class="valor ${dc}">${esc(p.dificuldade)}</div></div>
+      ${it('Tamanho',p.tamanho)}${it('Vida',p.vida)}${it('Temperatura',p.temperatura)}${it('pH',p.ph)}
+      ${p.gh?it('GH',p.gh):''}${p.salinidade?it('Salinidade',p.salinidade):''}
+      ${it('Origem',p.origem,'longo')}${it('Comportamento',p.comportamento,'longo')}${it('Alimentação',p.alimentacao,'longo')}${it('Compatibilidade',p.compatibilidade,'longo')}${it('📝 Observações',p.obs,'longo')}
+    </div>
+    <div class="contador-qtd"><button onclick="mudarQtd(-1)">−</button><span id="qtd-valor">1</span><button onclick="mudarQtd(1)">+</button></div>
+    <button class="btn btn-principal" onclick="adicionarAoAquario()">➕ Adicionar ao meu aquário</button>`;
+  document.getElementById('modal-peixe').classList.add('aberto');
+}
+function abrirModalWiki(p){
+  peixeSelecionado={id:'wiki_'+p.pageid,nome:p.title,cientifico:p.title,emoji:'🐟',tipo:'desconhecido'};qtdAdicionar=1;
+  const img=p.thumbnail&&p.thumbnail.source?`<img class="foto-peixe" src="${esc(p.thumbnail.source.replace('/300px-','/500px-'))}" alt="${esc(p.title)}">`:'';
+  document.getElementById('modal-conteudo').innerHTML=`${img}<h2>${esc(p.title)}</h2><div class="cientifico">Ficha da Wikipedia 🌍</div>
+    <p class="descricao-wiki">${esc(p.extract||'Sem descrição.')}</p>
+    <a class="link-wiki" href="https://pt.wikipedia.org/wiki/${encodeURIComponent(p.title)}" target="_blank" rel="noopener">📖 Ver artigo completo</a>
+    <div class="contador-qtd"><button onclick="mudarQtd(-1)">−</button><span id="qtd-valor">1</span><button onclick="mudarQtd(1)">+</button></div>
+    <button class="btn btn-principal" onclick="adicionarAoAquario()">➕ Adicionar ao meu aquário</button>`;
+  document.getElementById('modal-peixe').classList.add('aberto');
+}
+function mudarQtd(d){qtdAdicionar=Math.max(1,qtdAdicionar+d);document.getElementById('qtd-valor').textContent=qtdAdicionar;}
+function fecharModal(){document.getElementById('modal-peixe').classList.remove('aberto');}
+document.getElementById('modal-peixe').addEventListener('click',e=>{if(e.target.id==='modal-peixe')fecharModal();});
+
+function adicionarAoAquario(){
+  if(usuario.aquarioAtivo===null){alert('⚠️ Selecione ou cadastre um aquário primeiro!');return;}
+  const a=usuario.aquarios[usuario.aquarioAtivo];
+  const ex=a.peixes.find(x=>x.id===peixeSelecionado.id);
+  if(ex)ex.quantidade+=qtdAdicionar;
+  else a.peixes.push({id:peixeSelecionado.id,nome:peixeSelecionado.nome,cientifico:peixeSelecionado.cientifico,emoji:peixeSelecionado.emoji,quantidade:qtdAdicionar,tipo:peixeSelecionado.tipo});
+  salvarDados();
+  alert(`✅ ${qtdAdicionar}x ${peixeSelecionado.nome} adicionado(s) ao aquário "${a.nome}"! 🐠`);
+  fecharModal();
+}
+
+// ===== MEUS PEIXES =====
+function renderizarMeusPeixes(){
+  const c=document.getElementById('lista-meus-peixes');
+  if(usuario.aquarioAtivo===null){c.innerHTML='<div class="sem-dados">Selecione um aquário 🐠</div>';return;}
+  const a=usuario.aquarios[usuario.aquarioAtivo];
+  if(!a.peixes.length){c.innerHTML='<div class="sem-dados">Nenhum peixe ainda 🐟</div>';return;}
+  c.innerHTML='';
+  a.peixes.forEach((p,i)=>{
+    const it=document.createElement('div');it.className='lista-item';
+    it.innerHTML=`<h4>${p.emoji} ${esc(p.nome)} — <span style="color:var(--am)">${p.quantidade}x</span></h4><p><em>${esc(p.cientifico)}</em></p><div class="acoes"><button class="btn btn-pequeno btn-perigo" onclick="removerPeixe(${i})">Remover</button></div>`;
+    c.appendChild(it);
+  });
+}
+function removerPeixe(i){
+  const a=usuario.aquarios[usuario.aquarioAtivo];
+  if(a.peixes[i].quantidade>1)a.peixes[i].quantidade--;else a.peixes.splice(i,1);
+  salvarDados();renderizarMeusPeixes();
+}
+
+// ===== RESTAURAR SESSÃO AO ABRIR/ATUALIZAR =====
+(function(){
+  try{
+    const e=localStorage.getItem(CHAVE_SESSAO);if(!e)return;
+    const c=contas.find(x=>x.email===e);
+    if(c)abrirApp(c);else localStorage.removeItem(CHAVE_SESSAO);
+  }catch(err){}
+})();
 </script>
 </body>
 </html>
