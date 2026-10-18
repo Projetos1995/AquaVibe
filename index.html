@@ -71,6 +71,11 @@ input:focus,select:focus{outline:none;border-color:var(--am)}
 .contador-qtd button{width:40px;height:40px;border-radius:50%;border:none;background:var(--am);color:#fff;font-size:1.3rem;cursor:pointer}
 .contador-qtd span{font-size:1.3rem;font-weight:700;color:var(--ae);min-width:30px;text-align:center}
 .admin-badge{background:#fbbf24;color:#78350f;padding:.2rem .6rem;border-radius:10px;font-size:.75rem;font-weight:700;margin-left:.5rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}.form-grid label{font-size:.8rem}.check{display:flex;gap:.6rem;align-items:center;margin:.5rem 0;font-weight:400}.check input{width:auto}.ok{color:#16a34a;font-weight:600}.alerta{color:#dc2626;font-weight:600}#h-graf{margin-bottom:.8rem}
+textarea{width:100%;padding:.9rem 1rem;border:2px solid #e2e8f0;border-radius:12px;font-size:1rem;resize:vertical}textarea:focus{outline:none;border-color:var(--am)}.nota-txt{white-space:pre-wrap}
+.cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;color:var(--ae)}.cal-grade{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.cal-sem{text-align:center;font-size:.7rem;color:#94a3b8;font-weight:600}
+.cal-dia{aspect-ratio:1;border-radius:10px;border:2px solid transparent;background:#f1f5f9;cursor:pointer;font-size:.85rem;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#334155}
+.cal-dia.vazio{visibility:hidden}.cal-dia.ok{background:#d1fae5}.cal-dia.fora{background:#fee2e2}.cal-dia.nota{background:#fef3c7}.cal-dia.hoje{border-color:var(--am)}.cal-dia.sel{border-color:var(--ae);font-weight:700}.cal-dia small{font-size:.6rem;min-height:.8rem}
 </style>
 </head>
 <body>
@@ -119,6 +124,8 @@ input:focus,select:focus{outline:none;border-color:var(--am)}
 <div class="card-funcao" onclick="mostrarSubTela('sub-plantas')"><div class="icone">🌿</div><h3>Plantas</h3><p>Espécies</p></div>
 <div class="card-funcao" onclick="mostrarSubTela('sub-lembretes')"><div class="icone">⏰</div><h3>Lembretes</h3><p>Cuidados</p></div>
 <div class="card-funcao" onclick="mostrarSubTela('sub-historico')"><div class="icone">📈</div><h3>Histórico</h3><p>Acompanhamento</p></div>
+<div class="card-funcao" onclick="mostrarSubTela('sub-calendario')"><div class="icone">📅</div><h3>Calendário</h3><p>Dias anteriores</p></div>
+<div class="card-funcao" onclick="mostrarSubTela('sub-notas')"><div class="icone">📝</div><h3>Anotações</h3><p>Notas do aquário</p></div>
 <div class="card-funcao card-admin" id="card-admin" style="display:none" onclick="mostrarSubTela('sub-admin')"><div class="icone">👑</div><h3>Painel Admin</h3><p>Gerenciar o app</p></div>
 </div><button class="btn btn-secundario sair" onclick="sair()">Sair da conta</button></div>
 
@@ -157,16 +164,62 @@ input:focus,select:focus{outline:none;border-color:var(--am)}
 <button class="btn btn-principal" onclick="salvarAquario()">💾 Salvar</button><button class="btn btn-secundario" onclick="esconderFormAquario()">Cancelar</button></div></div>
 
 <div id="sub-parametros" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div>
-<div class="cartao-dados"><h3>📊 Parâmetros (exemplo) — <span id="aq-nome-param">Selecione um aquário</span></h3>
-<div class="dado-linha"><span>Temperatura</span><span class="valor-bom">26 °C ✅</span></div>
-<div class="dado-linha"><span>pH</span><span class="valor-bom">6.8 ✅</span></div>
-<div class="dado-linha"><span>Amoníaco (NH3)</span><span class="valor-bom">0.0 ppm ✅</span></div>
-<div class="dado-linha"><span>Nitrito (NO2)</span><span class="valor-bom">0.0 ppm ✅</span></div>
-<div class="dado-linha"><span>Nitrato (NO3)</span><span class="valor-alerta">25 ppm ⚠️</span></div></div></div>
+<div class="cartao-dados"><h3>📊 Parâmetros — <span id="aq-nome-param">Selecione um aquário</span></h3><div id="param-atual"></div>
+<button class="btn btn-principal" onclick="mostrarSubTela('sub-historico')">➕ Registrar medição de hoje</button></div></div>
 
 <div id="sub-plantas" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div><div class="cartao-dados"><h3>🌿 Plantas</h3><div class="sem-dados">Em breve 🌿</div></div></div>
 <div id="sub-lembretes" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div><div class="cartao-dados"><h3>⏰ Lembretes</h3><div class="sem-dados">Em breve ⏰</div></div></div>
-<div id="sub-historico" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div><div class="cartao-dados"><h3>📈 Histórico</h3><div class="sem-dados">Em breve 📈</div></div></div>
+<div id="sub-historico" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div>
+<div class="cartao-dados" id="hist-vazio"><h3>📈 Histórico</h3><div class="sem-dados">Selecione ou cadastre um aquário 🐠</div></div>
+<div id="hist-corpo" style="display:none">
+<div class="cartao-dados"><h3>📝 Registro do dia — <span id="aq-nome-hist"></span></h3>
+<div id="hist-aviso"></div>
+<div class="grupo-input"><label for="h-data">Data</label><input type="date" id="h-data" onchange="carregarRegistro()"></div>
+<div class="form-grid">
+<div><label for="h-temp">Temperatura (°C)</label><input type="number" step="any" id="h-temp"></div>
+<div><label for="h-ph">pH</label><input type="number" step="any" id="h-ph"></div>
+<div><label for="h-nh3">Amônia NH3 (ppm)</label><input type="number" step="any" id="h-nh3"></div>
+<div><label for="h-no2">Nitrito NO2 (ppm)</label><input type="number" step="any" id="h-no2"></div>
+<div><label for="h-no3">Nitrato NO3 (ppm)</label><input type="number" step="any" id="h-no3"></div>
+<div><label for="h-kh">KH (dKH)</label><input type="number" step="any" id="h-kh"></div>
+<div><label for="h-gh">GH (dGH)</label><input type="number" step="any" id="h-gh"></div>
+<div id="g-sal" style="display:none"><label for="h-sal">Salinidade (SG)</label><input type="number" step="any" id="h-sal" placeholder="1.024"></div>
+<div><label for="h-po4">Fosfato PO4 (ppm)</label><input type="number" step="any" id="h-po4"></div>
+<div id="g-ca" style="display:none"><label for="h-ca">Cálcio Ca (ppm)</label><input type="number" step="any" id="h-ca"></div>
+<div id="g-mg" style="display:none"><label for="h-mg">Magnésio Mg (ppm)</label><input type="number" step="any" id="h-mg"></div>
+</div>
+<div class="grupo-input" style="margin-top:1rem"><label for="h-troca">Troca de água hoje (%)</label><input type="number" id="h-troca" min="0" max="100" placeholder="0 se não trocou"></div>
+<label>Tarefas do dia</label><div id="h-tarefas"></div>
+<div class="grupo-input" style="margin-top:1rem"><label for="h-obs">Observações</label><input type="text" id="h-obs" placeholder="Ex: peixe nadando estranho"></div>
+<button class="btn btn-principal" onclick="salvarRegistro()">💾 Salvar registro</button>
+<p style="font-size:.75rem;color:#94a3b8;margin-top:.8rem">Preencha só o que você mediu. As faixas são gerais: confira a espécie no Banco de Peixes (ex.: kinguio vive em água mais fria).</p></div>
+<div class="cartao-dados"><h3>📈 Evolução</h3><div id="h-grafico"></div></div>
+<div class="cartao-dados"><h3>🗂️ Registros</h3><div id="h-lista"></div></div>
+</div></div>
+<div id="sub-calendario" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div>
+<div class="cartao-dados" id="cal-vazio"><h3>📅 Calendário</h3><div class="sem-dados">Selecione ou cadastre um aquário 🐠</div></div>
+<div id="cal-corpo" style="display:none">
+<div class="cartao-dados"><h3>📅 Calendário — <span id="aq-nome-cal"></span></h3>
+<div class="cal-nav"><button class="btn btn-pequeno btn-secundario" onclick="mudarMes(-1)">◀</button><strong id="cal-titulo"></strong><button class="btn btn-pequeno btn-secundario" onclick="mudarMes(1)">▶</button></div>
+<div class="cal-grade" id="cal-grade"></div>
+<p style="font-size:.75rem;color:#64748b;margin-top:.8rem">🟩 medições ok • 🟥 algo fora da faixa • 🟨 só tarefas/anotação • 📝 tem anotação</p>
+<p id="cal-resumo" style="font-size:.85rem;color:var(--ae);margin-top:.4rem;font-weight:600"></p>
+<button class="btn btn-secundario" onclick="irParaHoje()">Ir para hoje</button></div>
+<div class="cartao-dados"><h3 id="cal-dia-titulo">📆 Dia</h3><div id="cal-dia"></div></div>
+</div></div>
+
+<div id="sub-notas" class="sub-tela"><div class="voltar" onclick="voltarMenu()">← Voltar</div>
+<div class="cartao-dados" id="notas-vazio"><h3>📝 Anotações</h3><div class="sem-dados">Selecione ou cadastre um aquário 🐠</div></div>
+<div id="notas-corpo" style="display:none">
+<div class="cartao-dados"><h3>📝 Nova anotação — <span id="aq-nome-notas"></span></h3>
+<input type="hidden" id="n-id">
+<div class="grupo-input"><label for="n-titulo">Título</label><input type="text" id="n-titulo" placeholder="Ex: Troquei o filtro"></div>
+<div class="grupo-input"><label for="n-texto">Anotação</label><textarea id="n-texto" rows="4" placeholder="Escreva aqui..."></textarea></div>
+<button class="btn btn-principal" onclick="salvarNota()">💾 Salvar anotação</button>
+<button class="btn btn-secundario" id="n-cancelar" style="display:none" onclick="limparNota()">Cancelar edição</button></div>
+<div class="cartao-dados"><h3>🗒️ Minhas anotações</h3><div class="busca-box"><input type="text" id="n-busca" placeholder="🔍 Buscar anotações..." oninput="renderizarListaNotas()"></div><div id="n-lista"></div></div>
+</div></div>
+
 <div class="rodape">AquaVibe © 2026 — Sinta a vida do seu aquário 💧🐠</div>
 </section>
 
@@ -260,6 +313,10 @@ function mostrarSubTela(id){
   if(id==='sub-banco')renderizarBancoPeixes();
   if(id==='sub-peixes')renderizarMeusPeixes();
   if(id==='sub-admin')renderizarPainelAdmin();
+  if(id==='sub-historico')renderizarHistorico();
+  if(id==='sub-notas')renderizarNotas();
+  if(id==='sub-calendario')renderizarCalendario();
+  if(id==='sub-parametros')renderizarParametros();
 }
 function voltarMenu(){salvarView('menu');document.getElementById('menu-principal').style.display='block';document.querySelectorAll('.sub-tela').forEach(t=>t.classList.remove('sub-ativa'));}
 
@@ -351,17 +408,17 @@ function renderizarSeletorAquarios(){
   usuario.aquarios.forEach((a,i)=>{const t=document.createElement('span');t.className='tag-aquario'+(usuario.aquarioAtivo===i?' ativo':'');t.textContent=a.nome;t.onclick=()=>selecionarAquario(i);c.appendChild(t);});
   const n=document.createElement('span');n.className='tag-aquario tag-novo';n.textContent='+ Novo';n.onclick=()=>{mostrarSubTela('sub-aquarios');mostrarFormAquario();};c.appendChild(n);
 }
-function selecionarAquario(i){usuario.aquarioAtivo=i;salvarDados();renderizarSeletorAquarios();atualizarDadosAquarioAtivo();}
+function selecionarAquario(i){usuario.aquarioAtivo=i;salvarDados();renderizarSeletorAquarios();atualizarDadosAquarioAtivo();const at=document.querySelector('.sub-tela.sub-ativa');if(at)mostrarSubTela(at.id);}
 function atualizarDadosAquarioAtivo(){
   if(usuario.aquarioAtivo===null)return;
   const a=usuario.aquarios[usuario.aquarioAtivo];if(!a)return;
-  ['aq-nome-param','aq-nome-peixe'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=a.nome;});
+  ['aq-nome-param','aq-nome-peixe','aq-nome-hist','aq-nome-notas','aq-nome-cal'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=a.nome;});
 }
 function mostrarFormAquario(){document.getElementById('form-aquario').style.display='block';document.getElementById('aq-data').value=new Date().toISOString().split('T')[0];}
 function esconderFormAquario(){document.getElementById('form-aquario').style.display='none';['aq-nome','aq-volume','aq-obs'].forEach(id=>document.getElementById(id).value='');}
 function salvarAquario(){
   const n=document.getElementById('aq-nome').value.trim();if(!n){alert('⚠️ Dê um nome!');return;}
-  usuario.aquarios.push({nome:n,volume:document.getElementById('aq-volume').value||'--',tipo:document.getElementById('aq-tipo').value,dataMontagem:document.getElementById('aq-data').value||'--',observacoes:document.getElementById('aq-obs').value||'',peixes:[]});
+  usuario.aquarios.push({nome:n,volume:document.getElementById('aq-volume').value||'--',tipo:document.getElementById('aq-tipo').value,dataMontagem:document.getElementById('aq-data').value||'--',observacoes:document.getElementById('aq-obs').value||'',peixes:[],registros:[],notas:[]});
   usuario.aquarioAtivo=usuario.aquarios.length-1;
   salvarDados();
   alert(`✅ Aquário "${n}" cadastrado! 🐠`);esconderFormAquario();renderizarListaAquarios();renderizarSeletorAquarios();atualizarDadosAquarioAtivo();
@@ -423,6 +480,188 @@ async function buscarWikipedia(){
     });
   }catch(err){res.innerHTML='<div class="sem-dados">⚠️ Erro na busca. Verifique sua internet.</div>';}
 }
+
+// ===== HISTÓRICO DIÁRIO =====
+const CAMPOS=[['temp','Temperatura','°C'],['ph','pH',''],['nh3','Amônia (NH3)','ppm'],['no2','Nitrito (NO2)','ppm'],['no3','Nitrato (NO3)','ppm'],['kh','KH','dKH'],['gh','GH','dGH'],['sal','Salinidade','SG'],['po4','Fosfato (PO4)','ppm'],['ca','Cálcio (Ca)','ppm'],['mg','Magnésio (Mg)','ppm']];
+const TAREFAS=['Alimentei os peixes','Filtro e bomba funcionando','Aquecedor e luz conferidos','Contei os peixes e estão saudáveis','Removi sobras e limpei o vidro'];
+const DICAS={temp:'Confira aquecedor/ventilação e mude a temperatura devagar.',ph:'Evite mudanças bruscas; troque água aos poucos.',nh3:'Amônia é tóxica: troque 30-50% da água e reduza a comida.',no2:'Nitrito é tóxico: troque água e verifique o filtro biológico.',no3:'Faça uma troca parcial de água (20-30%).',kh:'KH instável causa oscilação de pH.',gh:'Ajuste a dureza aos poucos.',sal:'Ajuste devagar com água doce ou sal marinho.',po4:'Fosfato alto alimenta algas: reduza a comida e troque parte da água.',ca:'Corrija o cálcio aos poucos com suplemento próprio para marinho.',mg:'Magnésio baixo atrapalha cálcio e KH: ajuste com suplemento.'};
+function faixas(t){const m=t==='marinho';return{temp:m?[24,27]:[22,28],ph:m?[8.0,8.4]:[6.0,8.0],nh3:[0,0],no2:[0,0],no3:m?[0,20]:[0,40],kh:m?[7,12]:[3,10],gh:m?null:[3,15],sal:[1.020,1.025],po4:m?[0,0.1]:[0,1],ca:[380,450],mg:[1250,1400]};}
+function camposTipo(t){return CAMPOS.filter(c=>!(c[0]==='sal'&&t==='doce')&&!(['ca','mg'].includes(c[0])&&t!=='marinho'));}
+function st(v,f){return(v==null||!f)?'':(v<f[0]-1e-9||v>f[1]+1e-9)?'alerta':'ok';}
+function hoje(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);}
+function fmt(d){return d.split('-').reverse().join('/');}
+function aqAtivo(){const a=usuario.aquarios[usuario.aquarioAtivo];if(a){a.registros=a.registros||[];a.notas=a.notas||[];}return a||null;}
+const porData=(x,y)=>y.data.localeCompare(x.data);
+
+function renderizarHistorico(data){
+  const a=aqAtivo();
+  document.getElementById('hist-vazio').style.display=a?'none':'block';
+  document.getElementById('hist-corpo').style.display=a?'block':'none';
+  if(!a)return;
+  const m=a.tipo==='marinho';
+  document.getElementById('g-sal').style.display=a.tipo==='doce'?'none':'block';
+  ['g-ca','g-mg'].forEach(i=>document.getElementById(i).style.display=m?'block':'none');
+  document.getElementById('h-tarefas').innerHTML=TAREFAS.map((t,i)=>`<label class="check"><input type="checkbox" id="h-t${i}">${t}</label>`).join('');
+  document.getElementById('h-data').value=data||hoje();
+  carregarRegistro();desenharGrafico();renderizarListaRegistros();
+}
+function carregarRegistro(){
+  const a=aqAtivo();if(!a)return;
+  const d=document.getElementById('h-data').value,r=a.registros.find(x=>x.data===d)||{};
+  CAMPOS.forEach(c=>document.getElementById('h-'+c[0]).value=r[c[0]]??'');
+  document.getElementById('h-troca').value=r.troca??'';
+  document.getElementById('h-obs').value=r.obs||'';
+  TAREFAS.forEach((t,i)=>document.getElementById('h-t'+i).checked=!!(r.tarefas&&r.tarefas[i]));
+  document.getElementById('hist-aviso').innerHTML=r.data?'<div class="mensagem sucesso">✅ Já existe registro neste dia. Salvar vai atualizá-lo.</div>':(d===hoje()?'<div class="mensagem erro">⏰ Você ainda não registrou hoje.</div>':'');
+}
+function salvarRegistro(){
+  const a=aqAtivo();if(!a){alert('⚠️ Selecione um aquário!');return;}
+  const data=document.getElementById('h-data').value;if(!data){alert('⚠️ Escolha a data!');return;}
+  const n=id=>{const v=parseFloat(document.getElementById(id).value);return isNaN(v)?null:v;};
+  const r={data,tarefas:TAREFAS.map((t,i)=>document.getElementById('h-t'+i).checked),obs:document.getElementById('h-obs').value.trim()};
+  CAMPOS.forEach(c=>r[c[0]]=n('h-'+c[0]));r.troca=n('h-troca');
+  if(CAMPOS.every(c=>r[c[0]]==null)&&r.troca==null&&!r.obs&&!r.tarefas.some(Boolean)){alert('⚠️ Preencha ao menos um item!');return;}
+  const i=a.registros.findIndex(x=>x.data===data);
+  if(i>=0)a.registros[i]=r;else a.registros.push(r);
+  salvarDados();renderizarHistorico(data);
+  const f=faixas(a.tipo),fora=CAMPOS.filter(c=>st(r[c[0]],f[c[0]])==='alerta');
+  alert(fora.length?`⚠️ Salvo! Fora da faixa: ${fora.map(c=>c[1]).join(', ')}.`:'✅ Registro salvo!');
+}
+function editarRegistro(d){document.getElementById('h-data').value=d;carregarRegistro();document.getElementById('h-data').scrollIntoView({behavior:'smooth'});}
+function excluirRegistro(d){
+  if(!confirm('Excluir este registro?'))return;
+  const a=aqAtivo();a.registros=a.registros.filter(x=>x.data!==d);
+  salvarDados();renderizarHistorico(document.getElementById('h-data').value);
+}
+function renderizarListaRegistros(){
+  const a=aqAtivo(),c=document.getElementById('h-lista');
+  if(!a.registros.length){c.innerHTML='<div class="sem-dados">Nenhum registro ainda 📋</div>';return;}
+  const f=faixas(a.tipo);
+  c.innerHTML=[...a.registros].sort(porData).map(r=>{
+    const vals=CAMPOS.filter(k=>r[k[0]]!=null).map(k=>`<span class="${st(r[k[0]],f[k[0]])==='alerta'?'alerta':'ok'}">${k[1]} ${r[k[0]]}${k[2]?' '+k[2]:''}</span>`).join(' • ');
+    const feitas=(r.tarefas||[]).filter(Boolean).length;
+    return `<div class="lista-item"><h4>📅 ${fmt(r.data)}</h4><p>${vals||'Sem medições'}</p><p>✅ ${feitas}/${TAREFAS.length} tarefas${r.troca!=null?` • 💧 troca de ${r.troca}%`:''}</p>${r.obs?`<p>📝 ${esc(r.obs)}</p>`:''}<div class="acoes"><button class="btn btn-pequeno btn-principal" onclick="editarRegistro('${r.data}')">Editar</button><button class="btn btn-pequeno btn-perigo" onclick="excluirRegistro('${r.data}')">Excluir</button></div></div>`;
+  }).join('');
+}
+function graficoSVG(a,k){
+  const reg=a.registros.filter(r=>r[k]!=null).sort((x,y)=>x.data.localeCompare(y.data)).slice(-14);
+  if(reg.length<2)return null;
+  const f=faixas(a.tipo)[k],v=reg.map(r=>r[k]);
+  let mn=Math.min(...v,...(f?[f[0]]:[])),mx=Math.max(...v,...(f?[f[1]]:[]));
+  if(mn===mx){mn-=1;mx+=1;}
+  const p=(mx-mn)*.1;mn-=p;mx+=p;
+  const X=i=>40+i*(270/(reg.length-1)),Y=x=>130-(x-mn)/(mx-mn)*110;
+  const band=f?`<rect x="40" y="${Y(f[1])}" width="270" height="${Math.max(2,Y(f[0])-Y(f[1]))}" fill="#10b981" opacity=".15"/>`:'';
+  const pts=reg.map((r,i)=>`${X(i)},${Y(r[k])}`).join(' ');
+  const dots=reg.map((r,i)=>`<circle cx="${X(i)}" cy="${Y(r[k])}" r="4" fill="${st(r[k],f)==='alerta'?'#dc2626':'#0ea5e9'}"/>`).join('');
+  const t=(x,y,s,an)=>`<text x="${x}" y="${y}" font-size="10" fill="#64748b"${an?` text-anchor="${an}"`:''}>${s}</text>`;
+  return `<svg viewBox="0 0 320 160" style="width:100%">${band}<polyline points="${pts}" fill="none" stroke="#0ea5e9" stroke-width="2"/>${dots}${t(4,24,+mx.toFixed(2))}${t(4,130,+mn.toFixed(2))}${t(40,152,fmt(reg[0].data).slice(0,5))}${t(310,152,fmt(reg[reg.length-1].data).slice(0,5),'end')}</svg>`;
+}
+function desenharGrafico(){
+  const a=aqAtivo(),box=document.getElementById('h-grafico');if(!a)return;
+  const m=a.tipo==='marinho',ok=[],falta=[];
+  camposTipo(a.tipo).forEach(c=>{
+    const s=graficoSVG(a,c[0]);
+    if(s)ok.push(`<div style="margin-bottom:1.2rem"><h4 style="color:var(--ae);margin-bottom:.3rem">${c[1]}${c[2]?' ('+c[2]+')':''}</h4>${s}</div>`);
+    else falta.push(c[1]);
+  });
+  if(!ok.length){box.innerHTML='<div class="sem-dados">Registre ao menos 2 dias para ver os gráficos 📈</div>';return;}
+  box.innerHTML=ok.join('')+'<p style="font-size:.75rem;color:#94a3b8">Faixa verde = ideal geral. Pontos vermelhos = fora da faixa.</p>'+(falta.length?`<p style="font-size:.75rem;color:#94a3b8;margin-top:.4rem">Sem dados suficientes ainda: ${falta.join(', ')}.</p>`:'');
+}
+function renderizarParametros(){
+  const a=aqAtivo(),c=document.getElementById('param-atual');
+  if(!a){c.innerHTML='<div class="sem-dados">Selecione um aquário 🐠</div>';return;}
+  const r=[...a.registros].sort(porData).find(x=>CAMPOS.some(k=>x[k[0]]!=null));
+  if(!r){c.innerHTML='<div class="sem-dados">Nenhuma medição ainda. Registre no Histórico 📈</div>';return;}
+  const f=faixas(a.tipo);let dicas='';
+  const linhas=CAMPOS.filter(k=>r[k[0]]!=null).map(k=>{
+    const s=st(r[k[0]],f[k[0]]);
+    if(s==='alerta')dicas+=`<p>⚠️ <b>${k[1]}:</b> ${DICAS[k[0]]}</p>`;
+    return `<div class="dado-linha"><span>${k[1]}</span><span class="${s==='alerta'?'valor-alerta':'valor-bom'}">${r[k[0]]}${k[2]?' '+k[2]:''} ${s==='alerta'?'⚠️':'✅'}</span></div>`;
+  }).join('');
+  c.innerHTML=`<p class="ajuda" style="text-align:left">Último registro: ${fmt(r.data)}</p>${linhas}${dicas?`<div class="mensagem erro" style="text-align:left;font-size:.85rem">${dicas}</div>`:''}`;
+}
+
+// ===== ANOTAÇÕES =====
+function renderizarNotas(){
+  const a=aqAtivo();
+  document.getElementById('notas-vazio').style.display=a?'none':'block';
+  document.getElementById('notas-corpo').style.display=a?'block':'none';
+  if(!a)return;
+  limparNota();renderizarListaNotas();
+}
+function limparNota(){['n-id','n-titulo','n-texto'].forEach(i=>document.getElementById(i).value='');document.getElementById('n-cancelar').style.display='none';}
+function salvarNota(){
+  const a=aqAtivo();if(!a)return;
+  const t=document.getElementById('n-titulo').value.trim(),x=document.getElementById('n-texto').value.trim(),id=document.getElementById('n-id').value;
+  if(!t&&!x){alert('⚠️ Escreva algo!');return;}
+  if(id){const n=a.notas.find(z=>z.id===id);if(n){n.titulo=t;n.texto=x;n.editada=hoje();}}
+  else a.notas.push({id:Date.now().toString(36),titulo:t,texto:x,data:hoje(),fixada:false});
+  salvarDados();limparNota();renderizarListaNotas();
+}
+function editarNota(id){
+  const n=aqAtivo().notas.find(z=>z.id===id);if(!n)return;
+  document.getElementById('n-id').value=id;document.getElementById('n-titulo').value=n.titulo;document.getElementById('n-texto').value=n.texto;
+  document.getElementById('n-cancelar').style.display='block';document.getElementById('n-titulo').scrollIntoView({behavior:'smooth'});
+}
+function fixarNota(id){const n=aqAtivo().notas.find(z=>z.id===id);if(n){n.fixada=!n.fixada;salvarDados();renderizarListaNotas();}}
+function excluirNota(id){if(!confirm('Excluir esta anotação?'))return;const a=aqAtivo();a.notas=a.notas.filter(z=>z.id!==id);salvarDados();renderizarListaNotas();}
+function renderizarListaNotas(){
+  const a=aqAtivo(),c=document.getElementById('n-lista');if(!a)return;
+  const b=document.getElementById('n-busca').value.toLowerCase();
+  const l=a.notas.filter(n=>!b||(n.titulo+' '+n.texto).toLowerCase().includes(b)).sort((x,y)=>(y.fixada-x.fixada)||y.data.localeCompare(x.data));
+  if(!l.length){c.innerHTML='<div class="sem-dados">'+(a.notas.length?'Nada encontrado 🔍':'Nenhuma anotação ainda 📝')+'</div>';return;}
+  c.innerHTML=l.map(n=>`<div class="lista-item"><h4>${n.fixada?'📌 ':''}${esc(n.titulo||'Sem título')}</h4><p>📅 ${fmt(n.data)}${n.editada?` • editada em ${fmt(n.editada)}`:''}</p><p class="nota-txt" style="color:#334155;margin-top:.5rem;font-size:.95rem">${esc(n.texto)}</p><div class="acoes"><button class="btn btn-pequeno btn-principal" onclick="editarNota('${n.id}')">Editar</button><button class="btn btn-pequeno btn-secundario" onclick="fixarNota('${n.id}')">${n.fixada?'Desafixar':'📌 Fixar'}</button><button class="btn btn-pequeno btn-perigo" onclick="excluirNota('${n.id}')">Excluir</button></div></div>`).join('');
+}
+
+// ===== CALENDÁRIO =====
+const MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+let calMes=hoje().slice(0,7),calSel=hoje();
+try{const s=JSON.parse(localStorage.getItem('aquavibe_cal')||'null');if(s&&s.dia===hoje()){calMes=s.mes;calSel=s.sel;}}catch(e){}
+function salvarCal(){try{localStorage.setItem('aquavibe_cal',JSON.stringify({mes:calMes,sel:calSel,dia:hoje()}));}catch(e){}}
+function statusDia(a,d){
+  const r=a.registros.find(x=>x.data===d);
+  if(r){const f=faixas(a.tipo);if(CAMPOS.some(k=>st(r[k[0]],f[k[0]])==='alerta'))return'fora';return CAMPOS.some(k=>r[k[0]]!=null)?'ok':'nota';}
+  return a.notas.some(n=>n.data===d)?'nota':'';
+}
+function renderizarCalendario(){
+  const a=aqAtivo();
+  document.getElementById('cal-vazio').style.display=a?'none':'block';
+  document.getElementById('cal-corpo').style.display=a?'block':'none';
+  if(!a)return;
+  const [y,m]=calMes.split('-').map(Number),prim=new Date(y,m-1,1).getDay(),dias=new Date(y,m,0).getDate(),hj=hoje();
+  document.getElementById('cal-titulo').textContent=`${MESES[m-1]} de ${y}`;
+  let html=['D','S','T','Q','Q','S','S'].map(s=>`<div class="cal-sem">${s}</div>`).join('');
+  for(let i=0;i<prim;i++)html+='<div class="cal-dia vazio"></div>';
+  let reg=0;
+  for(let d=1;d<=dias;d++){
+    const ds=`${calMes}-${String(d).padStart(2,'0')}`;
+    if(a.registros.some(r=>r.data===ds))reg++;
+    html+=`<div class="cal-dia ${statusDia(a,ds)} ${ds===hj?'hoje':''} ${ds===calSel?'sel':''}" onclick="selecionarDia('${ds}')">${d}<small>${a.notas.some(n=>n.data===ds)?'📝':''}</small></div>`;
+  }
+  document.getElementById('cal-grade').innerHTML=html;
+  document.getElementById('cal-resumo').textContent=`${reg} dia(s) com registro neste mês`;
+  mostrarDia();
+}
+function mudarMes(d){const [y,m]=calMes.split('-').map(Number),dt=new Date(y,m-1+d,1);calMes=`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;salvarCal();renderizarCalendario();}
+function selecionarDia(d){calSel=d;salvarCal();renderizarCalendario();}
+function irParaHoje(){calMes=hoje().slice(0,7);calSel=hoje();salvarCal();renderizarCalendario();}
+function mostrarDia(){
+  const a=aqAtivo(),c=document.getElementById('cal-dia');
+  document.getElementById('cal-dia-titulo').textContent='📆 '+fmt(calSel)+(calSel===hoje()?' (hoje)':'');
+  const r=a.registros.find(x=>x.data===calSel),ns=a.notas.filter(n=>n.data===calSel),f=faixas(a.tipo);
+  const sub=t=>`<h4 style="margin:1rem 0 .4rem;color:var(--ae)">${t}</h4>`;
+  let html='';
+  if(r){
+    html+=CAMPOS.filter(k=>r[k[0]]!=null).map(k=>{const s=st(r[k[0]],f[k[0]])==='alerta';return `<div class="dado-linha"><span>${k[1]}</span><span class="${s?'valor-alerta':'valor-bom'}">${r[k[0]]}${k[2]?' '+k[2]:''} ${s?'⚠️':'✅'}</span></div>`;}).join('');
+    if(r.troca!=null)html+=`<div class="dado-linha"><span>Troca de água</span><span class="valor-bom">${r.troca}%</span></div>`;
+    html+=sub('Tarefas')+TAREFAS.map((t,i)=>`<p style="font-size:.9rem">${r.tarefas&&r.tarefas[i]?'✅':'⬜'} ${t}</p>`).join('');
+    if(r.obs)html+=sub('Observações')+`<p style="font-size:.9rem">${esc(r.obs)}</p>`;
+  }else html+='<div class="sem-dados" style="padding:1rem">Sem registro neste dia.</div>';
+  if(ns.length)html+=sub('Anotações')+ns.map(n=>`<div class="lista-item"><h4>${esc(n.titulo||'Sem título')}</h4><p class="nota-txt">${esc(n.texto)}</p></div>`).join('');
+  c.innerHTML=html+`<button class="btn btn-principal" onclick="abrirRegistroDoDia()">${r?'✏️ Editar registro deste dia':'➕ Registrar este dia'}</button>`;
+}
+function abrirRegistroDoDia(){const d=calSel;mostrarSubTela('sub-historico');document.getElementById('h-data').value=d;carregarRegistro();}
 
 // ===== FOTOS (Wikipedia, com cache) =====
 const CHAVE_FOTOS='aquavibe_fotos';
